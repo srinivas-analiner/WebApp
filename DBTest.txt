@@ -1,0 +1,3485 @@
+DELIMITER //
+-- Drop VIEWS
+DROP VIEW IF EXISTS GetConfigurationTabDetails;
+DROP VIEW IF EXISTS GetImagingSettingDetails;
+DROP VIEW IF EXISTS GetTrackingNetworkDetails;
+DROP VIEW IF EXISTS GetSystemDateTimeDetails;
+DROP VIEW IF EXISTS GetTimeZoneDetails;
+DROP VIEW IF EXISTS GetResolutionDetails2;
+DROP VIEW IF EXISTS GetImgFPSDetails;
+DROP VIEW IF EXISTS GetProfileDetails;
+DROP VIEW IF EXISTS GetNetworkDetails;
+DROP VIEW IF EXISTS GetLoginDetails;
+DROP VIEW IF EXISTS GetDefaultProfileDetails;
+DROP VIEW IF EXISTS GetResolutionDetails;
+DROP VIEW IF EXISTS GetFPSDetails;
+DROP VIEW IF EXISTS GetEncoderDetails;
+DROP VIEW IF EXISTS GetRTSPDetails;
+DROP VIEW IF EXISTS GetCurrentStreamDetails;
+DROP VIEW IF EXISTS GetRecordingResolutionDetails;
+DROP VIEW IF EXISTS GetRecordingDetails;
+DROP View IF EXISTS GetErrorMessages;
+DROP View IF EXISTS GetErrorSeverity;
+Drop View IF EXISTS GetErrorTypes;
+Drop View IF EXISTS GetEventDetails;
+DROP View IF EXISTS GetMotionZoneDetails;
+DROP View IF EXISTS GetIVAZoneDetails;
+DROP View IF EXISTS GetMotionDetectionDetails;
+DROP View IF EXISTS GetIVADetectionDetails;
+DROP View IF EXISTS GetTamperDetectionDetails;
+DROP View IF EXISTS GetRecordingStatusDetails;
+DROP View IF EXISTS  GetTemperatureDetails;
+DROP View IF EXISTS GetImagingMinMaxDetails;
+DROP View IF EXISTS GetSupportedImagingDetails;
+DROP View IF EXISTS GetImagingModeDetails;
+DROP View IF EXISTS GetImgModeDetails;
+DROP View IF EXISTS GetImgColorpaletteDetails;
+DROP View IF EXISTS GetCurrentImagingDetails;
+DROP View IF EXISTS GetImgOrientationDetails;
+DROP View IF EXISTS GetDeviceDetails;
+DROP View IF EXISTS GetSystemDetails;
+DROP View IF EXISTS GetPanTiltDetails;
+commit;
+
+// DELIMITER ;
+
+DELIMITER //
+Drop EVENT IF EXISTS Evnt_Temp_Chk;
+Drop EVENT IF EXISTS Evnt_Temp_Log;
+commit;
+// DELIMITER ;
+
+DELIMITER //
+
+SET FOREIGN_KEY_CHECKS=0; -- to disable them
+
+// DELIMITER ;
+
+DELIMITER //
+
+-- Drop TABLES 
+DROP TABLE IF EXISTS Tbl_Config_Tab_Dtls;
+DROP TABLE IF EXISTS Tbl_Img_Set_Dtls;
+DROP TABLE IF EXISTS Tbl_Trk_Net_Dtls;
+-- DROP TABLE IF EXISTS Tbl_Sys_Dtls;
+DROP TABLE IF EXISTS Tbl_Sys_DT_Dtls;
+DROP TABLE IF EXISTS Tbl_Res_Dtls;
+DROP TABLE IF EXISTS Tbl_Img_FPS_Dtls;
+DROP TABLE IF EXISTS Tbl_Img_Orien_Dtls;
+DROP TABLE IF EXISTS Tbl_Curr_Img_Set_Dtls;
+DROP TABLE IF EXISTS Tbl_Img_Clr_Pal_Dtls;
+DROP TABLE IF EXISTS Tbl_Img_Set_Mode_Dtls;
+DROP TABLE IF EXISTS Tbl_Sup_Img_Set_Dtls;
+DROP TABLE IF EXISTS Tbl_Img_Set_MinMax_Dtls;
+DROP TABLE IF EXISTS Tbl_Img_Mode_Mstr;
+Drop TABLE IF EXISTS Tbl_Img_Set_Mstr;
+DROP TABLE IF EXISTS Tbl_Temp_Dtls;
+DROP TABLE IF EXISTS Tbl_Rec_Stat_Dtls;
+DROP TABLE IF EXISTS Tbl_MD_Dtls;
+DROP TABLE IF EXISTS Tbl_VA_Dtls;
+DROP TABLE IF EXISTS Tbl_Zn_Mstr;
+DROP TABLE IF EXISTS Tbl_VA_Mstr;
+DROP TABLE IF EXISTS Tbl_Evnt_Dtls;
+DROP TABLE IF EXISTS Tbl_Msg_Dtls;
+DROP TABLE IF EXISTS Tbl_Err_Sev_Mstr;
+DROP TABLE IF EXISTS Tbl_Ext_Msg_Dtls;
+DROP TABLE IF EXISTS Tbl_Rec_Res_Dtls;
+DROP TABLE IF EXISTS Tbl_Rec_Dtls;
+DROP TABLE IF EXISTS Tbl_Sav_Img_Dtls;
+DROP TABLE IF EXISTS Tbl_Net_Dtls;
+DROP TABLE IF EXISTS Tbl_Def_Prof_Dtls;
+DROP TABLE IF EXISTS Tbl_RTSP_Dtls;
+DROP TABLE IF EXISTS Tbl_Curr_Dtls;
+DROP TABLE IF EXISTS Tbl_Lgn_Dtls;
+DROP TABLE IF EXISTS Tbl_Prof_Dtls;
+DROP TABLE IF EXISTS Tbl_Port_Mstr;
+DROP TABLE IF EXISTS Tbl_IP_Add_Mstr;
+DROP TABLE IF EXISTS Tbl_FPS_Dtls;
+DROP TABLE IF EXISTS Tbl_Enc_Mstr;
+DROP TABLE IF EXISTS Tbl_Res_Mstr;
+DROP TABLE IF EXISTS Tbl_Dev_Dtls;
+DROP TABLE IF EXISTS Tbl_T_Zn_Mstr;
+DROP TABLE IF EXISTS Tbl_PT_Dtls;
+DROP TABLE IF EXISTS Tbl_Dev_Mstr;
+commit;
+
+// DELIMITER ;
+
+DELIMITER //
+SET FOREIGN_KEY_CHECKS=1; -- to re-enable them
+
+commit;
+
+// DELIMITER ;
+
+Delimiter //
+-- Device Table
+CREATE TABLE IF NOT EXISTS Tbl_Dev_Mstr
+(
+Clm_Dev_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Device Id
+Clm_Dev_NM varchar(20) unique -- Device Name 
+-- Clm_Dev_CS bool default false -- Current state, 0/De-Active,1/Active
+);
+// DELIMITER ;
+
+Delimiter //
+-- Device Details Table
+CREATE TABLE IF NOT EXISTS Tbl_Dev_Dtls
+(
+Clm_Dev_Dtls_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Device Id
+Clm_Dev_CS bool default false, -- Current state, 0/De-Active,1/Active
+Clm_Dev_NM varchar(50), -- Device Name 
+Clm_Dev_Node varchar(50), -- Device Node 
+Clm_Dev_WD int, -- Device Width
+Clm_Dev_HT int,  -- Device Height
+Clm_Dev_Frmt varchar(15),  -- Device Format
+Clm_Dev_SPORT varchar(25),  -- Device Serial Port
+Clm_Dev_Id int,-- Device Id from Device Table
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Login Table
+CREATE TABLE IF NOT EXISTS Tbl_Lgn_Dtls 
+(
+Clm_Lgn_Id INTEGER AUTO_INCREMENT  PRIMARY KEY,
+Clm_Lgn_Nm varchar(15) unique, -- User Name
+Clm_Lgn_Pwd varchar(15), -- Password
+Clm_Lgn_Lvl integer default 1, -- Level 0-admin, 1-user
+Clm_Lgn_Cre_D VARCHAR(20) -- Created Data
+);
+// DELIMITER ;
+
+Delimiter //
+-- Ip Address Table
+CREATE TABLE IF NOT EXISTS Tbl_IP_Add_Mstr
+(
+Clm_IP_Add_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- IpAddress Id
+Clm_Ip_Add varchar(20) unique -- Ip Address
+);
+// DELIMITER ;
+
+Delimiter //
+-- Port Table
+CREATE TABLE IF NOT EXISTS Tbl_Port_Mstr
+(
+Clm_Port_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Port Id
+Clm_Port_No int unique -- Port Number
+);
+// DELIMITER ;
+
+Delimiter //
+-- RTSP Table
+CREATE TABLE IF NOT EXISTS Tbl_RTSP_Dtls
+(
+Clm_RTSP_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- RTSP Id
+Clm_Port_Id int, -- Port Id
+Clm_RTSP_Tout int default 30, -- RTSP TimeOut
+Clm_RTSP_auth int default 0, -- authentication 0-None, 1-Digest
+Clm_Dev_Id int,
+FOREIGN KEY (Clm_Port_Id) REFERENCES Tbl_Port_Mstr(Clm_Port_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Network Table
+CREATE TABLE IF NOT EXISTS Tbl_Net_Dtls
+(
+Clm_Net_Id INTEGER AUTO_INCREMENT  PRIMARY KEY,
+-- Clm_Net_Ip_Add varchar(20) unique, -- Ip Address
+Clm_Net_SNM varchar(20), -- Subnet Mask
+Clm_Net_GW varchar(20), -- Gateway
+Clm_Net_DNS1 varchar(20), -- DNS 1
+Clm_Net_DNS2 varchar(20), -- DNS 2
+Clm_Net_Typ integer default 1, -- Network Type 0-Manual, 1-DHCP
+clm_Net_MAC varchar(20), -- MacAddress
+clm_Net_Hst_NM varchar(20), -- HostName
+Clm_IP_Add_Id int,  -- IpAddress Id from Ip Address Table
+FOREIGN KEY (Clm_IP_Add_Id) REFERENCES Tbl_IP_Add_Mstr(Clm_IP_Add_Id) -- FOREIGN key constrain for Ip Address Table
+);
+// DELIMITER ;
+
+Delimiter //
+CREATE TABLE IF NOT EXISTS Tbl_Sav_Img_Dtls
+(
+Clm_Img_Id int AUTO_INCREMENT  PRIMARY KEY,
+Clm_Img_Data longblob -- longblob to store byteArray
+);
+// DELIMITER ;
+
+Delimiter //
+-- Resolution Table
+CREATE TABLE IF NOT EXISTS Tbl_Res_Mstr
+(
+Clm_Res_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Resolution Id
+Clm_Res_WD int, -- Width
+Clm_Res_HT int,  -- Height
+UNIQUE KEY Res_fun_id (Clm_Res_WD, Clm_Res_HT) -- Creating Unique key on two columns
+);
+// DELIMITER ;
+
+Delimiter //
+-- FrameRate Table
+CREATE TABLE IF NOT EXISTS Tbl_FPS_Dtls
+(
+Clm_FPS_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- FrameRate Id
+Clm_FPS_NM int -- FrameRate
+);
+// DELIMITER ;
+
+Delimiter //
+-- Encoder Type Table
+CREATE TABLE IF NOT EXISTS Tbl_Enc_Mstr
+(
+Clm_Enc_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- FrameRate Id
+Clm_Enc_NM varchar(10) unique -- Encoder Name
+);
+// DELIMITER ;
+
+Delimiter //
+-- Profile Table
+CREATE TABLE IF NOT EXISTS Tbl_Prof_Dtls
+(
+Clm_Prof_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Profile Id
+Clm_Prof_NM varchar(20), -- Profile Name
+Clm_FPS_Id int, -- FrameRate Id from FrameRate Table
+Clm_Res_Id int, -- Resolution Id from Resolution Table
+Clm_BR int default 2048, -- Bitrate
+Clm_Dev_Id int,-- Device Id from Device Table
+Clm_Enc_Id int, -- EncoderType Id from Encoder Table
+Clm_Prof_Typ int default 1, -- Profile Type 0-Factory, 1-User
+Clm_Prof_Muc int default 1, -- Multicast RTSP Type 0-Yes, 1-No
+Clm_Prof_Muc_Ip_Add_Id int, -- Multicast Ip Address
+Clm_Prof_Muc_TTL int, -- Multicast TTL (Time to Live)
+Clm_Muc_Port_Id int, -- Port Id
+UNIQUE KEY (Clm_Prof_NM,Clm_Dev_Id),
+FOREIGN KEY (Clm_FPS_Id) REFERENCES Tbl_FPS_Dtls(Clm_FPS_Id),
+FOREIGN KEY (Clm_Res_Id) REFERENCES Tbl_Res_Mstr(Clm_Res_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id),
+FOREIGN KEY (Clm_Enc_Id) REFERENCES Tbl_Enc_Mstr(Clm_Enc_Id),
+FOREIGN KEY (Clm_Prof_Muc_Ip_Add_Id) REFERENCES Tbl_IP_Add_Mstr(Clm_IP_Add_Id),
+FOREIGN KEY (Clm_Muc_Port_Id) REFERENCES Tbl_Port_Mstr(Clm_Port_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Default Profile Table
+CREATE TABLE IF NOT EXISTS Tbl_Def_Prof_Dtls
+(
+Clm_Prof_Def_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Default Id
+Clm_Prof_Id int unique, -- Profile Id from Profile Table
+Clm_Dev_Id int unique,-- Device Id from Device Table
+FOREIGN KEY (Clm_Prof_Id) REFERENCES Tbl_Prof_Dtls(Clm_Prof_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Current Streaming Table
+CREATE TABLE IF NOT EXISTS Tbl_Curr_Dtls
+(
+Clm_Curr_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Default Id
+Clm_Res_Id int, -- Resolution Id
+Clm_FPS_Id int, -- FPS Id
+Clm_Enc_Id int, -- Encoder Id
+Clm_Dev_Id int, -- Device Id
+Clm_Curr_BR int, -- Current BitRate
+FOREIGN KEY (Clm_Res_Id) REFERENCES Tbl_Res_Mstr(Clm_Res_Id),
+FOREIGN KEY (Clm_FPS_Id) REFERENCES Tbl_FPS_Dtls(Clm_FPS_Id),
+FOREIGN KEY (Clm_Enc_Id) REFERENCES Tbl_Enc_Mstr(Clm_Enc_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Recording details Table
+CREATE TABLE IF NOT EXISTS Tbl_Rec_Dtls
+(
+Clm_Rec_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Recording Id
+Clm_Enc_Id int, -- Encoder Id
+Clm_Res_Id int, -- Resolution Id
+Clm_Res_TIME int default 30, -- Recording Time
+Clm_Dev_Id int,
+FOREIGN KEY (Clm_Enc_Id) REFERENCES Tbl_Enc_Mstr(Clm_Enc_Id),
+FOREIGN KEY (Clm_Res_Id) REFERENCES Tbl_Res_Mstr(Clm_Res_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Recording Resolution details Table
+CREATE TABLE IF NOT EXISTS Tbl_Rec_Res_Dtls
+(
+Clm_Rec_Res_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Recording Resolution Id
+Clm_Res_Id int, -- Resolution Id
+Clm_Dev_Id int,
+FOREIGN KEY (Clm_Res_Id) REFERENCES Tbl_Res_Mstr(Clm_Res_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Error Severity Table
+CREATE TABLE IF NOT EXISTS Tbl_Err_Sev_Mstr
+(
+Clm_Err_Sev_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Severity Id
+Clm_Err_Sev_NM varchar(20) unique, -- Severity Name
+Clm_Err_Sev_Abv varchar(5) unique -- Severity Abbreviation
+);
+// DELIMITER ;
+
+Delimiter //
+-- Message Table for Errors
+CREATE TABLE IF NOT EXISTS Tbl_Msg_Dtls
+(
+Clm_Msg_Id bigint AUTO_INCREMENT  PRIMARY KEY, -- Error message Id
+Clm_Msg_Id_NM varchar(6) unique, -- Message Id
+Clm_Msg varchar(767) unique, -- Error message 3072
+Clm_Err_Sev_Id int,
+FOREIGN KEY (Clm_Err_Sev_Id) REFERENCES Tbl_Err_Sev_Mstr(Clm_Err_Sev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- External Message Table for Errors
+CREATE TABLE IF NOT EXISTS Tbl_Ext_Msg_Dtls
+(
+Clm_Ext_Msg_Id bigint AUTO_INCREMENT  PRIMARY KEY, -- External message Id
+Clm_Ext_Msg varchar(767) unique -- External message 3072
+);
+// DELIMITER ;
+
+Delimiter //
+CREATE TABLE IF NOT EXISTS Tbl_Evnt_Dtls
+(
+Clm_Evnt_Id bigint AUTO_INCREMENT  PRIMARY KEY, -- Event Id
+Clm_Msg_Id bigint, -- message Id
+Clm_Evnt_DT datetime, -- Event DateTime
+Clm_Ext_Msg_Id bigint default 1, -- External message Id
+FOREIGN KEY (Clm_Msg_Id) REFERENCES Tbl_Msg_Dtls(Clm_Msg_Id),
+FOREIGN KEY (Clm_Ext_Msg_Id) REFERENCES Tbl_Ext_Msg_Dtls(Clm_Ext_Msg_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- video analytics Table
+CREATE TABLE IF NOT EXISTS Tbl_VA_Mstr
+(
+Clm_VA_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- video analytics Id
+Clm_VA_Typ varchar(25) unique -- video analytics Type (i.e., Motion,Face,Tampering,IVA)
+);
+// DELIMITER ; 
+
+-- Delimiter //
+-- Zone_Details Table
+-- CREATE TABLE IF NOT EXISTS Tbl_MD_Zn_Mstr
+-- (
+-- Clm_MD_Zn_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- video analytics Id
+-- Clm_MD_Zn_Typ int default 0, -- Zone Type, 0-PreDefined, 1-Custom
+-- Clm_MD_Zn int, -- Zone Number
+-- Clm_MD_Zn_WD int default 640, -- Zone Width
+-- Clm_MD_Zn_HT int default 480, -- Zone Height
+-- Clm_MD_Zn_Pnt varchar(50), -- Points
+-- Clm_MD_Zn_CS int default 1, -- Zone Current state 0-Active,1-DeActive
+-- Clm_MD_Zn_Th int default 10, -- Threshold value
+-- Clm_MD_Zn_Dur int default 1, -- Duration
+-- Clm_Dev_Id int,
+-- FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+-- );
+-- // DELIMITER ;
+
+Delimiter //
+-- Zone_Master Table
+CREATE TABLE IF NOT EXISTS Tbl_Zn_Mstr
+(
+Clm_Zn_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Zone Id
+Clm_Zn_Typ int default 0, -- Zone Type, 0-PreDefined/Line, 1-Custom/Area
+Clm_Zn int, -- Zone Number
+Clm_Zn_WD int default 640, -- Zone Width
+Clm_Zn_HT int default 480, -- Zone Height
+Clm_Zn_Pnt varchar(50), -- Points
+Clm_Zn_CS int default 1, -- Zone Current state 0-Active,1-DeActive
+Clm_Zn_Th int default 10, -- Threshold value
+Clm_Zn_Dur int default 1, -- Duration
+Clm_Dev_Id int,
+Clm_VA_Id int default 1,
+FOREIGN KEY (Clm_VA_Id) REFERENCES Tbl_VA_Mstr(Clm_VA_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- video analytics Details Table
+CREATE TABLE IF NOT EXISTS Tbl_VA_Dtls
+(
+Clm_VA_Dtls_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- video analytics Id
+Clm_VA_Alrm bool default false, -- Alarm state, 0/false-Enable,1/true-Disable
+Clm_VA_Id int default 1,
+Clm_VA_Zn_Typ int default 0, -- Zone Type, 0-PreDefined, 1-Custom
+Clm_Dev_Id int,
+Clm_VA_CS bool default false, -- Current state, 0/false-Enable,1/true-Disable
+FOREIGN KEY (Clm_VA_Id) REFERENCES Tbl_VA_Mstr(Clm_VA_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Recording Status Table
+CREATE TABLE IF NOT EXISTS Tbl_Rec_Stat_Dtls
+(
+Clm_Rec_Stat_Id int AUTO_INCREMENT  PRIMARY KEY, -- Recording Status Id
+Clm_Rec_Stat bool default false, -- Recording Status, 0-Ideal , 1-Recording
+Clm_Dev_Id int,
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Temperature Table
+CREATE TABLE IF NOT EXISTS Tbl_Temp_Dtls
+(
+Clm_Temp_Id bigint AUTO_INCREMENT  PRIMARY KEY, -- Event Id
+Clm_Temp_Typ int, -- Temperature Type 0-processor Temperature, 1-CamFPA Tempreature, 2-CamSys Temp
+Clm_Temp_DT datetime, -- Event DateTime
+Clm_Temp_Val varchar(15), 
+Clm_Dev_Id int,
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging Settings Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_Set_Mstr
+(
+Clm_Img_Set_Id int AUTO_INCREMENT  PRIMARY KEY, -- Imaging Settings Id
+Clm_Img_Set_NM varchar(20) unique -- Imaging Settings Name
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging Modes Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_Mode_Mstr
+(
+Clm_Img_Mode_Id int AUTO_INCREMENT  PRIMARY KEY, -- Imaging Mode Id
+Clm_Img_Mode_NM varchar(20) unique -- Imaging Mode Name
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging Color palette Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_Clr_Pal_Dtls
+(
+Clm_Img_Mode_Id int AUTO_INCREMENT  PRIMARY KEY, -- palette Id
+Clm_Img_Mode_NM varchar(20) unique, -- palette Name
+Clm_Dev_Id int,
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging FPS Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_FPS_Dtls
+(
+Clm_Img_FPS_Id int AUTO_INCREMENT  PRIMARY KEY, -- FPS Id
+Clm_Img_FPS_NM varchar(20), -- FPS Name
+Clm_Dev_Id int,
+UNIQUE KEY (Clm_Img_FPS_NM,Clm_Dev_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Resolution Details Table
+CREATE TABLE IF NOT EXISTS Tbl_Res_Dtls
+(
+Clm_Res_Dtls_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Resolution Id
+Clm_Res_Id int, -- Resolution Id
+Clm_Dev_Id int,-- Device Id from Device Table
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id),
+FOREIGN KEY (Clm_Res_Id) REFERENCES Tbl_Res_Mstr(Clm_Res_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Image Orientation Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_Orien_Dtls
+(
+Clm_Img_Orien_Id int AUTO_INCREMENT  PRIMARY KEY, -- palette Id
+Clm_Img_Orien_NM varchar(20), -- palette Name
+Clm_Dev_Id int,
+UNIQUE KEY (Clm_Img_Orien_NM,Clm_Dev_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging Supported Settings Table
+CREATE TABLE IF NOT EXISTS Tbl_Sup_Img_Set_Dtls
+(
+Clm_Sup_Img_Set_Id int AUTO_INCREMENT  PRIMARY KEY, -- Imaging Settings Id
+Clm_Img_Set_Id int,
+Clm_Dev_Id int,
+FOREIGN KEY (Clm_Img_Set_Id) REFERENCES Tbl_Img_Set_Mstr(Clm_Img_Set_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging Settings Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_Set_Mode_Dtls
+(
+Clm_Img_Set_Mode_Id int AUTO_INCREMENT  PRIMARY KEY, -- Imaging Settings Id
+Clm_Img_Set_Id int,
+Clm_Dev_Id int,
+Clm_Img_Mode_Id int,
+FOREIGN KEY (Clm_Img_Set_Id) REFERENCES Tbl_Img_Set_Mstr(Clm_Img_Set_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id),
+FOREIGN KEY (Clm_Img_Mode_Id) REFERENCES Tbl_Img_Mode_Mstr(Clm_Img_Mode_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging Settings Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_Set_MinMax_Dtls
+(
+Clm_Img_Set_MinMax_Id int AUTO_INCREMENT  PRIMARY KEY, -- Imaging Settings Id
+Clm_Img_Set_Id int,
+Clm_Dev_Id int,
+Clm_Min_Val double,
+Clm_Max_Val double,
+FOREIGN KEY (Clm_Img_Set_Id) REFERENCES Tbl_Img_Set_Mstr(Clm_Img_Set_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Current Imaging Settings Table
+CREATE TABLE IF NOT EXISTS Tbl_Curr_Img_Set_Dtls
+(
+Clm_Img_Set_Curr_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Default Id
+Clm_Img_Set_Id int,
+Clm_Curr_Val varchar(20), -- Current Value
+Clm_Dev_Id int, -- Device Id
+FOREIGN KEY (Clm_Img_Set_Id) REFERENCES Tbl_Img_Set_Mstr(Clm_Img_Set_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- TimeZone Table
+CREATE TABLE IF NOT EXISTS Tbl_T_Zn_Mstr
+(
+Clm_T_Zn_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- TimeZone Id
+Clm_T_Zn_NM varchar(150) unique -- TimeZone Name 
+);
+// DELIMITER ;
+
+Delimiter //
+-- System DateTime Table
+CREATE TABLE IF NOT EXISTS Tbl_Sys_DT_Dtls
+(
+Clm_Sys_DT_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- System DateTime Id
+Clm_T_Zn_Id int, -- TimeZone Id
+Clm_Sys_DT_Typ int default 0, -- 1-Manual,0-Synchronize with NTP server
+Clm_Sys_DT_D varchar(12),
+Clm_Sys_DT_T varchar(8),
+Clm_Sys_DT_Add1 varchar(25),
+Clm_Sys_DT_Add2 varchar(25),
+FOREIGN KEY (Clm_T_Zn_Id) REFERENCES Tbl_T_Zn_Mstr(Clm_T_Zn_Id)
+);
+// DELIMITER ;
+
+-- Delimiter //
+-- System Details Table
+-- CREATE TABLE IF NOT EXISTS Tbl_Sys_Dtls
+-- (
+-- Clm_Sys_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- System Id 
+-- Clm_Sys_NM varchar(50), -- Name 
+-- Clm_Sys_Loc varchar(50), -- Location 
+-- Clm_Sys_Mfr varchar(50), -- Manufacturer 
+-- Clm_Sys_Mdl varchar(50), -- Model 
+-- Clm_Sys_HW varchar(50), -- Hardware 
+-- Clm_Sys_FMW varchar(50), -- Firmware 
+-- Clm_Sys_Dev_Id varchar(50), -- Device Id 
+-- Clm_Logo longtext, -- Company Logo  
+-- Clm_Bnr longtext -- Company banner
+-- );
+-- // DELIMITER ;
+
+Delimiter //
+-- Pan Tilt Table 
+CREATE TABLE IF NOT EXISTS Tbl_PT_Dtls 
+(
+Clm_PT_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Id 
+Clm_PT_CS bool default false, -- Current State 0/De-Active,1/Active 
+Clm_P_Val float, -- Pan Value 
+Clm_T_Val float, -- Tilt Value 
+Clm_T_Dir int default 0, -- Tilt Direction 1-Bottom,0-Top 
+Clm_Z_Val float,
+Clm_Dev_Id int, -- Device Id
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id) 
+);
+// DELIMITER ;
+
+Delimiter //
+-- Tracking Network Details table
+CREATE TABLE IF NOT EXISTS Tbl_Trk_Net_Dtls 
+(
+Clm_Trk_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, 
+Clm_Port_Id int, -- Port Id 
+Clm_IP_Add_Id int,  -- IpAddress Id from Ip Address Table 
+FOREIGN KEY (Clm_Port_Id) REFERENCES Tbl_Port_Mstr(Clm_Port_Id), 
+FOREIGN KEY (Clm_IP_Add_Id) REFERENCES Tbl_IP_Add_Mstr(Clm_IP_Add_Id) -- FOREIGN key constrain for Ip Address Table 
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging Settings Enable/Visible Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_Set_Dtls
+(
+Clm_Id int AUTO_INCREMENT  PRIMARY KEY,
+Clm_Img_Set_Id int, 
+Clm_Dev_Id int, 
+Clm_Ena_St bool default false, 
+Clm_Vis_St bool default false, 
+FOREIGN KEY (Clm_Img_Set_Id) REFERENCES Tbl_Img_Set_Mstr(Clm_Img_Set_Id), 
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id) 
+);
+// DELIMITER ;
+
+Delimiter //
+-- Configuration Tabs Enable/Visible Table
+CREATE TABLE IF NOT EXISTS Tbl_Config_Tab_Dtls
+(
+Clm_Id int AUTO_INCREMENT  PRIMARY KEY,
+Clm_Config_Tab_NM varchar(50),
+Clm_Ena_St bool default false, 
+Clm_Vis_St bool default false 
+);
+// DELIMITER ;
+
+
+ -- Start of Views 
+
+Delimiter //
+-- View to get all details from Login Table
+CREATE VIEW GetLoginDetails AS 
+SELECT Clm_Lgn_Nm as UserName, 
+Clm_Lgn_Pwd as Password, 
+CASE Clm_Lgn_Lvl WHEN 0 THEN 'Administrator' WHEN 1 THEN 'Operator' WHEN 2 THEN 'User' END as Level 
+FROM Tbl_Lgn_Dtls; 
+// DELIMITER ;
+
+Delimiter //
+-- View to get all details from Network Table
+CREATE VIEW GetNetworkDetails AS 
+SELECT t1.Clm_Net_Id as Id, 
+t2.Clm_Ip_Add as IPAddress, 
+Clm_Net_SNM as SubnetMask, 
+Clm_Net_GW as Gateway, 
+Clm_Net_DNS1 as DNS1, 
+Clm_Net_DNS2 as DNS2, 
+CASE Clm_Net_Typ  WHEN 0 THEN 'Static' WHEN 1 THEN 'DHCP' END as NetworkType, 
+clm_Net_MAC as MacAddress, 
+clm_Net_Hst_NM as HostName 
+FROM Tbl_Net_Dtls t1 
+left join Tbl_IP_Add_Mstr t2 on t2.Clm_IP_Add_Id=t1.Clm_IP_Add_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- View to get all information from Resolution Table
+CREATE VIEW GetResolutionDetails AS 
+SELECT Clm_Res_Id as Id, 
+Clm_Res_WD as Width, 
+Clm_Res_HT as Height 
+FROM Tbl_Res_Mstr; 
+// DELIMITER ;
+
+Delimiter //
+-- View to get all information from FPS Table
+CREATE VIEW GetFPSDetails AS 
+SELECT Clm_FPS_Id as Id, 
+Clm_FPS_NM as FPS 
+FROM Tbl_FPS_Dtls; 
+// DELIMITER ;
+
+Delimiter //
+-- View to get all information from Encoder Type Table
+CREATE VIEW GetEncoderDetails AS 
+SELECT Clm_Enc_Id as Id, 
+Clm_Enc_NM as EncoderType 
+FROM Tbl_Enc_Mstr; 
+// DELIMITER ;
+
+Delimiter //
+-- View to get all DefaultProfile information from Default Profile Table
+CREATE VIEW GetDefaultProfileDetails AS 
+SELECT t1.Clm_Prof_Id as Id, 
+t2.Clm_Prof_NM as ProfileName, 
+t3.Clm_Dev_NM as DeviceName 
+FROM Tbl_Def_Prof_Dtls t1 
+left join Tbl_Prof_Dtls t2 on t2.Clm_Prof_Id=t1.Clm_Prof_Id 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- View to get all Device information
+CREATE VIEW GetDeviceDetails AS 
+SELECT 
+CASE t1.Clm_Dev_CS WHEN 1 THEN 'Active' WHEN 0 THEN 'DeActive'END as Current_State, 
+t1.Clm_Dev_NM as Name, 
+t1.Clm_Dev_Node as Node, 
+t1.Clm_Dev_WD as Width, 
+t1.Clm_Dev_HT as Height, 
+t1.Clm_Dev_Frmt as Format, 
+t1.Clm_Dev_SPORT as Serial_Port, 
+t2.Clm_Dev_NM as DeviceName  
+FROM Tbl_Dev_Dtls t1 
+left join Tbl_Dev_Mstr t2 on t2.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+
+Delimiter //
+-- View to get all Profile information from Profile Table
+CREATE VIEW GetProfileDetails AS 
+SELECT Clm_Prof_Id as Id, 
+Clm_Prof_NM as Name, 
+t2.Clm_FPS_NM as FPS, 
+t1.Clm_BR as BitRate, 
+t3.Clm_Enc_NM as Encoder, 
+t4.Clm_Dev_NM as DeviceName, 
+t5.Clm_Res_WD as Width, 
+t5.Clm_Res_HT as Height, 
+CASE (select count(*) from Tbl_Def_Prof_Dtls tt where t1.Clm_Prof_Id=tt.Clm_Prof_Id) WHEN 1 THEN 'Default' WHEN 0 THEN 'NotDefault'END as Default_State, 
+CASE t1.Clm_Prof_Typ WHEN 1 THEN 'User' WHEN 0 THEN 'Factory'END as PType, 
+CASE t1.Clm_Prof_Muc WHEN 1 THEN 'No' WHEN 0 THEN 'Yes'END as Multicast, 
+t1.Clm_Prof_Muc_TTL as TTL, 
+t6.Clm_Port_No as MPort, 
+t7.Clm_Ip_Add as MIPAddress 
+FROM Tbl_Prof_Dtls t1 
+left join Tbl_FPS_Dtls t2 on t2.Clm_FPS_Id=t1.Clm_FPS_Id 
+left join Tbl_Enc_Mstr t3 on t3.Clm_Enc_Id=t1.Clm_Enc_Id 
+left join Tbl_Dev_Mstr t4 on t4.Clm_Dev_Id=t1.Clm_Dev_Id 
+left join Tbl_Res_Mstr t5 on t5.Clm_Res_Id=t1.Clm_Res_Id 
+left join Tbl_Port_Mstr t6 on t6.Clm_Port_Id=t1.Clm_Muc_Port_Id 
+left join Tbl_IP_Add_Mstr t7 on t7.Clm_IP_Add_Id=t1.Clm_Prof_Muc_Ip_Add_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- View to get all RTSP information from RTSP Table
+CREATE VIEW GetRTSPDetails AS 
+SELECT t1.Clm_RTSP_Id as Id, 
+t2.Clm_Port_No as Port, 
+Clm_RTSP_Tout as TimeOut, 
+CASE t1.Clm_RTSP_auth WHEN 1 THEN 'Digest' WHEN 0 THEN 'None'END as Authentication, 
+t3.Clm_Dev_NM as DeviceName 
+FROM Tbl_RTSP_Dtls t1 
+left join Tbl_Port_Mstr t2 on t2.Clm_Port_Id=t1.Clm_Port_Id 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+
+Delimiter //
+-- View to get all RTSP information from RTSP Table
+CREATE VIEW GetCurrentStreamDetails AS 
+SELECT t1.Clm_Curr_BR as BitRate, 
+t2.Clm_Res_WD as Width, 
+t2.Clm_Res_HT as Height, 
+t3.Clm_FPS_NM as FPS, 
+t4.Clm_Enc_NM as Encoder, 
+t6.Clm_Dev_NM as Device 
+FROM Tbl_Curr_Dtls t1 
+left join Tbl_Res_Mstr t2 on t2.Clm_Res_Id=t1.Clm_Res_Id 
+left join Tbl_FPS_Dtls t3 on t3.Clm_FPS_Id=t1.Clm_FPS_Id 
+left join Tbl_Enc_Mstr t4 on t4.Clm_Enc_Id=t1.Clm_Enc_Id 
+left join Tbl_Dev_Mstr t6 on t6.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- View to get all supported Resolutions from Recording
+CREATE VIEW GetRecordingResolutionDetails AS 
+SELECT t2.Clm_Res_WD as Width, 
+t2.Clm_Res_HT as Height, 
+t3.Clm_Dev_NM as Device 
+FROM Tbl_Rec_Res_Dtls t1 
+left join Tbl_Res_Mstr t2 on t2.Clm_Res_Id=t1.Clm_Res_Id 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- View to get all Recording Information
+CREATE VIEW GetRecordingDetails AS 
+SELECT t1.Clm_Res_TIME as Time, 
+t2.Clm_Res_WD as Width, 
+t2.Clm_Res_HT as Height, 
+t4.Clm_Enc_NM as Encoder, 
+t3.Clm_Dev_NM as Device 
+FROM Tbl_Rec_Dtls t1 
+left join Tbl_Res_Mstr t2 on t2.Clm_Res_Id=t1.Clm_Res_Id 
+left join Tbl_Enc_Mstr t4 on t4.Clm_Enc_Id=t1.Clm_Enc_Id 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE View GetErrorSeverity AS 
+select Clm_Err_Sev_Id as Id, 
+Clm_Err_Sev_NM as Name, 
+Clm_Err_Sev_Abv as Abbreviation 
+from Tbl_Err_Sev_Mstr; 
+// DELIMITER ;
+
+Delimiter //
+CREATE View GetErrorMessages AS 
+select Clm_Msg_Id as Id, 
+Clm_Msg_Id_NM as MsgId, 
+Clm_Msg as Message, 
+t2.Clm_Err_Sev_Abv as Severity 
+from Tbl_Msg_Dtls t1 
+left join Tbl_Err_Sev_Mstr t2 on t2.Clm_Err_Sev_Id=t1.Clm_Err_Sev_Id; 
+// DELIMITER ;
+
+Delimiter //
+Create View GetEventDetails AS 
+select t1.Clm_Evnt_Id as Id, 
+t3.Clm_Err_Sev_Abv as Severity, 
+t2.Clm_Msg_Id_NM as MsgId, 
+t2.Clm_Msg as Message, 
+t1.Clm_Evnt_DT as EventDateTime, 
+t4.Clm_Ext_Msg as EMessage 
+FROM Tbl_Evnt_Dtls t1 
+left join Tbl_Msg_Dtls t2 on t2.Clm_Msg_Id=t1.Clm_Msg_Id 
+left join Tbl_Err_Sev_Mstr t3 on t3.Clm_Err_Sev_Id=t2.Clm_Err_Sev_Id 
+left join Tbl_Ext_Msg_Dtls t4 on t4.Clm_Ext_Msg_Id=t1.Clm_Ext_Msg_Id; 
+// DELIMITER ;
+
+Delimiter //
+Create View GetErrorTypes AS 
+select Clm_Err_Sev_NM as ErrorType, 
+Clm_Err_Sev_Abv as  Abbrevation 
+FROM Tbl_Err_Sev_Mstr; 
+// DELIMITER ;
+ 
+Delimiter //
+CREATE View GetMotionZoneDetails AS 
+select CASE t1.Clm_Zn_Typ WHEN 1 THEN 'Custom' WHEN 0 THEN 'PreDefined'END as Zone_Type, 
+t1.Clm_Zn as ZoneId, 
+t1.Clm_Zn_WD as Width, 
+t1.Clm_Zn_HT as Height, 
+t1.Clm_Zn_Pnt as Points, 
+t1.Clm_Zn_Th as Threshold, 
+t1.Clm_Zn_Dur as Duration, 
+CASE t1.Clm_Zn_CS WHEN 0 THEN 'Active' WHEN 1 THEN 'DeActive'END as Current_State, 
+t3.Clm_Dev_NM as Device 
+from Tbl_Zn_Mstr t1 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id where Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Motion_Detection'); 
+// DELIMITER ;
+
+
+Delimiter //
+CREATE View GetIVAZoneDetails AS 
+select CASE t1.Clm_Zn_Typ WHEN 1 THEN 'Area' WHEN 0 THEN 'Line'END as Zone_Type, 
+t1.Clm_Zn as ZoneId, 
+t1.Clm_Zn_WD as Width, 
+t1.Clm_Zn_HT as Height, 
+t1.Clm_Zn_Pnt as Points, 
+t1.Clm_Zn_Th as Threshold, 
+t1.Clm_Zn_Dur as Duration, 
+CASE t1.Clm_Zn_CS WHEN 0 THEN 'Active' WHEN 1 THEN 'DeActive'END as Current_State, 
+t3.Clm_Dev_NM as Device 
+from Tbl_Zn_Mstr t1 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id where Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'); 
+// DELIMITER ;
+
+Delimiter //
+CREATE View GetMotionDetectionDetails AS 
+select CASE t1.Clm_VA_Zn_Typ WHEN 1 THEN 'Custom' WHEN 0 THEN 'PreDefined'END as Zone_Type, 
+ CASE t1.Clm_VA_Alrm WHEN 0 THEN 'Disable' WHEN 1 THEN 'Enable'END as Alarm_State, 
+ CASE t1.Clm_VA_CS WHEN 0 THEN 'Disable' WHEN 1 THEN 'Enable'END as Current_State, 
+ t3.Clm_Dev_NM as Device 
+from Tbl_VA_Dtls t1 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id where Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Motion_Detection'); 
+// DELIMITER ;
+
+Delimiter //
+CREATE View GetIVADetectionDetails AS 
+select CASE t1.Clm_VA_Zn_Typ WHEN 1 THEN 'Area' WHEN 0 THEN 'Line'END as Zone_Type, 
+ CASE t1.Clm_VA_Alrm WHEN 0 THEN 'Disable' WHEN 1 THEN 'Enable'END as Alarm_State, 
+ CASE t1.Clm_VA_CS WHEN 0 THEN 'Disable' WHEN 1 THEN 'Enable'END as Current_State, 
+ t3.Clm_Dev_NM as Device 
+from Tbl_VA_Dtls t1 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id where Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Motion_Detection'); 
+// DELIMITER ;
+
+Delimiter //
+CREATE View GetTamperDetectionDetails AS 
+select 
+CASE t1.Clm_VA_Alrm WHEN 0 THEN 'Disable' WHEN 1 THEN 'Enable'END as Alarm_State, 
+CASE t1.Clm_VA_CS WHEN 0 THEN 'Disable' WHEN 1 THEN 'Enable'END as Current_State, 
+t2.Clm_Zn_Th as Threshold, 
+t2.Clm_Zn_Dur as Duration, 
+t3.Clm_Dev_NM as Device 
+from Tbl_VA_Dtls t1 
+left join Tbl_Zn_Mstr t2 on t2.Clm_Zn_Typ=t1.Clm_VA_Zn_Typ 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id where 
+t1.Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Tampering_Detection') and 
+t2.Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Tampering_Detection'); 
+// DELIMITER ;
+
+Delimiter //
+CREATE View GetRecordingStatusDetails AS 
+select CASE t1.Clm_Rec_Stat WHEN 0 THEN 'Ideal' WHEN 1 THEN 'Recording'END as Recording_State, 
+ t3.Clm_Dev_NM as Device 
+from Tbl_Rec_Stat_Dtls t1 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE View GetTemperatureDetails AS 
+select t1.Clm_Temp_Id as Id, 
+CASE t1.Clm_Temp_Typ WHEN 0 THEN 'Processor' WHEN 1 THEN 'FPA' WHEN 1 THEN 'Sys'END as Type, 
+t1.Clm_Temp_DT as TempDateTime, 
+t1.Clm_Temp_Val as Temperature, 
+t3.Clm_Dev_NM as Device 
+from Tbl_Temp_Dtls t1 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE View GetImgModeDetails AS 
+select  Clm_Img_Mode_Id as Id, 
+		Clm_Img_Mode_NM as Mode 
+        from Tbl_Img_Mode_Mstr order by Clm_Img_Mode_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE View GetImgColorpaletteDetails AS 
+select Clm_Img_Mode_Id as Id, 
+		Clm_Img_Mode_NM as palette, 
+        t3.Clm_Dev_NM as DeviceName 
+        from Tbl_Img_Clr_Pal_Dtls t1 
+        left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id order by Clm_Img_Mode_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE View GetImgFPSDetails AS 
+select Clm_Img_FPS_Id as Id, 
+		Clm_Img_FPS_NM as FPS, 
+        t3.Clm_Dev_NM as DeviceName 
+        from Tbl_Img_FPS_Dtls t1 
+        left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id order by Clm_Img_FPS_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE View GetImgOrientationDetails AS 
+select Clm_Img_Orien_Id as Id, 
+		Clm_Img_Orien_NM as Orientation, 
+        t3.Clm_Dev_NM as DeviceName 
+        from Tbl_Img_Orien_Dtls t1  
+        left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id order by Clm_Img_Orien_Id; 
+// DELIMITER ;
+
+Delimiter //                                              
+CREATE View GetSupportedImagingDetails AS 
+select  t1.Clm_Sup_Img_Set_Id as Id, 
+		t2.Clm_Img_Set_NM as Name, 
+		t3.Clm_Dev_NM as DeviceName 
+        from Tbl_Sup_Img_Set_Dtls t1 
+        left join Tbl_Img_Set_Mstr t2 on t2.Clm_Img_Set_Id=t1.Clm_Img_Set_Id 
+        left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id;   
+// DELIMITER ;
+
+Delimiter //
+CREATE View GetImagingModeDetails AS 
+select  t2.Clm_Img_Set_NM as Name, 
+		t4.Clm_Img_Mode_NM as Modes, 
+		t3.Clm_Dev_NM as DeviceName 
+        from Tbl_Img_Set_Mode_Dtls t1 
+        left join Tbl_Img_Set_Mstr t2 on t2.Clm_Img_Set_Id=t1.Clm_Img_Set_Id 
+        left join Tbl_Img_Mode_Mstr t4 on t4.Clm_Img_Mode_Id=t1.Clm_Img_Mode_Id 
+        left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //  
+CREATE View GetImagingMinMaxDetails AS 
+select  t2.Clm_Img_Set_NM as Name, 
+		Clm_Min_Val as MinVal, 
+		Clm_Max_Val as MaxVal, 
+		t3.Clm_Dev_NM as DeviceName 
+        from Tbl_Img_Set_MinMax_Dtls t1 
+        left join Tbl_Img_Set_Mstr t2 on t2.Clm_Img_Set_Id=t1.Clm_Img_Set_Id 
+        left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE View GetCurrentImagingDetails AS 
+select t2.Clm_Img_Set_NM as Name, 
+Clm_Curr_Val as Value, 
+ t3.Clm_Dev_NM as DeviceName 
+from Tbl_Curr_Img_Set_Dtls t1 
+left join Tbl_Img_Set_Mstr t2 on t2.Clm_Img_Set_Id=t1.Clm_Img_Set_Id 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- View to get all supported Resolution Device wise
+CREATE VIEW GetResolutionDetails2 AS 
+SELECT t1.Clm_Res_Dtls_Id as Id, 
+t2.Clm_Res_WD as Width, 
+t2.Clm_Res_HT as Height, 
+t3.Clm_Dev_NM as DeviceName  
+FROM Tbl_Res_Dtls t1 
+left join Tbl_Res_Mstr t2 on t2.Clm_Res_Id=t1.Clm_Res_Id 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- View to get all details from TimeZone Table
+CREATE VIEW GetTimeZoneDetails AS 
+SELECT Clm_T_Zn_Id as ZoneId, 
+Clm_T_Zn_NM as ZoneName 
+FROM Tbl_T_Zn_Mstr; 
+// DELIMITER ;
+
+Delimiter //
+-- View to get all details from TimeZone Table
+CREATE VIEW GetSystemDateTimeDetails AS 
+SELECT t1.Clm_Sys_DT_Id as Id, 
+t2.Clm_T_Zn_NM as ZoneName, 
+CASE t1.Clm_Sys_DT_Typ WHEN 0 THEN 'NTP_Server' WHEN 1 THEN 'Manual' END as Type, 
+CASE WHEN t1.Clm_Sys_DT_D is null THEN DATE(NOW()) else t1.Clm_Sys_DT_D END as Date, 
+CASE WHEN t1.Clm_Sys_DT_T is null THEN TIME(NOW()) else t1.Clm_Sys_DT_T END as Time, 
+t1.Clm_Sys_DT_Add1 as NTP_Server1, 
+t1.Clm_Sys_DT_Add2 as NTP_Server2  
+FROM Tbl_Sys_DT_Dtls t1 
+left join Tbl_T_Zn_Mstr t2 on t2.Clm_T_Zn_Id=t1.Clm_T_Zn_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetSystemDetails AS 
+select Clm_Sys_NM as Name, 
+Clm_Sys_Loc as Location, 
+Clm_Sys_Mfr as Manufacturer, 
+Clm_Sys_Mdl as Model, 
+Clm_Sys_HW as Hardware, 
+Clm_Sys_FMW as Firmware, 
+Clm_Sys_Dev_Id as DeviceId, 
+Clm_Logo as Logo, 
+Clm_Bnr as Banner  
+from Tbl_Sys_Dtls; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetPanTiltDetails AS 
+select Clm_P_Val as PanValue, 
+Clm_T_Val as TiltValue, 
+Clm_Z_Val as ZoomValue,
+t2.Clm_Dev_NM as DeviceName,   
+CASE Clm_T_Dir WHEN 0 THEN 'Top' WHEN 1 THEN 'Bottom'END as Direction, 
+CASE Clm_PT_CS WHEN 0 THEN 'Disable' WHEN 1 THEN 'Enable'END as Current_State 
+from Tbl_PT_Dtls t1  
+left join Tbl_Dev_Mstr t2 on t2.Clm_Dev_Id=t1.Clm_Dev_Id;
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get Network details of Tracking board
+CREATE VIEW GetTrackingNetworkDetails AS 
+SELECT t1.Clm_Trk_Id as Id, 
+t2.Clm_Ip_Add as IPAddress, 
+t3.Clm_Port_No as Port 
+FROM Tbl_Trk_Net_Dtls t1 
+left join Tbl_IP_Add_Mstr t2 on t2.Clm_IP_Add_Id=t1.Clm_IP_Add_Id 
+left join Tbl_Port_Mstr t3 on t3.Clm_Port_Id=t1.Clm_Port_Id;  
+// DELIMITER ;
+
+Delimiter //                                              
+CREATE VIEW GetImagingSettingDetails AS 
+select  t1.Clm_Id as Id, 
+		t2.Clm_Img_Set_NM as Name, 
+        CASE t1.Clm_Ena_St WHEN 0 THEN 'False' WHEN 1 THEN 'True' END as Enable, 
+        CASE t1.Clm_Vis_St WHEN 0 THEN 'False' WHEN 1 THEN 'True' END as Visible, 
+        t3.Clm_Dev_NM as DeviceName 
+        from Tbl_Img_Set_Dtls t1 
+        left join Tbl_Img_Set_Mstr t2 on t2.Clm_Img_Set_Id=t1.Clm_Img_Set_Id 
+        left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id;   
+// DELIMITER ;
+
+Delimiter //                                              
+CREATE VIEW GetConfigurationTabDetails AS 
+select  t1.Clm_Id as Id, 
+		t1.Clm_Config_Tab_NM as Name, 
+		CASE t1.Clm_Ena_St WHEN 0 THEN 'False' WHEN 1 THEN 'True' END as Enable, 
+        CASE t1.Clm_Vis_St WHEN 0 THEN 'False' WHEN 1 THEN 'True' END as Visible  
+        from Tbl_Config_Tab_Dtls t1;   
+// DELIMITER ;
+
+
+Delimiter //
+
+insert into Tbl_Dev_Mstr(Clm_Dev_NM) values('Device0');
+insert into Tbl_Dev_Mstr(Clm_Dev_NM) values('Device1');
+
+insert into Tbl_Config_Tab_Dtls(Clm_Config_Tab_NM) values('System');
+insert into Tbl_Config_Tab_Dtls(Clm_Config_Tab_NM) values('DateTime');
+insert into Tbl_Config_Tab_Dtls(Clm_Config_Tab_NM) values('Networks');
+insert into Tbl_Config_Tab_Dtls(Clm_Config_Tab_NM) values('UserAccounts');
+insert into Tbl_Config_Tab_Dtls(Clm_Config_Tab_NM) values('Profiles');
+insert into Tbl_Config_Tab_Dtls(Clm_Config_Tab_NM) values('Analytics');
+insert into Tbl_Config_Tab_Dtls(Clm_Config_Tab_NM) values('Recording_Config');
+
+-- insert into Tbl_Sys_Dtls(Clm_Sys_NM,Clm_Sys_Loc,Clm_Sys_Mfr,Clm_Sys_Mdl,Clm_Sys_HW,Clm_Sys_FMW,Clm_Sys_Dev_Id) values('Python','India','Analinear','Python','PY125678','1.1.C.1','PY123456');
+
+insert into Tbl_Dev_Dtls(Clm_Dev_CS,Clm_Dev_NM,Clm_Dev_Id) values(true,'Python',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Dev_Dtls(Clm_Dev_CS,Clm_Dev_NM,Clm_Dev_Id) values(true,'Eagle',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Lgn_Dtls(Clm_Lgn_Nm,Clm_Lgn_Pwd,Clm_Lgn_Lvl,Clm_Lgn_Cre_D) 
+			values('admin','Analinear',0,(SELECT DATE_FORMAT(NOW(), "%d-%m-%Y %T")));
+
+insert into Tbl_IP_Add_Mstr(Clm_Ip_Add) values('192.168.8.140');
+
+-- Insert default details into Network Table
+insert into Tbl_Net_Dtls(Clm_Net_SNM,Clm_Net_GW,Clm_Net_DNS1,Clm_Net_DNS2,Clm_Net_Typ,clm_Net_Hst_NM,clm_Net_MAC,Clm_IP_Add_Id)
+		values('255.255.255.0','192.168.8.1','','',0,'Analinear','E4-02-9B-1B-DA-60',(select Clm_IP_Add_Id from Tbl_IP_Add_Mstr where Clm_Ip_Add='192.168.8.140'));
+
+
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1920,1080);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1920,1280);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1280,1024);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1280,960);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1280,720);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1024,768);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(800,600);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(800,448);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(720,576);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(720,480);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(640,480);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(640,360);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(320,240);
+
+insert into Tbl_Res_Dtls(Clm_Res_Id,Clm_Dev_Id)values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD='640' and Clm_Res_HT='480'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Res_Dtls(Clm_Res_Id,Clm_Dev_Id)values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD='320' and Clm_Res_HT='240'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Res_Dtls(Clm_Res_Id,Clm_Dev_Id)values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD='1920' and Clm_Res_HT='1280'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(1);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(2);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(3);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(4);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(5);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(6);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(7);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(8);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(9);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(10);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(11);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(12);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(13);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(14);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(15);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(16);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(17);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(18);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(19);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(20);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(21);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(22);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(23);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(24);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(25);
+
+insert into Tbl_Enc_Mstr(Clm_Enc_NM)values("H.264");
+-- insert into Tbl_Enc_Mstr(Clm_Enc_NM)values("MJPEG");
+
+insert into Tbl_Port_Mstr(Clm_Port_No) values(8554);
+insert into Tbl_Port_Mstr(Clm_Port_No) values(1026);
+
+insert into Tbl_Prof_Dtls(Clm_Prof_NM,Clm_FPS_Id,Clm_BR,Clm_Enc_Id,Clm_Res_Id,Clm_Dev_Id,Clm_Prof_Typ)
+		values('H264',
+        (select Clm_FPS_Id from Tbl_FPS_Dtls where Clm_FPS_NM=25),
+        2048,
+        (select Clm_Enc_Id from Tbl_Enc_Mstr where Clm_Enc_NM='H.264'),
+        (select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=640 and Clm_Res_HT=480),
+		(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),0
+        ); 
+insert into Tbl_Prof_Dtls(Clm_Prof_NM,Clm_FPS_Id,Clm_BR,Clm_Enc_Id,Clm_Res_Id,Clm_Dev_Id,Clm_Prof_Typ)
+		values('H264',
+        (select Clm_FPS_Id from Tbl_FPS_Dtls where Clm_FPS_NM=25),
+        2048,
+        (select Clm_Enc_Id from Tbl_Enc_Mstr where Clm_Enc_NM='H.264'),
+        (select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=1920 and Clm_Res_HT=1280),
+		(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),0
+        );        
+        
+-- insert into Tbl_Prof_Dtls(Clm_Prof_NM,Clm_FPS_Id,Clm_BR,Clm_Enc_Id,Clm_Res_Id,Clm_Dev_Id,Clm_Prof_Typ)
+-- 		values('MJPEG',
+--         (select Clm_FPS_Id from Tbl_FPS_Dtls where Clm_FPS_NM=25),
+--         2048,
+--         (select Clm_Enc_Id from Tbl_Enc_Mstr where Clm_Enc_NM='MJPEG'),
+--         (select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=640 and Clm_Res_HT=480),
+-- 		(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),0
+--         ); 
+        
+insert into Tbl_Def_Prof_Dtls(Clm_Prof_Id,Clm_Dev_Id) values((select Clm_Prof_Id from Tbl_Prof_Dtls where Clm_Prof_NM='H264' and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Def_Prof_Dtls(Clm_Prof_Id,Clm_Dev_Id) values((select Clm_Prof_Id from Tbl_Prof_Dtls where Clm_Prof_NM='H264' and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_RTSP_Dtls(Clm_Port_Id,Clm_Dev_Id) values((select Clm_Port_Id from Tbl_Port_Mstr where Clm_Port_No=8554),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Curr_Dtls(Clm_Res_Id,Clm_FPS_Id,Clm_Enc_Id,Clm_Dev_Id,Clm_Curr_BR) values(
+								(select Clm_Res_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')),
+                                (select Clm_FPS_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')),
+                                (select Clm_Enc_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')),
+                                (select Clm_Dev_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')),
+                                (select Clm_BR from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'))
+                                );
+insert into Tbl_Curr_Dtls(Clm_Res_Id,Clm_FPS_Id,Clm_Enc_Id,Clm_Dev_Id,Clm_Curr_BR) values(
+								(select Clm_Res_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')),
+                                (select Clm_FPS_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')),
+                                (select Clm_Enc_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')),
+                                (select Clm_Dev_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')),
+                                (select Clm_BR from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'))
+                                );                                
+                                
+insert into Tbl_Rec_Res_Dtls(Clm_Res_Id,Clm_Dev_Id) values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=1920 and Clm_Res_HT=1080),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Rec_Res_Dtls(Clm_Res_Id,Clm_Dev_Id) values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=1920 and Clm_Res_HT=1280),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Rec_Res_Dtls(Clm_Res_Id,Clm_Dev_Id) values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=1280 and Clm_Res_HT=720),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Rec_Res_Dtls(Clm_Res_Id,Clm_Dev_Id) values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=640 and Clm_Res_HT=480),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Rec_Res_Dtls(Clm_Res_Id,Clm_Dev_Id) values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=640 and Clm_Res_HT=480),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+
+insert into Tbl_Rec_Dtls(Clm_Enc_Id,Clm_Res_Id,Clm_Dev_Id) values(
+								(select Clm_Enc_Id from Tbl_Enc_Mstr where Clm_Enc_NM='H.264'),
+								(select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=640 and Clm_Res_HT=480),
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								);
+insert into Tbl_Rec_Dtls(Clm_Enc_Id,Clm_Res_Id,Clm_Dev_Id) values(
+								(select Clm_Enc_Id from Tbl_Enc_Mstr where Clm_Enc_NM='H.264'),
+								(select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=1920 and Clm_Res_HT=1280),
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')
+								);                                
+                                
+insert into Tbl_Err_Sev_Mstr(Clm_Err_Sev_NM,Clm_Err_Sev_Abv) values('Error','ERR');
+insert into Tbl_Err_Sev_Mstr(Clm_Err_Sev_NM,Clm_Err_Sev_Abv) values('Warning','WRN');
+insert into Tbl_Err_Sev_Mstr(Clm_Err_Sev_NM,Clm_Err_Sev_Abv) values('Information','INF');
+
+insert into Tbl_Msg_Dtls(Clm_Msg_Id_NM,Clm_Msg,Clm_Err_Sev_Id) values('SYS001','Network connection Established',
+													(select Clm_Err_Sev_Id from Tbl_Err_Sev_Mstr where Clm_Err_Sev_Abv='INF'));
+insert into Tbl_Msg_Dtls(Clm_Msg_Id_NM,Clm_Msg,Clm_Err_Sev_Id) values('SYS002','Network disconnected',
+													(select Clm_Err_Sev_Id from Tbl_Err_Sev_Mstr where Clm_Err_Sev_Abv='ERR'));
+insert into Tbl_Msg_Dtls(Clm_Msg_Id_NM,Clm_Msg,Clm_Err_Sev_Id) values('SYS003','New Client Device Connected with IP Address',
+													(select Clm_Err_Sev_Id from Tbl_Err_Sev_Mstr where Clm_Err_Sev_Abv='INF'));
+insert into Tbl_Msg_Dtls(Clm_Msg_Id_NM,Clm_Msg,Clm_Err_Sev_Id) values('CAM001','Camera Detected',
+													(select Clm_Err_Sev_Id from Tbl_Err_Sev_Mstr where Clm_Err_Sev_Abv='INF'));
+insert into Tbl_Msg_Dtls(Clm_Msg_Id_NM,Clm_Msg,Clm_Err_Sev_Id) values('CAM002','camera Disconnected',
+													(select Clm_Err_Sev_Id from Tbl_Err_Sev_Mstr where Clm_Err_Sev_Abv='ERR'));
+insert into Tbl_Msg_Dtls(Clm_Msg_Id_NM,Clm_Msg,Clm_Err_Sev_Id) values('CAM003','Camera Reset Request Received',
+													(select Clm_Err_Sev_Id from Tbl_Err_Sev_Mstr where Clm_Err_Sev_Abv='INF'));
+                                                    
+insert into Tbl_Ext_Msg_Dtls(Clm_Ext_Msg) values('');
+
+insert into  Tbl_VA_Mstr(Clm_VA_Typ) values('Motion_Detection');
+insert into  Tbl_VA_Mstr(Clm_VA_Typ) values('Face_Detection');
+insert into  Tbl_VA_Mstr(Clm_VA_Typ) values('Tampering_Detection');
+insert into  Tbl_VA_Mstr(Clm_VA_Typ) values('IVA_Detection');
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,1,'0 160,213 160,213 0,0 0',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,1,'0 160,213 160,213 0,0 0',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,2,'213 160,426 160,426 0,213 0',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,2,'213 160,426 160,426 0,213 0',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,3,'639 160,426 160,426 0,639 0',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,3,'639 160,426 160,426 0,639 0',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,4,'0 320,213 320,213 160,0 160',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,4,'0 320,213 320,213 160,0 160',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,5,'426 320,213 320,213 160,426 160',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,5,'426 320,213 320,213 160,426 160',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,6,'639 320,426 320,426 160,639 160',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,6,'639 320,426 320,426 160,639 160',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,7,'0 320,213 320,213 480,0 480',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,7,'0 320,213 320,213 480,0 480',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,8,'426 320,213 320,213 480,426 480',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,8,'426 320,213 320,213 480,426 480',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,9,'639 320,426 320,426 480,639 480',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,9,'639 320,426 320,426 480,639 480',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,1,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,1,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,2,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,2,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,3,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,3,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,4,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,4,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));   
+
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,1,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,1,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,2,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,2,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,3,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,3,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,4,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,4,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,1,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,1,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,2,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,2,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,3,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,3,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,4,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,4,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,1,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Tampering_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,1,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Tampering_Detection'));   
+
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(1,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Motion_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(1,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Motion_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                        
+                        
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(0,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(0,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                        
+                        
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(1,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')); 
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(1,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                        
+ 
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(1,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Tampering_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(1,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Tampering_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                        
+ 
+insert into Tbl_Rec_Stat_Dtls(Clm_Dev_Id) values((select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Rec_Stat_Dtls(Clm_Dev_Id) values((select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Brightness');
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Contrast');
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Sharpness');
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Saturation');
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('BLC_Mode'); -- Backlight compensation Mode
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('BLC_Level'); -- Backlight compensation Level
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('WDR_Mode'); -- Wide dynamic range mode
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('WDR_Level'); -- Wide dynamic range level
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Exposure_Mode');
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Exposure_Time');
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('WB_Mode'); -- White balance Mode
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('WB_Cb'); -- White balance Cb
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('WB_Cr'); -- White balance Cr
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('IrCFilter_Mode'); -- Infrared cutoff filter
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('1NUC'); -- Perform 1NUC
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('NUC_Mode'); -- 1NUC Modes
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('NUC_Mode_Type'); -- 1NUC Mode Type
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Polarity'); -- Polarity Type
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Orientation'); -- Orientation Mode
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Integration_Time'); -- Integration Time/Exposure Time
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('FPS'); -- FPS
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Sharpen'); -- Sharpen
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Smoothen'); -- Smoothen
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('AGC_Mode'); -- AGC Modes
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('AutoExposure'); -- Auto Exposure
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Defog'); -- Defog 
+
+
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Defog'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Defog'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Sharpness'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Saturation'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Level'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Level'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Time'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Cb'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Cr'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='IrCFilter_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='1NUC'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Polarity'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Orientation'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='FPS'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Sharpen'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Smoothen'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='AGC_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='AutoExposure'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Defog'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Sharpness'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Saturation'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Level'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Level'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Time'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Cb'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Cr'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='IrCFilter_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='1NUC'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Polarity'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Orientation'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='FPS'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Sharpen'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Smoothen'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='AGC_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='AutoExposure'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Defog'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('On');
+insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('Off');
+insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('Auto');
+insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('Manual');
+insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('External');
+-- insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('Frame');
+insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('Time');
+insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('Temperature');
+
+insert into Tbl_Img_Clr_Pal_Dtls(Clm_Img_Mode_NM,Clm_Dev_Id)values('White_Hot',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Clr_Pal_Dtls(Clm_Img_Mode_NM,Clm_Dev_Id)values('Black_Hot',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Img_FPS_Dtls(Clm_Img_FPS_NM,Clm_Dev_Id)values('25',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_FPS_Dtls(Clm_Img_FPS_NM,Clm_Dev_Id)values('25',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Img_FPS_Dtls(Clm_Img_FPS_NM,Clm_Dev_Id)values('50',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Normal',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Normal',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Invert',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Invert',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Revert',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Revert',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Invert_Revert',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Invert_Revert',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+                                                    
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='1NUC'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));                                                    
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Polarity'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Orientation'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Orientation'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                                    
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='FPS'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')); 
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='FPS'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+                                                    
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Sharpen'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Smoothen'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='AGC_Mode'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));                                                    
+                                                   
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Auto'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Auto'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+ 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Manual'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Manual'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='On'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')); 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='On'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+ 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Off'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Off'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='On'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')); 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='On'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+ 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Off'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));  
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Off'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+                                    
+                                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Auto'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Auto'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+ 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Manual'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Manual'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='IrCFilter_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='On'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')); 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='IrCFilter_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='On'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+ 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='IrCFilter_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Off'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));  
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='IrCFilter_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Off'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Auto'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+                                      
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Auto'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+ 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Manual'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')); 
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='External'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));   
+                                    
+-- insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+-- 							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),
+-- 									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Frame'),
+--                                     (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Time'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Temperature'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='AGC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Auto'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='AGC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Manual'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));                                    
+                                                                    
+                                    
+insert into Tbl_Img_Set_MinMax_Dtls(Clm_Img_Set_Id,Clm_Dev_Id,Clm_Min_Val,Clm_Max_Val) values(
+									(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),
+                                    1,16000                                 
+									);
+                                    
+insert into Tbl_Img_Set_MinMax_Dtls(Clm_Img_Set_Id,Clm_Dev_Id,Clm_Min_Val,Clm_Max_Val) values(
+									(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),
+                                    1,255                                 
+									);                                    
+                                    
+insert into Tbl_Img_Set_MinMax_Dtls(Clm_Img_Set_Id,Clm_Dev_Id,Clm_Min_Val,Clm_Max_Val) values(
+									(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),
+                                    1,255                                 
+									);
+
+insert into Tbl_Img_Set_MinMax_Dtls(Clm_Img_Set_Id,Clm_Dev_Id,Clm_Min_Val,Clm_Max_Val) values(
+									(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),
+                                    1,255                                 
+									);                                    
+                                    
+insert into Tbl_Img_Set_MinMax_Dtls(Clm_Img_Set_Id,Clm_Dev_Id,Clm_Min_Val,Clm_Max_Val) values(
+									(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),
+                                    1000,18000                                 
+									);   
+                                    
+insert into Tbl_Img_Set_MinMax_Dtls(Clm_Img_Set_Id,Clm_Dev_Id,Clm_Min_Val,Clm_Max_Val) values(
+									(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),
+                                    0,89                                 
+									);  
+insert into Tbl_Img_Set_MinMax_Dtls(Clm_Img_Set_Id,Clm_Dev_Id,Clm_Min_Val,Clm_Max_Val) values(
+									(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),
+                                    0,19                                 
+									);                                     
+
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Polarity'),
+								'White_Hot',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								);
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode'),
+								'Manual',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+                                                              
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),
+								'80',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),
+								'80',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')
+								);                                
+
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),
+								'30',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),
+								'30',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')
+								);
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Orientation'),
+								'Normal',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Orientation'),
+								'Normal',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')
+								);                                
+                               
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),
+								'1000',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),
+								'10.2',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),
+								'10.2',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')
+								);                                
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='FPS'),
+								'25',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='FPS'),
+								'25',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')
+								);                                
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Sharpen'),
+								'false',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								);  
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Smoothen'),
+								'false',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								);                                  
+                                    
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='AGC_Mode'),
+								'Auto',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+
+insert into Tbl_Sys_DT_Dtls(Clm_T_Zn_Id)values((select Clm_T_Zn_Id from Tbl_T_Zn_Mstr where Clm_T_Zn_NM='Asia/Kolkata'));
+
+insert into Tbl_PT_Dtls(Clm_P_Val,Clm_T_Val,Clm_Z_Val,Clm_Dev_Id)values(0,0,0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')); 
+
+commit;
+
+// DELIMITER ;
+
+
+
+Delimiter //
+-- Drop PROCEDURES 
+DROP PROCEDURE IF EXISTS Pro_UpdateSystemDetails;
+DROP PROCEDURE IF EXISTS Pro_UpdateConfigurationTabDetails;
+DROP PROCEDURE IF EXISTS Pro_UpdateImagingSettingDetails;
+DROP PROCEDURE IF EXISTS Pro_UpadteTrackingNetworkDetails;
+DROP PROCEDURE IF EXISTS Pro_UpdateIpAddress;
+DROP PROCEDURE IF EXISTS Pro_UpdateCurrentStreamDetails;
+DROP PROCEDURE IF EXISTS Pro_UpdateCurrentTimeSetup;
+DROP PROCEDURE IF EXISTS Pro_UpdateCurrentTimeZone;
+DROP PROCEDURE IF EXISTS Pro_InsertTimeZoneDetails;
+DROP PROCEDURE IF EXISTS Pro_DeleteTimeZoneDetails;
+DROP PROCEDURE IF EXISTS Pro_UpdateDeviceDetails;
+DROP PROCEDURE IF EXISTS Pro_Events_Dtls;
+DROP PROCEDURE IF EXISTS Pro_UpdateCurrentImageSettings;
+DROP PROCEDURE IF EXISTS Pro_CreateUser;
+DROP PROCEDURE IF EXISTS Pro_UpdateUser;
+DROP PROCEDURE IF EXISTS Pro_DeleteUser;
+DROP PROCEDURE IF EXISTS Pro_UpdateNetworkDetails;
+DROP PROCEDURE IF EXISTS Pro_CreateProfile;
+DROP PROCEDURE IF EXISTS Pro_DeleteProfile;
+DROP PROCEDURE IF EXISTS Pro_UpadteProfile;
+DROP PROCEDURE IF EXISTS Pro_UpadteRTSPDetails;
+DROP PROCEDURE IF EXISTS Pro_UpadteRecordingDetails;
+DROP PROCEDURE IF EXISTS Pro_UpadteMotionDetectionDetails;
+DROP PROCEDURE IF EXISTS Pro_UpadteIVADetectionDetails;
+DROP PROCEDURE IF EXISTS Pro_UpadteTamperDetectionDetails;
+DROP PROCEDURE IF EXISTS Pro_UpadteMotionZoneDetails;
+DROP PROCEDURE IF EXISTS Pro_UpadteIVAZoneDetails;
+DROP PROCEDURE IF EXISTS Pro_DeleteMotionDetectionZoneDetails;
+DROP PROCEDURE IF EXISTS Pro_DeleteIVADetectionZoneDetails;
+DROP PROCEDURE IF EXISTS Pro_UpdateRecordingStatusDetails;
+DROP PROCEDURE IF EXISTS Pro_InsertTemperatureDetails;
+DROP PROCEDURE IF EXISTS Pro_UpdatePTDetails;
+DROP PROCEDURE IF EXISTS Pro_UpdatePTStatus;
+
+commit;
+// DELIMITER ;
+
+
+-- PROCEDURE to insert values into Login Table
+DELIMITER //
+CREATE PROCEDURE Pro_CreateUser ( 
+p_UserName varchar(20), 
+p_Password varchar(20), 
+p_Level varchar(15), 
+OUT p_Status longtext )
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000'; 
+  DECLARE msg TEXT; 
+  DECLARE rows INT; 
+  DECLARE result TEXT; 
+  -- Declare exception handler for failed insert 
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION 
+    BEGIN 
+      GET DIAGNOSTICS CONDITION 1 
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT; 
+    END; 
+IF(p_UserName = '' OR p_Password= '') 
+THEN 
+Set p_Status='Failed, UserName,Password and Level cannot be empty'; 
+ELSE 
+BEGIN 
+Declare v_Level int; 
+set v_Level=2; 
+IF(p_Level='admin' || p_Level='Administrator') 
+Then 
+set v_Level=0; 
+end IF; 
+
+IF(p_Level='Operator') 
+Then 
+set v_Level=1; 
+end IF; 
+
+IF(p_Level='User') 
+Then 
+set v_Level=2; 
+end IF; 
+
+IF((select count(*) from Tbl_Lgn_Dtls)<10) 
+Then 
+IF((select count(*) from Tbl_Lgn_Dtls where Clm_Lgn_Nm=p_UserName)=0) 
+Then 
+insert into Tbl_Lgn_Dtls(Clm_Lgn_Nm,Clm_Lgn_Pwd,Clm_Lgn_Lvl,Clm_Lgn_Cre_D) 
+					values(p_UserName,p_Password,v_Level,(SELECT DATE_FORMAT(NOW(), "%d-%m-%Y %T"))); 
+Set p_Status='Sucess'; 
+COMMIT;                    
+else 
+Set p_Status='UserName already Exist'; 
+end IF; 
+else 
+Set p_Status='Max limit exceeded'; 
+end IF; 
+END; 
+END IF; 
+IF code != '00000' THEN 
+   		SET p_Status=msg; 
+        ROLLBACK; 
+  END IF; 
+END; 
+// DELIMITER ;
+
+-- PROCEDURE to update values of Login Table
+Delimiter //
+Create Procedure Pro_UpdateUser (
+p_UserName varchar(20),
+p_Password varchar(20),
+p_Level varchar(15),
+OUT p_Status longtext )
+BEGIN
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_UserName = '' OR p_Password= '')
+THEN 
+	Set p_Status='Failed, UserName,Password and Level cannot be empty';
+ELSE 
+BEGIN
+Declare v_Level int;
+set v_Level=2;
+IF(p_Level='admin' || p_Level='Administrator') 
+Then 
+set v_Level=0; 
+end IF; 
+IF(p_Level='Operator') 
+Then 
+set v_Level=1; 
+end IF; 
+IF(p_Level='User') 
+Then 
+set v_Level=2;
+end IF;
+IF((select count(*) from Tbl_Lgn_Dtls where Clm_Lgn_Nm=p_UserName)=1)
+Then
+update Tbl_Lgn_Dtls set Clm_Lgn_Pwd=p_Password,Clm_Lgn_Lvl=v_Level where Clm_Lgn_Nm=p_UserName;
+COMMIT;
+Set p_Status='Sucess';
+else
+Set p_Status='Invalid UserName';
+end IF;
+END;
+END IF;
+IF code != '00000' THEN
+	SET p_Status=msg;
+	ROLLBACK; 
+END IF;
+END;
+// DELIMITER ;
+
+-- PROCEDURE to delete values of Login Table
+Delimiter //
+Create Procedure Pro_DeleteUser (
+p_UserName varchar(20),
+OUT p_Status longtext )
+BEGIN
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_UserName = '')
+THEN 
+	Set p_Status='Failed, UserName cannot be empty';
+ELSE 
+BEGIN
+IF(p_UserName!='admin')
+Then
+IF((select count(*) from Tbl_Lgn_Dtls where Clm_Lgn_Nm=p_UserName)=1)
+Then
+
+delete from Tbl_Lgn_Dtls where Clm_Lgn_Nm=p_UserName;
+COMMIT;
+Set p_Status='Sucess';
+else
+Set p_Status='Invalid UserName';
+end IF;
+else
+Set p_Status='admin cannot be removed';
+end IF;
+
+END;
+END IF;
+IF code != '00000' THEN
+	SET p_Status=msg;
+	ROLLBACK; 
+END IF;
+END;
+// DELIMITER ;
+
+-- PROCEDURE to update values of Network Table
+Delimiter //
+Create Procedure Pro_UpdateIpAddress (
+p_IpAddress varchar(20),
+p_SubnetMask varchar(20),
+p_Gateway varchar(20),
+p_DNS1 varchar(20),
+p_DNS2 varchar(20),
+p_MacAddress varchar(20),
+OUT p_Status longtext )
+BEGIN
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_IpAddress = '' OR p_SubnetMask= '' OR p_Gateway= '')
+THEN 
+	Set p_Status='Failed, IpAddress,SubnetMask and Gateway cannot be empty';
+ELSE 
+BEGIN
+Declare v_IPId int;
+IF((select count(*) from Tbl_IP_Add_Mstr where Clm_Ip_Add =p_IpAddress)=0 )
+then 
+insert into Tbl_IP_Add_Mstr(Clm_Ip_Add)	values(p_IpAddress);
+end IF;
+select Clm_IP_Add_Id into v_IPId from Tbl_IP_Add_Mstr where Clm_Ip_Add =p_IpAddress;
+update Tbl_Net_Dtls set Clm_IP_Add_Id=v_IPId,Clm_Net_SNM=p_SubnetMask,Clm_Net_GW=p_Gateway,Clm_Net_DNS1=p_DNS1,Clm_Net_DNS2=p_DNS2,clm_Net_MAC=p_MacAddress;
+Set p_Status='Sucess';
+END;
+END IF;
+IF code != '00000' THEN
+	SET p_Status=msg;
+	ROLLBACK; 
+END IF;
+END;
+// DELIMITER ;
+
+procedure
+
+-- PROCEDURE to update values of Network Table
+Delimiter //
+Create Procedure Pro_UpdateNetworkDetails (
+p_IpAddress varchar(20),
+p_SubnetMask varchar(20),
+p_Gateway varchar(20),
+p_DNS1 varchar(20),
+p_DNS2 varchar(20),
+p_NetworkType varchar(20),
+p_HostName varchar(20),    
+OUT p_Status longtext )
+BEGIN
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_IpAddress = '' OR p_SubnetMask= '' OR p_Gateway= '')
+THEN 
+	Set p_Status='Failed, IpAddress,SubnetMask and Gateway cannot be empty';
+ELSE 
+BEGIN
+Declare v_NetType int;Declare v_IPId int;
+IF((select count(*) from Tbl_Net_Dtls)=1)
+Then
+IF(p_NetworkType='Manual' OR p_NetworkType='Static')
+Then
+set v_NetType=0;
+else
+set v_NetType=1;
+end IF;
+
+IF((select count(*) from Tbl_IP_Add_Mstr where Clm_Ip_Add =p_IpAddress)=0 )
+then 
+insert into Tbl_IP_Add_Mstr(Clm_Ip_Add)	values(p_IpAddress);
+end IF;
+select Clm_IP_Add_Id into v_IPId from Tbl_IP_Add_Mstr where Clm_Ip_Add =p_IpAddress;
+update Tbl_Net_Dtls set Clm_IP_Add_Id=v_IPId,Clm_Net_SNM=p_SubnetMask,Clm_Net_GW=p_Gateway,Clm_Net_DNS1=p_DNS1,Clm_Net_DNS2=p_DNS2,Clm_Net_Typ=v_NetType,clm_Net_Hst_NM=p_HostName;
+Set p_Status='Sucess';
+else
+insert into Tbl_IP_Add_Mstr(Clm_Ip_Add)	values(p_IpAddress);
+insert into Tbl_Ip_Dtls(Clm_Net_SNM,Clm_Net_GW,Clm_Net_DNS1,Clm_Net_DNS2,Clm_Net_Typ,Clm_IP_Add_Id)
+				values(p_SubnetMask,p_Gateway,p_DNS1,p_DNS2,v_NetType,(select Clm_IP_Add_Id from Tbl_IP_Add_Mstr where Clm_Ip_Add=p_IpAddress));
+COMMIT;
+Set p_Status='Sucess';
+end IF;
+END;
+END IF;
+IF code != '00000' THEN
+	SET p_Status=msg;
+	ROLLBACK; 
+END IF;
+END;
+// DELIMITER ;
+
+-- PROCEDURE to insert values into Profile Table
+Delimiter //
+Create Procedure Pro_CreateProfile (
+p_ProfileName varchar(20),
+p_FPS int,
+p_Width int,
+P_Height int,
+p_Bitrate int,
+p_DeviceName varchar(20),
+p_Encoder varchar(20),
+p_Default bool,
+OUT p_Status longtext )
+BEGIN
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_ProfileName = '' OR p_FPS= '' OR p_Width= '' OR P_Height= '' OR p_Bitrate= '' OR p_DeviceName= '' OR p_Encoder= '')
+THEN 
+	Set p_Status='Failed, ProfileName,FPS,Width,Height,Bitrate,DeviceName and Encoder_Type cannot be empty';
+ELSE 
+BEGIN
+DECLARE v_FPS int; DECLARE v_DeviceId int; DECLARE v_EncoderId int;DECLARE v_ResolutionId int;DECLARE v_ProfileId int;
+
+IF((select count(*) from Tbl_Prof_Dtls where Clm_Prof_NM=p_ProfileName and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName))=0)
+THEN
+BEGIN
+select Clm_FPS_Id into v_FPS from Tbl_FPS_Dtls where Clm_FPS_NM=p_FPS;
+select Clm_Res_Id into v_ResolutionId from Tbl_Res_Mstr where Clm_Res_WD=p_Width and Clm_Res_HT=P_Height;
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+select Clm_Enc_Id into v_EncoderId from Tbl_Enc_Mstr where Clm_Enc_NM=p_Encoder;
+
+insert into Tbl_Prof_Dtls(Clm_Prof_NM,Clm_FPS_Id,Clm_BR,Clm_Enc_Id,Clm_Res_Id,Clm_Dev_Id) 
+values(p_ProfileName,v_FPS,p_Bitrate,v_EncoderId,v_ResolutionId,v_DeviceId);
+Set p_Status='Sucess';
+COMMIT;
+IF(p_Default)
+THEN
+BEGIN
+select Clm_Prof_Id into v_ProfileId from Tbl_Prof_Dtls where Clm_Prof_NM=p_ProfileName and Clm_Dev_Id=v_DeviceId;
+IF((select count(*) from Tbl_Def_Prof_Dtls where Clm_Dev_Id=v_DeviceId)=0)
+THEN
+BEGIN
+insert into Tbl_Def_Prof_Dtls(Clm_Prof_Id,Clm_Dev_Id) values(v_ProfileId,v_DeviceId);
+END;
+else
+BEGIN
+update Tbl_Def_Prof_Dtls set Clm_Prof_Id =v_ProfileId where Clm_Dev_Id=v_DeviceId;
+END;
+end IF;
+END;
+end IF;
+END;
+else
+BEGIN
+ Set p_Status='Profile Already exist!';
+ END;
+ END IF;
+
+END;
+END IF;
+IF code != '00000' THEN
+	SET p_Status=msg;
+	ROLLBACK; 
+END IF;
+END;
+// DELIMITER ;
+
+-- PROCEDURE to delete row from Profile Table
+Delimiter //
+Create Procedure Pro_DeleteProfile (
+p_ProfileId int,
+p_ProfileName varchar(20),
+p_DeviceName varchar(20),
+OUT p_Status longtext )
+BEGIN
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_ProfileName = '' OR p_ProfileId= '' OR p_DeviceName= '')
+THEN 
+	Set p_Status='Failed, ProfileName and DeviceName cannot be empty';
+ELSE 
+BEGIN
+DECLARE v_DeviceId int;
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+IF((select count(*) from Tbl_Def_Prof_Dtls where Clm_Dev_Id=v_DeviceId and Clm_Prof_Id=p_ProfileId)=1)
+THEN
+BEGIN
+update Tbl_Def_Prof_Dtls set Clm_Prof_Id =(select Clm_Prof_Id from Tbl_Prof_Dtls where Clm_Prof_NM='H264' and Clm_Dev_Id=v_DeviceId) where Clm_Dev_Id=v_DeviceId;
+END;
+end IF;
+
+delete from Tbl_Prof_Dtls where Clm_Prof_NM=p_ProfileName and Clm_Dev_Id=v_DeviceId and Clm_Prof_Id=p_ProfileId and Clm_Prof_Typ=1;
+COMMIT;
+Set p_Status='Sucess';
+
+END;
+END IF;
+IF code != '00000' THEN
+	SET p_Status=msg;
+	ROLLBACK; 
+END IF;
+END;
+// DELIMITER ;
+
+-- PROCEDURE to Update values in Profile Table
+Delimiter //
+Create Procedure Pro_UpadteProfile (
+p_ProfileId int,
+p_ProfileName varchar(20),
+p_FPS int,
+p_Width int,
+P_Height int,
+p_Bitrate int,
+p_DeviceName varchar(20),
+p_Encoder varchar(20),
+p_Default bool,
+OUT p_Status longtext )
+BEGIN
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_ProfileName = '' OR p_FPS= '' OR p_Width= '' OR P_Height= '' OR p_Bitrate= '' OR p_DeviceName= '' OR p_Encoder= '')
+THEN 
+	Set p_Status='Failed, ProfileName,FPS,Width,Height,Bitrate,DeviceName and Encoder_Type cannot be empty';
+ELSE 
+BEGIN
+DECLARE v_FPS int; DECLARE v_DeviceId int; DECLARE v_EncoderId int;DECLARE v_ResolutionId int;DECLARE v_ProfileId int;
+DECLARE v_DCheck bool;
+set v_DCheck=false;
+
+IF((select count(*) from Tbl_Prof_Dtls where (Clm_Prof_Id!=p_ProfileId) and Clm_Prof_NM=p_ProfileName and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName))=0)
+THEN
+BEGIN
+select Clm_FPS_Id into v_FPS from Tbl_FPS_Dtls where Clm_FPS_NM=p_FPS;
+select Clm_Res_Id into v_ResolutionId from Tbl_Res_Mstr where Clm_Res_WD=p_Width and Clm_Res_HT=P_Height;
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+select Clm_Enc_Id into v_EncoderId from Tbl_Enc_Mstr where Clm_Enc_NM=p_Encoder;
+
+update Tbl_Prof_Dtls set Clm_Prof_NM=p_ProfileName,Clm_FPS_Id=v_FPS,Clm_BR=p_Bitrate,Clm_Enc_Id=v_EncoderId,Clm_Res_Id=v_ResolutionId where Clm_Prof_Id=p_ProfileId and Clm_Dev_Id=v_DeviceId;
+COMMIT;
+Set p_Status='Sucess';
+
+IF((select count(*) from Tbl_Def_Prof_Dtls where Clm_Dev_Id=v_DeviceId and Clm_Prof_Id=p_ProfileId)=1)
+THEN
+set v_DCheck=true;
+END IF;
+
+IF(p_Default)
+THEN
+BEGIN
+select Clm_Prof_Id into v_ProfileId from Tbl_Prof_Dtls where Clm_Prof_NM=p_ProfileName and Clm_Dev_Id=v_DeviceId;
+
+IF((select count(*) from Tbl_Def_Prof_Dtls where Clm_Dev_Id=v_DeviceId)=0)
+THEN
+BEGIN
+insert into Tbl_Def_Prof_Dtls(Clm_Prof_Id,Clm_Dev_Id) values(v_ProfileId,v_DeviceId);
+END;
+else
+BEGIN
+update Tbl_Def_Prof_Dtls set Clm_Prof_Id =v_ProfileId where Clm_Dev_Id=v_DeviceId;
+END;
+end IF;
+
+END;
+end IF;
+END;
+
+IF(p_Default=false)
+THEN
+IF(v_DCheck)
+THEN
+update Tbl_Def_Prof_Dtls set Clm_Prof_Id =(select Clm_Prof_Id from Tbl_Prof_Dtls where Clm_Prof_NM='H264' and Clm_Dev_Id=v_DeviceId) where Clm_Dev_Id=v_DeviceId;
+END IF;
+END IF;
+
+else
+BEGIN
+ Set p_Status='Profile Already exist!';
+ END;
+ END IF;
+
+END;
+END IF;
+IF code != '00000' THEN
+	SET p_Status=msg;
+	ROLLBACK; 
+END IF;
+END;
+// DELIMITER ;
+
+-- PROCEDURE to Update parameters in RTSP Table
+Delimiter //
+Create Procedure Pro_UpadteRTSPDetails (
+p_RTSPId int,
+p_Port int,
+p_TimeOut int,
+p_Authentication varchar(20),
+p_DeviceName varchar(20),
+OUT p_Status longtext )
+BEGIN
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_Authentication = '' OR p_Port= '' OR p_TimeOut= '')
+THEN 
+	Set p_Status='Failed, Authentication Mode,Port and TimeOut cannot be empty';
+ELSE 
+BEGIN
+DECLARE v_PortId int;DECLARE v_AuthId int;
+DECLARE v_DeviceId int; declare PortCheck bool;DECLARE v_PortNoTemp int;
+declare PortNotExist bool;
+
+set PortCheck=false;
+set PortNotExist=false;
+
+IF(p_Authentication='None')
+then 
+set v_AuthId=0;
+else
+set v_AuthId=1;
+END IF;
+
+select Clm_Port_No into v_PortNoTemp from Tbl_Port_Mstr where Clm_Port_Id=(select Clm_Port_Id from Tbl_RTSP_Dtls where Clm_RTSP_Id=p_RTSPId);
+
+IF(v_PortNoTemp!=p_Port)
+then 
+set PortCheck=true;
+end IF;
+
+IF(PortCheck)
+then
+IF((select count(*) from Tbl_Port_Mstr where Clm_Port_No=p_Port)=0)
+then
+set PortNotExist=false;
+else
+set PortNotExist=true;
+end IF;
+end IF;
+
+IF(!PortNotExist)
+then
+
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+
+update Tbl_Port_Mstr set Clm_Port_No=p_Port where Clm_Port_Id=(select Clm_Port_Id from Tbl_RTSP_Dtls where Clm_RTSP_Id=p_RTSPId);
+
+update Tbl_RTSP_Dtls set Clm_RTSP_Tout=p_TimeOut,Clm_RTSP_auth=v_AuthId where Clm_RTSP_Id=p_RTSPId and Clm_Dev_Id=v_DeviceId;
+COMMIT;
+Set p_Status='Sucess';
+else
+Set p_Status='Port Already in Use, try with different Port.';
+END IF;
+END;
+END IF;
+IF code != '00000' THEN
+	SET p_Status=msg;
+	ROLLBACK; 
+END IF;
+END;
+// DELIMITER ;
+
+-- PROCEDURE to Update parameters of CurrentStream Table
+-- Modified Name from Pro_Up_Curr_Dtls to Pro_UpdateCurrentStreamDetails
+Delimiter //
+Create Procedure Pro_UpdateCurrentStreamDetails (
+p_FPS int,
+p_Width int,
+P_Height int,
+p_Bitrate int,
+p_DeviceName varchar(20),
+p_Encoder varchar(20),
+OUT p_Status longtext )
+BEGIN
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_FPS= '' OR p_Width= '' OR P_Height= '' OR p_Bitrate= '' OR p_DeviceName= '' OR p_Encoder= '')
+THEN 
+	Set p_Status='Failed, FPS,Width,Height,MaxBitrate,DeviceName and Encoder_Type cannot be empty';
+ELSE 
+BEGIN
+DECLARE v_DeviceId int; Declare v_Insert boolean;
+DECLARE v_FPS int;  DECLARE v_EncoderId int;DECLARE v_ResolutionId int;
+set v_Insert=false;
+
+IF(p_FPS>25)
+then
+set p_FPS=25;
+end IF;
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+select Clm_FPS_Id into v_FPS from Tbl_FPS_Dtls where Clm_FPS_NM=p_FPS;
+select Clm_Res_Id into v_ResolutionId from Tbl_Res_Mstr where Clm_Res_WD=p_Width and Clm_Res_HT=P_Height;
+select Clm_Enc_Id into v_EncoderId from Tbl_Enc_Mstr where Clm_Enc_NM=p_Encoder;
+
+
+IF((select count(*) from Tbl_Curr_Dtls where Clm_Dev_Id=v_DeviceId)=0)
+then
+set v_Insert=true;
+End IF;
+
+IF(v_Insert)
+THEN
+insert into Tbl_Curr_Dtls(Clm_Res_Id,Clm_FPS_Id,Clm_Enc_Id,Clm_Dev_Id,Clm_Curr_BR) values(v_ResolutionId,v_FPS,v_EncoderId,v_DeviceId,p_Bitrate);
+else
+update Tbl_Curr_Dtls set Clm_Res_Id=v_ResolutionId,Clm_FPS_Id=v_FPS,Clm_Enc_Id=v_EncoderId,Clm_Curr_BR=p_Bitrate where Clm_Dev_Id=v_DeviceId;
+END IF;
+COMMIT;
+Set p_Status='Sucess';
+END;
+END IF;
+IF code != '00000' THEN
+	SET p_Status=msg;
+	ROLLBACK; 
+END IF;
+END;
+// DELIMITER ;
+
+-- PROCEDURE to Update parameters of Recording settings Table
+Delimiter //
+Create Procedure Pro_UpadteRecordingDetails (
+p_Width int,
+P_Height int,
+p_Time int,
+p_DeviceName varchar(20),
+p_Encoder varchar(20),
+OUT p_Status longtext )
+BEGIN
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_Width= '' OR P_Height= '' OR p_Time= '' OR p_DeviceName= '')
+THEN 
+	Set p_Status='Failed, Width,Height,Time and DeviceName cannot be empty';
+ELSE 
+BEGIN
+DECLARE v_DeviceId int; Declare v_Insert boolean;DECLARE v_EncoderId int;
+DECLARE v_ResolutionId int;
+set v_Insert=false;
+
+IF(p_Time !=30 && p_Time !=60 && p_Time !=90  )
+then
+set p_Time=30;
+end IF;
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+select Clm_Res_Id into v_ResolutionId from Tbl_Res_Mstr where Clm_Res_WD=p_Width and Clm_Res_HT=P_Height;
+select Clm_Enc_Id into v_EncoderId from Tbl_Enc_Mstr where Clm_Enc_NM=p_Encoder;
+
+IF((select count(*) from Tbl_Rec_Dtls where Clm_Dev_Id=v_DeviceId)=0)
+then
+set v_Insert=true;
+End IF;
+
+IF(v_Insert)
+THEN
+insert into Tbl_Rec_Dtls(Clm_Res_Id,Clm_Dev_Id,Clm_Enc_Id,Clm_Res_TIME) values(v_ResolutionId,v_DeviceId,v_EncoderId,p_Time);
+else
+update Tbl_Rec_Dtls set Clm_Res_Id=v_ResolutionId,Clm_Enc_Id=v_EncoderId,Clm_Res_TIME=p_Time where Clm_Dev_Id=v_DeviceId;
+END IF;
+COMMIT;
+Set p_Status='Sucess';
+END;
+END IF;
+
+  IF code != '00000' THEN
+   		SET p_Status=msg;
+        ROLLBACK; 
+  END IF;
+END;
+// DELIMITER ;
+
+-- PROCEDURE to Get Recording Details
+Delimiter //
+Create Procedure Pro_Events_Dtls (
+p_Code varchar(6),
+p_Msg varchar(150), 
+OUT p_Status longtext )
+BEGIN
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+BEGIN
+Declare ExternalMsgId bigint;
+set ExternalMsgId=1;
+IF((p_Msg!=''))
+then
+IF((select count(*) from Tbl_Ext_Msg_Dtls where Clm_Ext_Msg=p_Msg)=0)
+then
+insert into Tbl_Ext_Msg_Dtls(Clm_Ext_Msg) values(p_Msg);
+end IF;
+select Clm_Ext_Msg_Id into ExternalMsgId from Tbl_Ext_Msg_Dtls where Clm_Ext_Msg=p_Msg;
+end IF;
+insert into Tbl_Evnt_Dtls(Clm_Msg_Id,Clm_Evnt_DT,Clm_Ext_Msg_Id) values((select Clm_Msg_Id from Tbl_Msg_Dtls where Clm_Msg_Id_NM=p_Code),now(),ExternalMsgId);
+set p_Status="Sucess";  
+END;
+
+  IF code != '00000' THEN
+   		 SET p_Status=msg;
+        ROLLBACK; 
+  END IF;
+END;
+// DELIMITER ;
+
+-- PROCEDURE to update values of Motion_Detection Table
+DELIMITER //
+Create Procedure Pro_UpadteMotionDetectionDetails ( 
+p_ZoneType varchar(20), 
+p_AlarmState bool,
+p_CurrentState bool,
+p_DeviceName varchar(20),
+OUT p_Status longtext )
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_ZoneType = '' OR p_DeviceName= '') 
+THEN 
+Set p_Status='Failed, ZoneType and DeviceName cannot be empty'; 
+ELSE 
+BEGIN 
+Declare v_Zone int; DECLARE v_DeviceId int;
+IF(p_ZoneType='PreDefined')
+then
+set v_Zone=0;
+else
+set v_Zone=1;
+end IF;
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+update Tbl_VA_Dtls set Clm_VA_Zn_Typ=v_Zone,Clm_VA_Alrm=p_AlarmState,Clm_VA_CS=p_CurrentState where Clm_Dev_Id=v_DeviceId and Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Motion_Detection');
+Set p_Status='Sucess';
+END;
+END IF; 
+
+  IF code != '00000' THEN
+   		SET p_Status=msg;
+        ROLLBACK; 
+  END IF;
+END; 
+// DELIMITER ;
+
+-- PROCEDURE to update values of IVA_Detection Table
+DELIMITER //
+Create Procedure Pro_UpadteIVADetectionDetails ( 
+p_ZoneType varchar(20), 
+p_AlarmState bool,
+p_CurrentState bool,
+p_DeviceName varchar(20),
+OUT p_Status longtext )
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_ZoneType = '' OR p_DeviceName= '') 
+THEN 
+Set p_Status='Failed, ZoneType and DeviceName cannot be empty'; 
+ELSE 
+BEGIN 
+Declare v_Zone int; DECLARE v_DeviceId int;
+IF(p_ZoneType='Line')
+then
+set v_Zone=0;
+else
+set v_Zone=1;
+end IF;
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+update Tbl_VA_Dtls set Clm_VA_Alrm=p_AlarmState,Clm_VA_CS=p_CurrentState where Clm_VA_Zn_Typ=v_Zone and Clm_Dev_Id=v_DeviceId and Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection');
+Set p_Status='Sucess';
+END;
+END IF; 
+
+  IF code != '00000' THEN
+   		SET p_Status=msg;
+        ROLLBACK; 
+  END IF;
+END; 
+// DELIMITER ;
+
+-- PROCEDURE to update values of Tamper_Detection Table
+DELIMITER //
+Create Procedure Pro_UpadteTamperDetectionDetails ( 
+p_AlarmState bool,
+p_CurrentState bool,
+p_Threshold int,
+p_Duration int,
+p_DeviceName varchar(20),
+OUT p_Status longtext )
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_DeviceName= '') 
+THEN 
+Set p_Status='Failed, DeviceName cannot be empty'; 
+ELSE 
+BEGIN 
+DECLARE v_DeviceId int;
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+update Tbl_VA_Dtls set Clm_VA_Alrm=p_AlarmState,Clm_VA_CS=p_CurrentState where Clm_VA_Zn_Typ=1 and Clm_Dev_Id=v_DeviceId and Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Tampering_Detection');
+update Tbl_Zn_Mstr set Clm_Zn_Th=p_Threshold,Clm_Zn_Dur=p_Duration where Clm_Dev_Id=v_DeviceId and Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Tampering_Detection');
+Set p_Status='Sucess';
+END;
+END IF; 
+
+  IF code != '00000' THEN
+   		SET p_Status=msg;
+        ROLLBACK; 
+  END IF;
+END; 
+// DELIMITER ;
+
+-- PROCEDURE to update Zone values of Zone_Details Table
+DELIMITER //
+Create Procedure Pro_UpadteMotionZoneDetails ( 
+p_ZoneType varchar(20), 
+p_ZoneId int,
+p_Width int,
+p_Height int,
+p_points varchar(50),
+p_Threshold int,
+p_Duration int,
+p_CurrentState bool,
+p_DeviceName varchar(20),
+OUT p_Status longtext )
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_ZoneType = '' OR p_DeviceName= '') 
+THEN 
+Set p_Status='Failed, ZoneType and DeviceName cannot be empty'; 
+ELSE 
+BEGIN 
+Declare v_Zone int; DECLARE v_DeviceId int;DECLARE v_CState int;
+IF(p_ZoneType='PreDefined')
+then
+set v_Zone=0;
+else
+set v_Zone=1;
+end IF;
+
+IF(p_CurrentState)
+then
+set v_CState=0;
+else
+set v_CState=1;
+end IF;
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+update Tbl_Zn_Mstr set Clm_Zn_WD=p_Width,Clm_Zn_HT=p_Height,Clm_Zn_Pnt=p_points,Clm_Zn_Th=p_Threshold,Clm_Zn_Dur=p_Duration,Clm_Zn_CS=v_CState where Clm_Zn_Typ=v_Zone and Clm_Zn=p_ZoneId and Clm_Dev_Id=v_DeviceId and Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Motion_Detection');
+Set p_Status='Sucess';
+END;
+END IF; 
+
+  IF code != '00000' THEN
+   		SET p_Status=msg;
+        ROLLBACK; 
+  END IF;
+END; 
+// DELIMITER ;
+
+-- PROCEDURE to update IVA Zone values of Zone_Details Table
+DELIMITER //
+Create Procedure Pro_UpadteIVAZoneDetails ( 
+p_ZoneType varchar(20), 
+p_ZoneId int,
+p_Width int,
+p_Height int,
+p_points varchar(50),
+p_Threshold int,
+p_Duration int,
+p_CurrentState bool,
+p_DeviceName varchar(20),
+OUT p_Status longtext )
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_ZoneType = '' OR p_DeviceName= '') 
+THEN 
+Set p_Status='Failed, ZoneType and DeviceName cannot be empty'; 
+ELSE 
+BEGIN 
+Declare v_Zone int; DECLARE v_DeviceId int;DECLARE v_CState int;
+IF(p_ZoneType='Line')
+then
+set v_Zone=0;
+else
+set v_Zone=1;
+end IF;
+
+IF(p_CurrentState)
+then
+set v_CState=0;
+else
+set v_CState=1;
+end IF;
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+update Tbl_Zn_Mstr set Clm_Zn_WD=p_Width,Clm_Zn_HT=p_Height,Clm_Zn_Pnt=p_points,Clm_Zn_Th=p_Threshold,Clm_Zn_Dur=p_Duration,Clm_Zn_CS=v_CState where Clm_Zn_Typ=v_Zone and Clm_Zn=p_ZoneId and Clm_Dev_Id=v_DeviceId and Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection');
+Set p_Status='Sucess';
+END;
+END IF; 
+
+  IF code != '00000' THEN
+   		SET p_Status=msg;
+        ROLLBACK; 
+  END IF;
+END; 
+// DELIMITER ;
+
+-- PROCEDURE to update Zone values of Zone_Details Table
+DELIMITER //
+Create Procedure Pro_DeleteMotionDetectionZoneDetails ( 
+p_ZoneType varchar(20), 
+p_ZoneId int,
+p_DeviceName varchar(20),
+OUT p_Status longtext )
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_ZoneType = '' OR p_DeviceName= '') 
+THEN 
+Set p_Status='Failed, ZoneType and DeviceName cannot be empty'; 
+ELSE 
+BEGIN 
+Declare v_Zone int; DECLARE v_DeviceId int;
+IF(p_ZoneType='PreDefined')
+then
+set v_Zone=0;
+else
+set v_Zone=1;
+end IF;
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+update Tbl_Zn_Mstr set Clm_Zn_Pnt='320 220,160 220,160 120,320 120',Clm_Zn_Th=10,Clm_Zn_Dur=1,Clm_Zn_CS=1 where Clm_Zn_Typ=v_Zone and Clm_Zn=p_ZoneId and Clm_Dev_Id=v_DeviceId and Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Motion_Detection');
+Set p_Status='Sucess';
+END;
+END IF; 
+
+  IF code != '00000' THEN
+   		SET p_Status=msg;
+        ROLLBACK; 
+  END IF;
+END; 
+// DELIMITER ;
+
+-- PROCEDURE to update IVA Zone values of Zone_Details Table
+DELIMITER //
+Create Procedure Pro_DeleteIVADetectionZoneDetails ( 
+p_ZoneType varchar(20), 
+p_ZoneId int,
+p_DeviceName varchar(20),
+OUT p_Status longtext )
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_ZoneType = '' OR p_DeviceName= '') 
+THEN 
+Set p_Status='Failed, ZoneType and DeviceName cannot be empty'; 
+ELSE 
+BEGIN 
+Declare v_Zone int; DECLARE v_DeviceId int;DECLARE v_Points varchar(50);
+IF(p_ZoneType='Line')
+then
+set v_Zone=0;
+set v_Points="237 220,237 120";
+else
+set v_Zone=1;
+set v_Points="320 220,160 220,160 120,320 120";
+end IF;
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+update Tbl_Zn_Mstr set Clm_Zn_Pnt=v_Points,Clm_Zn_Th=10,Clm_Zn_Dur=1,Clm_Zn_CS=1 where Clm_Zn_Typ=v_Zone and Clm_Zn=p_ZoneId and Clm_Dev_Id=v_DeviceId and Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection');
+Set p_Status='Sucess';
+END;
+END IF; 
+
+  IF code != '00000' THEN
+   		SET p_Status=msg;
+        ROLLBACK; 
+  END IF;
+END; 
+// DELIMITER ;
+
+DELIMITER //
+-- PROCEDURE to update Recording status
+Create Procedure Pro_UpdateRecordingStatusDetails ( 
+p_RecStatus bool,
+p_DeviceName varchar(20), 
+OUT p_Status longtext )
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+BEGIN 
+DECLARE v_DeviceId int;
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+update Tbl_Rec_Stat_Dtls set Clm_Rec_Stat=p_RecStatus where Clm_Dev_Id=v_DeviceId;
+Set p_Status='Sucess';
+END;
+IF code != '00000' THEN
+   		SET p_Status=msg;
+        ROLLBACK; 
+END IF;
+END; 
+// DELIMITER ;
+
+-- PROCEDURE to insert Temperature Details
+Delimiter //
+Create Procedure Pro_InsertTemperatureDetails (
+p_Type int,
+p_Value varchar(15),
+p_DeviceName varchar(20), 
+OUT p_Status longtext )
+BEGIN
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+BEGIN
+Declare v_DeviceId int;
+IF(p_DeviceName='')
+then 
+set p_DeviceName="Device0";
+end IF;
+ select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+ insert into Tbl_Temp_Dtls(Clm_Temp_Typ,Clm_Temp_DT,Clm_Temp_Val,Clm_Dev_Id) values(p_Type,now(),p_Value,v_DeviceId);
+ set p_Status="Sucess";  
+END;
+
+  IF code != '00000' THEN
+   		 SET p_Status=msg;
+        ROLLBACK; 
+  END IF;
+END;
+// DELIMITER ;
+
+-- PROCEDURE to update Current ImageSettings Details
+Delimiter //
+Create Procedure Pro_UpdateCurrentImageSettings (
+p_Type varchar(20),
+p_Value varchar(20),
+p_DeviceName varchar(20), 
+OUT p_Status longtext )
+BEGIN
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+BEGIN
+Declare v_DeviceId int;Declare v_ImgSetNM int;
+IF(p_DeviceName='')
+then 
+set p_DeviceName="Device0";
+end IF;
+ select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+ select Clm_Img_Set_Id into v_ImgSetNM from Tbl_Img_Set_Mstr where Clm_Img_Set_NM=p_Type;
+ update Tbl_Curr_Img_Set_Dtls set Clm_Curr_Val=p_Value where Clm_Dev_Id=v_DeviceId and Clm_Img_Set_Id=v_ImgSetNM;
+ set p_Status="Sucess";  
+END;
+
+  IF code != '00000' THEN
+   		 SET p_Status=msg;
+        ROLLBACK; 
+  END IF;
+END;
+// DELIMITER ; 
+
+-- PROCEDURE to insert values into Device Details Table
+Delimiter //
+Create Procedure Pro_UpdateDeviceDetails (
+p_CurrentState bool,
+p_Name varchar(50),
+p_Node varchar(50),
+p_Width int,
+P_Height int,
+p_Format varchar(15),
+p_Port varchar(25),
+p_DeviceName varchar(20),
+OUT p_Status longtext )
+BEGIN
+DECLARE code CHAR(5) DEFAULT '00000';
+  DECLARE msg TEXT;
+  DECLARE rows INT;
+  DECLARE result TEXT;
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+    END;
+IF(p_Name = '' OR p_Node= '' OR p_Width= '' OR P_Height= '' OR p_Format= '' OR p_Port= '' OR p_DeviceName= '')
+THEN 
+	Set p_Status='Failed, CurrentState,Name,Node,Width,Height,Format,Port and Device cannot be empty';
+ELSE 
+BEGIN
+DECLARE v_DeviceId int;
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;
+update Tbl_Dev_Dtls set Clm_Dev_CS=p_CurrentState,Clm_Dev_NM=p_Name,Clm_Dev_Node=p_Node,Clm_Dev_WD=p_Width,Clm_Dev_HT=P_Height,Clm_Dev_Frmt=p_Format,Clm_Dev_SPORT=p_Port where Clm_Dev_Id=v_DeviceId;
+set p_Status="Sucess"; 
+END;
+END IF;
+
+  IF code != '00000' THEN
+   		SET p_Status=msg;
+        ROLLBACK; 
+  END IF;
+END;
+// DELIMITER ;
+
+-- PROCEDURE to insert values into TimeZone Table
+DELIMITER //
+CREATE PROCEDURE Pro_InsertTimeZoneDetails ( 
+p_Name varchar(150), 
+OUT p_Status longtext )
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000'; 
+  DECLARE msg TEXT; 
+  DECLARE rows INT; 
+  DECLARE result TEXT; 
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION 
+    BEGIN 
+      GET DIAGNOSTICS CONDITION 1 
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT; 
+    END; 
+IF(p_Name = '') 
+THEN  
+Set p_Status='Failed, Name cannot be empty';  
+ELSE  
+BEGIN 
+insert into Tbl_T_Zn_Mstr(Clm_T_Zn_NM)values(p_Name); 
+Set p_Status='Sucess'; 
+END; 
+END IF; 
+
+  IF code != '00000' THEN 
+   		SET p_Status=msg; 
+        ROLLBACK; 
+  END IF; 
+END; 
+// DELIMITER ;
+
+-- PROCEDURE to delete values from TimeZone Table
+DELIMITER //
+CREATE PROCEDURE Pro_DeleteTimeZoneDetails ( 
+OUT p_Status longtext )
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000'; 
+  DECLARE msg TEXT; 
+  DECLARE rows INT; 
+  DECLARE result TEXT; 
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION 
+    BEGIN 
+      GET DIAGNOSTICS CONDITION 1 
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT; 
+    END; 
+BEGIN 
+delete from Tbl_T_Zn_Mstr; 
+Set p_Status='Sucess'; 
+END; 
+
+  IF code != '00000' THEN 
+   		SET p_Status=msg; 
+        ROLLBACK;    
+  END IF; 
+END; 
+// DELIMITER ;
+
+-- PROCEDURE to insert values into TimeZone Table
+DELIMITER //
+CREATE PROCEDURE Pro_UpdateCurrentTimeZone ( 
+p_Name varchar(150), 
+OUT p_Status longtext )
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000'; 
+  DECLARE msg TEXT; 
+  DECLARE rows INT; 
+  DECLARE result TEXT; 
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION 
+    BEGIN 
+      GET DIAGNOSTICS CONDITION 1 
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT; 
+    END; 
+IF(p_Name = '') 
+THEN 
+Set p_Status='Failed, Name cannot be empty'; 
+ELSE 
+BEGIN 
+IF((select count(*) from Tbl_Sys_DT_Dtls) = 0) 
+THEN  
+BEGIN 
+insert into Tbl_Sys_DT_Dtls(Clm_T_Zn_Id)values((select Clm_T_Zn_Id from Tbl_T_Zn_Mstr where Clm_T_Zn_NM=p_Name)); 
+Set p_Status='Sucess'; 
+END; 
+ELSE 
+update Tbl_Sys_DT_Dtls set Clm_T_Zn_Id=(select Clm_T_Zn_Id from Tbl_T_Zn_Mstr where Clm_T_Zn_NM=p_Name); 
+Set p_Status='Sucess'; 
+END IF; 
+END; 
+END IF;  
+  IF code != '00000' THEN
+   		SET p_Status=msg;
+        ROLLBACK;
+  END IF;
+END; 
+// DELIMITER ;
+
+-- PROCEDURE to insert values into TimeZone Table
+DELIMITER //
+CREATE PROCEDURE Pro_UpdateCurrentTimeSetup ( 
+p_Type varchar(10),
+p_Date varchar(12),
+p_Time varchar(8),
+p_Add1 varchar(25),
+p_Add2 varchar(25),  
+OUT p_Status longtext )
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000'; 
+  DECLARE msg TEXT; 
+  DECLARE rows INT; 
+  DECLARE result TEXT; 
+  -- Declare exception handler for failed insert
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION 
+    BEGIN 
+      GET DIAGNOSTICS CONDITION 1 
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT; 
+    END; 
+IF(p_Type = '') 
+THEN 
+Set p_Status='Failed, Type cannot be empty'; 
+ELSE 
+BEGIN 
+DECLARE v_Type int; 
+IF(p_Type='Manual') 
+THEN 
+set v_Type=1; 
+else 
+set v_Type=0; 
+end IF;
+IF((select count(*) from Tbl_Sys_DT_Dtls) = 0) 
+THEN  
+BEGIN 
+insert into Tbl_Sys_DT_Dtls(Clm_Sys_DT_Typ,Clm_Sys_DT_D,Clm_Sys_DT_T,Clm_Sys_DT_Add1,Clm_Sys_DT_Add2)values(v_Type,p_Date,p_Time,p_Add1,p_Add2); 
+Set p_Status='Sucess'; 
+END; 
+ELSE 
+update Tbl_Sys_DT_Dtls set Clm_Sys_DT_Typ=v_Type,Clm_Sys_DT_D=p_Date,Clm_Sys_DT_T=p_Time,Clm_Sys_DT_Add1=p_Add1,Clm_Sys_DT_Add2=p_Add2; 
+Set p_Status='Sucess'; 
+END IF; 
+END; 
+END IF;  
+IF code != '00000' THEN
+   		SET p_Status=msg;
+        ROLLBACK;
+  END IF;
+END; 
+// DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE Pro_UpdatePTStatus ( 
+p_CurrentStatus bool,  
+OUT p_Status longtext )
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000'; 
+  DECLARE msg TEXT; 
+  DECLARE rows INT; 
+  DECLARE result TEXT; 
+  -- Declare exception handler for failed insert 
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION 
+    BEGIN 
+      GET DIAGNOSTICS CONDITION 1 
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT; 
+    END; 
+BEGIN 
+if((select count(*) from Tbl_PT_Dtls) = 0) 
+THEN  
+BEGIN 
+insert into Tbl_PT_Dtls(Clm_PT_CS)values(p_CurrentStatus); 
+Set p_Status='Sucess'; 
+END; 
+ELSE 
+update Tbl_PT_Dtls set Clm_PT_CS=p_CurrentStatus; 
+Set p_Status='Sucess'; 
+END IF; 
+END;  
+IF code != '00000' THEN 
+   		SET p_Status=msg; 
+        ROLLBACK; 
+  END IF;
+END; 
+// DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE Pro_UpdatePTDetails ( 
+p_PanValue float, 
+p_TiltValue float, 
+p_ZoomValue float, 
+p_Direction varchar(8), 
+p_DeviceName varchar(20), 
+OUT p_Status longtext ) 
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000'; 
+  DECLARE msg TEXT; 
+  DECLARE rows INT; 
+  DECLARE result TEXT; 
+  -- Declare exception handler for failed insert 
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION 
+    BEGIN 
+      GET DIAGNOSTICS CONDITION 1 
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT; 
+    END; 
+if(p_PanValue < 0 OR p_TiltValue < 0 ) 
+THEN 
+Set p_Status='Failed, PanValue and TiltValue cannot be empty'; 
+ELSE 
+BEGIN 
+declare v_Direction int; 
+DECLARE v_DeviceId int; 
+select Clm_Dev_Id into v_DeviceId from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName;  
+if(p_Direction='Top' OR p_Direction = 'TOP' OR p_Direction = 'Up' OR p_Direction = 'UP') 
+then 
+set v_Direction=0; 
+else 
+set v_Direction=1; 
+end if; 
+if((select count(*) from Tbl_PT_Dtls) = 0) 
+THEN  
+BEGIN 
+insert into Tbl_PT_Dtls(Clm_P_Val,Clm_T_Val,Clm_T_Dir,Clm_Z_Val,Clm_Dev_Id)values(p_PanValue,p_TiltValue,v_Direction,p_ZoomValue,v_DeviceId); 
+Set p_Status='Sucess'; 
+END; 
+ELSE 
+update Tbl_PT_Dtls set Clm_P_Val=p_PanValue,Clm_T_Val=p_TiltValue,Clm_T_Dir=v_Direction,Clm_Z_Val=p_ZoomValue,Clm_Dev_Id=v_DeviceId; 
+Set p_Status='Sucess'; 
+END IF; 
+END; 
+END IF;  
+IF code != '00000' THEN 
+	SET p_Status=msg; 
+	ROLLBACK; 
+END IF; 
+END; 
+// DELIMITER ;
+
+-- PROCEDURE to Update Network Details of Tracking Board
+Delimiter //
+Create Procedure Pro_UpadteTrackingNetworkDetails ( 
+p_IpAddress varchar(15), 
+p_Port int, 
+OUT p_Status longtext ) 
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000'; 
+  DECLARE msg TEXT; 
+  DECLARE rows INT; 
+  DECLARE result TEXT; 
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION 
+    BEGIN 
+      GET DIAGNOSTICS CONDITION 1 
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT; 
+    END; 
+if(p_IpAddress = '' OR p_Port= '') 
+THEN  
+	Set p_Status='Failed, IpAddress and Port cannot be empty'; 
+ELSE  
+BEGIN 
+DECLARE v_PortId int;DECLARE v_IpAddressId int; 
+if((select count(*) from Tbl_Port_Mstr where Clm_Port_No=p_Port)=0) 
+then 
+insert into Tbl_Port_Mstr(Clm_Port_No) values(p_Port); 
+end if; 
+select Clm_Port_Id into v_PortId from Tbl_Port_Mstr where Clm_Port_No=p_Port; 
+if((select count(*) from Tbl_IP_Add_Mstr where Clm_Ip_Add=p_IpAddress)=0) 
+then 
+insert into Tbl_IP_Add_Mstr(Clm_Ip_Add) values(p_IpAddress); 
+end if; 
+select Clm_IP_Add_Id into v_IpAddressId from Tbl_IP_Add_Mstr where Clm_Ip_Add=p_IpAddress; 
+if((select count(*) from Tbl_Trk_Net_Dtls)=0) 
+then 
+insert into Tbl_Trk_Net_Dtls(Clm_Port_Id,Clm_IP_Add_Id) values(v_PortId,v_IpAddressId); 
+else 
+update Tbl_Trk_Net_Dtls set Clm_Port_Id=v_PortId,Clm_IP_Add_Id=v_IpAddressId; 
+end if; 
+COMMIT; 
+Set p_Status='Sucess'; 
+END; 
+END IF; 
+IF code != '00000' THEN 
+	SET p_Status=msg; 
+	ROLLBACK; 
+END IF; 
+END; 
+// DELIMITER ;
+
+
+-- PROCEDURE to Update values of Enable/Visible Imaging Settings.
+DELIMITER //
+CREATE PROCEDURE Pro_UpdateImagingSettingDetails ( 
+p_Name varchar(20), 
+p_Visible bool, 
+p_Enable bool, 
+p_DeviceName varchar(20), 
+OUT p_Status longtext ) 
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000'; 
+  DECLARE msg TEXT; 
+  DECLARE rows INT; 
+  DECLARE result TEXT; 
+  -- Declare exception handler for failed insert 
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION 
+    BEGIN 
+      GET DIAGNOSTICS CONDITION 1 
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT; 
+    END; 
+if(p_Name = '' OR p_DeviceName= '') 
+THEN 
+Set p_Status='Failed, Name and DeviceName cannot be empty'; 
+ELSE 
+BEGIN 
+update Tbl_Img_Set_Dtls set Clm_Ena_St=p_Enable,Clm_Vis_St=p_Visible where Clm_Img_Set_Id=(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM=p_Name) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM=p_DeviceName);
+Set p_Status='Sucess'; 
+COMMIT;   
+END; 
+END IF; 
+IF code != '00000' THEN 
+	SET p_Status=msg; 
+	ROLLBACK; 
+END IF; 
+END; 
+// DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE Pro_UpdateConfigurationTabDetails ( 
+p_Name varchar(20), 
+p_Visible bool, 
+p_Enable bool, 
+OUT p_Status longtext )
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000'; 
+  DECLARE msg TEXT; 
+  DECLARE rows INT; 
+  DECLARE result TEXT; 
+  -- Declare exception handler for failed insert 
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION 
+    BEGIN 
+      GET DIAGNOSTICS CONDITION 1 
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT; 
+    END; 
+if(p_Name = '') 
+THEN 
+Set p_Status='Failed, Name cannot be empty'; 
+ELSE 
+BEGIN 
+update Tbl_Config_Tab_Dtls set Clm_Ena_St=p_Enable,Clm_Vis_St=p_Visible where Clm_Config_Tab_NM=p_Name;
+Set p_Status='Sucess'; 
+COMMIT;   
+END; 
+END IF; 
+IF code != '00000' THEN 
+	SET p_Status=msg; 
+	ROLLBACK; 
+END IF; 
+END; 
+// DELIMITER ;
+
+
+
+-- PROCEDURE to update System Details
+DELIMITER //
+CREATE PROCEDURE Pro_UpdateSystemDetails ( 
+p_Name varchar(50), 
+p_Manufacturer varchar(50), 
+p_Location varchar(50), 
+p_Model varchar(50), 
+p_DeviceId varchar(50), 
+p_Firmware varchar(50), 
+p_Hardware varchar(50), 
+OUT p_Status longtext ) 
+BEGIN 
+DECLARE code CHAR(5) DEFAULT '00000'; 
+  DECLARE msg TEXT; 
+  DECLARE rows INT; 
+  DECLARE result TEXT; 
+  -- Declare exception handler for failed insert 
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION 
+    BEGIN 
+      GET DIAGNOSTICS CONDITION 1 
+        code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT; 
+    END; 
+if(p_Name = '' OR p_Manufacturer= '' OR p_Location= '' OR p_Model= '' OR p_DeviceId='' OR p_Firmware='' OR p_Hardware='') 
+THEN 
+Set p_Status='Failed, Name,Manufacturer,Location,Model,DeviceId,Firmware and Hardware cannot be empty'; 
+ELSE 
+BEGIN 
+if((select count(*) from Tbl_Sys_Dtls)=0) 
+then 
+insert into Tbl_Sys_Dtls(Clm_Sys_NM,Clm_Sys_Loc,Clm_Sys_Mfr,Clm_Sys_Mdl,Clm_Sys_HW,Clm_Sys_FMW,Clm_Sys_Dev_Id)values(p_Name,p_Location,p_Manufacturer,p_Model,p_Hardware,p_Firmware,p_DeviceId); 
+else 
+update Tbl_Sys_Dtls set Clm_Sys_NM=p_Name,Clm_Sys_Loc=p_Location,Clm_Sys_Mfr=p_Manufacturer,Clm_Sys_Mdl=p_Model,Clm_Sys_HW=p_Hardware,Clm_Sys_FMW=p_Firmware,Clm_Sys_Dev_Id=p_DeviceId; 
+end if; 
+Set p_Status='Sucess'; 
+COMMIT; 
+END; 
+END IF; 
+IF code != '00000' THEN 
+	SET p_Status=msg; 
+	ROLLBACK; 
+END IF; 
+END; 
+// DELIMITER ;
+
+
+Delimiter //
+CREATE EVENT IF NOT EXISTS Evnt_Temp_Chk 
+    ON SCHEDULE EVERY 4 hour 
+    DO 
+       DELETE FROM Tbl_Temp_Dtls WHERE DATE(Clm_Temp_DT) < DATE((NOW() - INTERVAL 1 DAY)); 
+// DELIMITER ;
+
+Delimiter //
+CREATE EVENT IF NOT EXISTS Evnt_Temp_Log 
+    ON SCHEDULE EVERY 4 hour 
+    DO 
+       DELETE FROM Tbl_Evnt_Dtls WHERE DATE(Clm_Evnt_DT) < DATE((NOW() - INTERVAL 2 DAY)); 
+// DELIMITER ;
+
+Delimiter //
+commit; 
+// DELIMITER ;
