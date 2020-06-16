@@ -1,0 +1,15 @@
+-- TRIGGER & Events
+-- EVENT to delete
+Delimiter //
+CREATE EVENT IF NOT EXISTS Evnt_Del_Backup
+ON SCHEDULE EVERY 4 hour
+DO
+BEGIN
+	DELETE FROM Tbl_Evnt_Dtls WHERE DATE(Clm_Evnt_DT) < DATE((NOW() - INTERVAL 2 DAY));
+	DELETE FROM Tbl_Temp_Dtls WHERE DATE(Clm_Temp_DT) < DATE((NOW() - INTERVAL 1 DAY));
+	DELETE FROM Tbl_Trk_Tlm_Dtls WHERE DATE(Clm_DT) < DATE((NOW() - INTERVAL 1 DAY));
+END;
+// DELIMITER ;
+
+
+

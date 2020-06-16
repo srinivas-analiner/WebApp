@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "~/Views/Shared/_Common.cshtml";
+    ViewBag.Title = "User Guide";
+}
+<div style="height: 100vh;">
+    <object data=@ViewBag.PrintData type="application/pdf;application/msword;application/ms-word;application/vnd.ms-excel,image/*" style="width:100%;height:100%;">
+        <a href=@ViewBag.PrintData>Download File</a>
+    </object>
+</div>
+

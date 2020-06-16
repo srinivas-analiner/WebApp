@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "~/Views/Shared/_Common.cshtml";
+    //ViewBag.Title = "Print Document";
+}
+
+@*<object style="width: 100%;height: 100%;position: absolute; top: 0;left: 0;right: 0;bottom: 0;">
+        <embed src="@ViewBag.PrintData" type="application/pdf;application/msword;application/ms-word;application/vnd.ms-excel,image/*"></embed>
+    </object>*@
+    <div style="height: 100vh;">
+        <object data=@ViewBag.PrintData type="application/pdf;application/msword;application/ms-word;application/vnd.ms-excel,image/*" style="width:100%;height:100%;">
+            <a href=@ViewBag.PrintData>Download File</a>
+        </object>
+    </div>
+

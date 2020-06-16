@@ -1,0 +1,581 @@
+Delimiter //
+-- Camera Variables Table
+CREATE TABLE IF NOT EXISTS Tbl_Camera_Variables
+(
+Clm_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Id
+Ldr_Ctrl varchar(20) default 'AUTO', -- Ldr Control 
+Day_Light_Mode varchar(20) default 'DAY', -- Day Light Mode Control 
+Heater_Ctrl varchar(20) default 'AUTO', -- Heater Control 
+Fan_Ctrl varchar(20) default 'AUTO' -- Fan Control 
+);
+// DELIMITER ;
+
+Delimiter //
+-- Device Table
+CREATE TABLE IF NOT EXISTS Tbl_Dev_Mstr
+(
+Clm_Dev_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Device Id
+Clm_Dev_NM varchar(20) unique -- Device Name 
+-- Clm_Dev_CS bool default false -- Current state, 0/De-Active,1/Active
+);
+// DELIMITER ;
+
+Delimiter //
+-- Device Details Table
+CREATE TABLE IF NOT EXISTS Tbl_Dev_Dtls
+(
+Clm_Dev_Dtls_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Device Id
+Clm_Dev_CS bool default false, -- Current state, 0/De-Active,1/Active
+Clm_Dev_NM varchar(50), -- Device Name 
+Clm_Dev_Node varchar(50), -- Device Node 
+Clm_Dev_WD int, -- Device Width
+Clm_Dev_HT int,  -- Device Height
+Clm_Dev_Frmt varchar(15),  -- Device Format
+Clm_Dev_SPORT varchar(25),  -- Device Serial Port
+Clm_Dev_Id int,-- Device Id from Device Table
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Login Table
+CREATE TABLE IF NOT EXISTS Tbl_Lgn_Dtls 
+(
+Clm_Lgn_Id INTEGER AUTO_INCREMENT  PRIMARY KEY,
+Clm_Lgn_Nm varchar(15) unique, -- User Name
+Clm_Lgn_Pwd varchar(15), -- Password
+Clm_Lgn_Lvl integer default 1, -- Level 0-admin, 1-user
+Clm_Lgn_Cre_D VARCHAR(20) -- Created Data
+);
+// DELIMITER ;
+
+Delimiter //
+-- Ip Address Table
+CREATE TABLE IF NOT EXISTS Tbl_IP_Add_Mstr
+(
+Clm_IP_Add_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- IpAddress Id
+Clm_Ip_Add varchar(20) unique -- Ip Address
+);
+// DELIMITER ;
+
+Delimiter //
+-- Port Table
+CREATE TABLE IF NOT EXISTS Tbl_Port_Mstr
+(
+Clm_Port_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Port Id
+Clm_Port_No int unique -- Port Number
+);
+// DELIMITER ;
+
+Delimiter //
+-- RTSP Table
+CREATE TABLE IF NOT EXISTS Tbl_RTSP_Dtls
+(
+Clm_RTSP_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- RTSP Id
+Clm_Port_Id int, -- Port Id
+Clm_RTSP_Tout int default 30, -- RTSP TimeOut
+Clm_RTSP_auth int default 0, -- authentication 0-None, 1-Digest
+Clm_Dev_Id int,
+FOREIGN KEY (Clm_Port_Id) REFERENCES Tbl_Port_Mstr(Clm_Port_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Network Table
+CREATE TABLE IF NOT EXISTS Tbl_Net_Dtls
+(
+Clm_Net_Id INTEGER AUTO_INCREMENT  PRIMARY KEY,
+-- Clm_Net_Ip_Add varchar(20) unique, -- Ip Address
+Clm_Net_SNM varchar(20), -- Subnet Mask
+Clm_Net_GW varchar(20), -- Gateway
+Clm_Net_DNS1 varchar(20), -- DNS 1
+Clm_Net_DNS2 varchar(20), -- DNS 2
+Clm_Net_Typ integer default 1, -- Network Type 0-Manual, 1-DHCP
+clm_Net_MAC varchar(20), -- MacAddress
+clm_Net_Hst_NM varchar(20), -- HostName
+Clm_IP_Add_Id int,  -- IpAddress Id from Ip Address Table
+FOREIGN KEY (Clm_IP_Add_Id) REFERENCES Tbl_IP_Add_Mstr(Clm_IP_Add_Id) -- FOREIGN key constrain for Ip Address Table
+);
+// DELIMITER ;
+
+Delimiter //
+CREATE TABLE IF NOT EXISTS Tbl_Sav_Img_Dtls
+(
+Clm_Img_Id int AUTO_INCREMENT  PRIMARY KEY,
+Clm_Img_Data longblob -- longblob to store byteArray
+);
+// DELIMITER ;
+
+Delimiter //
+-- Resolution Table
+CREATE TABLE IF NOT EXISTS Tbl_Res_Mstr
+(
+Clm_Res_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Resolution Id
+Clm_Res_WD int, -- Width
+Clm_Res_HT int,  -- Height
+UNIQUE KEY Res_fun_id (Clm_Res_WD, Clm_Res_HT) -- Creating Unique key on two columns
+);
+// DELIMITER ;
+
+Delimiter //
+-- FrameRate Table
+CREATE TABLE IF NOT EXISTS Tbl_FPS_Dtls
+(
+Clm_FPS_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- FrameRate Id
+Clm_FPS_NM int -- FrameRate
+);
+// DELIMITER ;
+
+Delimiter //
+-- Encoder Type Table
+CREATE TABLE IF NOT EXISTS Tbl_Enc_Mstr
+(
+Clm_Enc_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- FrameRate Id
+Clm_Enc_NM varchar(10) unique -- Encoder Name
+);
+// DELIMITER ;
+
+Delimiter //
+-- Profile Table
+CREATE TABLE IF NOT EXISTS Tbl_Prof_Dtls
+(
+Clm_Prof_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Profile Id
+Clm_Prof_NM varchar(20), -- Profile Name
+Clm_FPS_Id int, -- FrameRate Id from FrameRate Table
+Clm_Res_Id int, -- Resolution Id from Resolution Table
+Clm_BR int default 2048, -- Bitrate
+Clm_Dev_Id int,-- Device Id from Device Table
+Clm_Enc_Id int, -- EncoderType Id from Encoder Table
+Clm_Prof_Typ int default 1, -- Profile Type 0-Factory, 1-User
+Clm_Prof_Muc int default 1, -- Multicast RTSP Type 0-Yes, 1-No
+Clm_Prof_Muc_Ip_Add_Id int, -- Multicast Ip Address
+Clm_Prof_Muc_TTL int, -- Multicast TTL (Time to Live)
+Clm_Muc_Port_Id int, -- Port Id
+UNIQUE KEY (Clm_Prof_NM,Clm_Dev_Id),
+FOREIGN KEY (Clm_FPS_Id) REFERENCES Tbl_FPS_Dtls(Clm_FPS_Id),
+FOREIGN KEY (Clm_Res_Id) REFERENCES Tbl_Res_Mstr(Clm_Res_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id),
+FOREIGN KEY (Clm_Enc_Id) REFERENCES Tbl_Enc_Mstr(Clm_Enc_Id),
+FOREIGN KEY (Clm_Prof_Muc_Ip_Add_Id) REFERENCES Tbl_IP_Add_Mstr(Clm_IP_Add_Id),
+FOREIGN KEY (Clm_Muc_Port_Id) REFERENCES Tbl_Port_Mstr(Clm_Port_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Default Profile Table
+CREATE TABLE IF NOT EXISTS Tbl_Def_Prof_Dtls
+(
+Clm_Prof_Def_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Default Id
+Clm_Prof_Id int unique, -- Profile Id from Profile Table
+Clm_Dev_Id int unique,-- Device Id from Device Table
+FOREIGN KEY (Clm_Prof_Id) REFERENCES Tbl_Prof_Dtls(Clm_Prof_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Current Streaming Table
+CREATE TABLE IF NOT EXISTS Tbl_Curr_Dtls
+(
+Clm_Curr_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Default Id
+Clm_Res_Id int, -- Resolution Id
+Clm_FPS_Id int, -- FPS Id
+Clm_Enc_Id int, -- Encoder Id
+Clm_Dev_Id int, -- Device Id
+Clm_Curr_BR int, -- Current BitRate
+FOREIGN KEY (Clm_Res_Id) REFERENCES Tbl_Res_Mstr(Clm_Res_Id),
+FOREIGN KEY (Clm_FPS_Id) REFERENCES Tbl_FPS_Dtls(Clm_FPS_Id),
+FOREIGN KEY (Clm_Enc_Id) REFERENCES Tbl_Enc_Mstr(Clm_Enc_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Recording details Table
+CREATE TABLE IF NOT EXISTS Tbl_Rec_Dtls
+(
+Clm_Rec_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Recording Id
+Clm_Enc_Id int, -- Encoder Id
+Clm_Res_Id int, -- Resolution Id
+Clm_Res_TIME int default 30, -- Recording Time
+Clm_Dev_Id int,
+FOREIGN KEY (Clm_Enc_Id) REFERENCES Tbl_Enc_Mstr(Clm_Enc_Id),
+FOREIGN KEY (Clm_Res_Id) REFERENCES Tbl_Res_Mstr(Clm_Res_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Recording Resolution details Table
+CREATE TABLE IF NOT EXISTS Tbl_Rec_Res_Dtls
+(
+Clm_Rec_Res_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Recording Resolution Id
+Clm_Res_Id int, -- Resolution Id
+Clm_Dev_Id int,
+FOREIGN KEY (Clm_Res_Id) REFERENCES Tbl_Res_Mstr(Clm_Res_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Error Severity Table
+CREATE TABLE IF NOT EXISTS Tbl_Err_Sev_Mstr
+(
+Clm_Err_Sev_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Severity Id
+Clm_Err_Sev_NM varchar(20) unique, -- Severity Name
+Clm_Err_Sev_Abv varchar(5) unique -- Severity Abbreviation
+);
+// DELIMITER ;
+
+Delimiter //
+-- Message Table for Errors
+CREATE TABLE IF NOT EXISTS Tbl_Msg_Dtls
+(
+Clm_Msg_Id bigint AUTO_INCREMENT  PRIMARY KEY, -- Error message Id
+Clm_Msg_Id_NM varchar(6) unique, -- Message Id
+Clm_Msg varchar(767) unique, -- Error message 3072
+Clm_Err_Sev_Id int,
+FOREIGN KEY (Clm_Err_Sev_Id) REFERENCES Tbl_Err_Sev_Mstr(Clm_Err_Sev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- External Message Table for Errors
+CREATE TABLE IF NOT EXISTS Tbl_Ext_Msg_Dtls
+(
+Clm_Ext_Msg_Id bigint AUTO_INCREMENT  PRIMARY KEY, -- External message Id
+Clm_Ext_Msg varchar(767) unique -- External message 3072
+);
+// DELIMITER ;
+
+Delimiter //
+CREATE TABLE IF NOT EXISTS Tbl_Evnt_Dtls
+(
+Clm_Evnt_Id bigint AUTO_INCREMENT  PRIMARY KEY, -- Event Id
+Clm_Msg_Id bigint, -- message Id
+Clm_Evnt_DT datetime, -- Event DateTime
+Clm_Ext_Msg_Id bigint default 1, -- External message Id
+FOREIGN KEY (Clm_Msg_Id) REFERENCES Tbl_Msg_Dtls(Clm_Msg_Id),
+FOREIGN KEY (Clm_Ext_Msg_Id) REFERENCES Tbl_Ext_Msg_Dtls(Clm_Ext_Msg_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- video analytics Table
+CREATE TABLE IF NOT EXISTS Tbl_VA_Mstr
+(
+Clm_VA_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- video analytics Id
+Clm_VA_Typ varchar(25) unique -- video analytics Type (i.e., Motion,Face,Tampering,IVA)
+);
+// DELIMITER ; 
+
+-- Delimiter //
+-- Zone_Details Table
+-- CREATE TABLE IF NOT EXISTS Tbl_MD_Zn_Mstr
+-- (
+-- Clm_MD_Zn_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- video analytics Id
+-- Clm_MD_Zn_Typ int default 0, -- Zone Type, 0-PreDefined, 1-Custom
+-- Clm_MD_Zn int, -- Zone Number
+-- Clm_MD_Zn_WD int default 640, -- Zone Width
+-- Clm_MD_Zn_HT int default 480, -- Zone Height
+-- Clm_MD_Zn_Pnt varchar(50), -- Points
+-- Clm_MD_Zn_CS int default 1, -- Zone Current state 0-Active,1-DeActive
+-- Clm_MD_Zn_Th int default 10, -- Threshold value
+-- Clm_MD_Zn_Dur int default 1, -- Duration
+-- Clm_Dev_Id int,
+-- FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+-- );
+-- // DELIMITER ;
+
+Delimiter //
+-- Zone_Master Table
+CREATE TABLE IF NOT EXISTS Tbl_Zn_Mstr
+(
+Clm_Zn_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Zone Id
+Clm_Zn_Typ int default 0, -- Zone Type, 0-PreDefined/Line, 1-Custom/Area
+Clm_Zn int, -- Zone Number
+Clm_Zn_WD int default 640, -- Zone Width
+Clm_Zn_HT int default 480, -- Zone Height
+Clm_Zn_Pnt varchar(50), -- Points
+Clm_Zn_CS int default 1, -- Zone Current state 0-Active,1-DeActive
+Clm_Zn_Th int default 10, -- Threshold value
+Clm_Zn_Dur int default 1, -- Duration
+Clm_Dev_Id int,
+Clm_VA_Id int default 1,
+FOREIGN KEY (Clm_VA_Id) REFERENCES Tbl_VA_Mstr(Clm_VA_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- video analytics Details Table
+CREATE TABLE IF NOT EXISTS Tbl_VA_Dtls
+(
+Clm_VA_Dtls_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- video analytics Id
+Clm_VA_Alrm bool default false, -- Alarm state, 0/false-Enable,1/true-Disable
+Clm_VA_Id int default 1,
+Clm_VA_Zn_Typ int default 0, -- Zone Type, 0-PreDefined, 1-Custom
+Clm_Dev_Id int,
+Clm_VA_CS bool default false, -- Current state, 0/false-Enable,1/true-Disable
+FOREIGN KEY (Clm_VA_Id) REFERENCES Tbl_VA_Mstr(Clm_VA_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Recording Status Table
+CREATE TABLE IF NOT EXISTS Tbl_Rec_Stat_Dtls
+(
+Clm_Rec_Stat_Id int AUTO_INCREMENT  PRIMARY KEY, -- Recording Status Id
+Clm_Rec_Stat bool default false, -- Recording Status, 0-Ideal , 1-Recording
+Clm_Dev_Id int,
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Temperature Table
+CREATE TABLE IF NOT EXISTS Tbl_Temp_Dtls
+(
+Clm_Temp_Id bigint AUTO_INCREMENT  PRIMARY KEY, -- Event Id
+Clm_Temp_Typ int, -- Temperature Type 0-processor Temperature, 1-CamFPA Tempreature, 2-CamSys Temp
+Clm_Temp_DT datetime, -- Event DateTime
+Clm_Temp_Val varchar(15), 
+Clm_Dev_Id int,
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging Settings Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_Set_Mstr
+(
+Clm_Img_Set_Id int AUTO_INCREMENT  PRIMARY KEY, -- Imaging Settings Id
+Clm_Img_Set_NM varchar(20) unique -- Imaging Settings Name
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging Modes Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_Mode_Mstr
+(
+Clm_Img_Mode_Id int AUTO_INCREMENT  PRIMARY KEY, -- Imaging Mode Id
+Clm_Img_Mode_NM varchar(20) unique -- Imaging Mode Name
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging Color palette Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_Clr_Pal_Dtls
+(
+Clm_Img_Mode_Id int AUTO_INCREMENT  PRIMARY KEY, -- palette Id
+Clm_Img_Mode_NM varchar(20) unique, -- palette Name
+Clm_Dev_Id int,
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging FPS Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_FPS_Dtls
+(
+Clm_Img_FPS_Id int AUTO_INCREMENT  PRIMARY KEY, -- FPS Id
+Clm_Img_FPS_NM varchar(20), -- FPS Name
+Clm_Dev_Id int,
+UNIQUE KEY (Clm_Img_FPS_NM,Clm_Dev_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Resolution Details Table
+CREATE TABLE IF NOT EXISTS Tbl_Res_Dtls
+(
+Clm_Res_Dtls_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Resolution Id
+Clm_Res_Id int, -- Resolution Id
+Clm_Dev_Id int,-- Device Id from Device Table
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id),
+FOREIGN KEY (Clm_Res_Id) REFERENCES Tbl_Res_Mstr(Clm_Res_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Image Orientation Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_Orien_Dtls
+(
+Clm_Img_Orien_Id int AUTO_INCREMENT  PRIMARY KEY, -- palette Id
+Clm_Img_Orien_NM varchar(20), -- palette Name
+Clm_Dev_Id int,
+UNIQUE KEY (Clm_Img_Orien_NM,Clm_Dev_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging Supported Settings Table
+CREATE TABLE IF NOT EXISTS Tbl_Sup_Img_Set_Dtls
+(
+Clm_Sup_Img_Set_Id int AUTO_INCREMENT  PRIMARY KEY, -- Imaging Settings Id
+Clm_Img_Set_Id int,
+Clm_Dev_Id int,
+FOREIGN KEY (Clm_Img_Set_Id) REFERENCES Tbl_Img_Set_Mstr(Clm_Img_Set_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging Settings Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_Set_Mode_Dtls
+(
+Clm_Img_Set_Mode_Id int AUTO_INCREMENT  PRIMARY KEY, -- Imaging Settings Id
+Clm_Img_Set_Id int,
+Clm_Dev_Id int,
+Clm_Img_Mode_Id int,
+FOREIGN KEY (Clm_Img_Set_Id) REFERENCES Tbl_Img_Set_Mstr(Clm_Img_Set_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id),
+FOREIGN KEY (Clm_Img_Mode_Id) REFERENCES Tbl_Img_Mode_Mstr(Clm_Img_Mode_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging Settings Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_Set_MinMax_Dtls
+(
+Clm_Img_Set_MinMax_Id int AUTO_INCREMENT  PRIMARY KEY, -- Imaging Settings Id
+Clm_Img_Set_Id int,
+Clm_Dev_Id int,
+Clm_Min_Val double,
+Clm_Max_Val double,
+FOREIGN KEY (Clm_Img_Set_Id) REFERENCES Tbl_Img_Set_Mstr(Clm_Img_Set_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Current Imaging Settings Table
+CREATE TABLE IF NOT EXISTS Tbl_Curr_Img_Set_Dtls
+(
+Clm_Img_Set_Curr_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Default Id
+Clm_Img_Set_Id int,
+Clm_Curr_Val varchar(20), -- Current Value
+Clm_Dev_Id int, -- Device Id
+FOREIGN KEY (Clm_Img_Set_Id) REFERENCES Tbl_Img_Set_Mstr(Clm_Img_Set_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- TimeZone Table
+CREATE TABLE IF NOT EXISTS Tbl_T_Zn_Mstr
+(
+Clm_T_Zn_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- TimeZone Id
+Clm_T_Zn_NM varchar(150) unique -- TimeZone Name 
+);
+// DELIMITER ;
+
+Delimiter //
+-- System DateTime Table
+CREATE TABLE IF NOT EXISTS Tbl_Sys_DT_Dtls
+(
+Clm_Sys_DT_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- System DateTime Id
+Clm_T_Zn_Id int, -- TimeZone Id
+Clm_Sys_DT_Typ int default 0, -- 1-Manual,0-Synchronize with NTP server
+Clm_Sys_DT_D varchar(12),
+Clm_Sys_DT_T varchar(8),
+Clm_Sys_DT_Add1 varchar(25),
+Clm_Sys_DT_Add2 varchar(25),
+FOREIGN KEY (Clm_T_Zn_Id) REFERENCES Tbl_T_Zn_Mstr(Clm_T_Zn_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- System Details Table
+CREATE TABLE IF NOT EXISTS Tbl_Sys_Dtls
+(
+Clm_Sys_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- System Id 
+Clm_Sys_NM varchar(50), -- Name 
+Clm_Sys_Loc varchar(50), -- Location 
+Clm_Sys_Mfr varchar(50), -- Manufacturer 
+Clm_Sys_Mdl varchar(50), -- Model 
+Clm_Sys_HW varchar(50), -- Hardware 
+Clm_Sys_FMW varchar(50), -- Firmware 
+Clm_Sys_Dev_Id varchar(50), -- Device Id 
+Clm_Logo longtext, -- Company Logo  
+Clm_Bnr longtext -- Company banner
+);
+// DELIMITER ;
+
+Delimiter //
+-- Pan Tilt Table
+CREATE TABLE IF NOT EXISTS Tbl_PT_Dtls
+(
+Clm_PT_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Id
+Clm_PT_CS bool default false, -- Current State 0/De-Active,1/Active
+Clm_P_Val float, -- Pan Value 
+Clm_T_Val float, -- Tilt Value 
+Clm_T_Dir int default 0, -- Tilt Direction 1-Bottom,0-Top
+Clm_Z_Val float,
+Clm_Dev_Id int, -- Device Id
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+// DELIMITER ;
+
+Delimiter //
+-- Tracking Network Details table
+CREATE TABLE IF NOT EXISTS Tbl_Trk_Net_Dtls 
+(
+Clm_Trk_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, 
+Clm_Port_Id int, -- Port Id 
+Clm_IP_Add_Id int,  -- IpAddress Id from Ip Address Table 
+FOREIGN KEY (Clm_Port_Id) REFERENCES Tbl_Port_Mstr(Clm_Port_Id), 
+FOREIGN KEY (Clm_IP_Add_Id) REFERENCES Tbl_IP_Add_Mstr(Clm_IP_Add_Id) -- FOREIGN key constrain for Ip Address Table 
+);
+// DELIMITER ;
+
+Delimiter //
+-- Imaging Settings Enable/Visible Table
+CREATE TABLE IF NOT EXISTS Tbl_Img_Set_Dtls
+(
+Clm_Id int AUTO_INCREMENT  PRIMARY KEY,
+Clm_Img_Set_Id int, 
+Clm_Dev_Id int, 
+Clm_Ena_St bool default false, 
+Clm_Vis_St bool default false, 
+FOREIGN KEY (Clm_Img_Set_Id) REFERENCES Tbl_Img_Set_Mstr(Clm_Img_Set_Id), 
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id) 
+);
+// DELIMITER ;
+
+Delimiter //
+-- Configuration Tabs Enable/Visible Table
+CREATE TABLE IF NOT EXISTS Tbl_Config_Tab_Dtls
+(
+Clm_Id int AUTO_INCREMENT  PRIMARY KEY,
+Clm_Config_Tab_NM varchar(50),
+Clm_Ena_St bool default false, 
+Clm_Vis_St bool default false 
+);
+// DELIMITER ;
+
+Delimiter //
+-- Update Type Details Table
+CREATE TABLE IF NOT EXISTS Tbl_UD_Typ_Mstr
+(
+Clm_UD_Typ_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Id 
+Clm_UD_Typ_NM varchar(50), -- Update Type Name 
+Clm_UD_Typ_Ver varchar(10) default '1.1.D.1' -- Update Version 
+);
+// DELIMITER ;
+
+Delimiter //
+-- Smart Camera Status Table
+CREATE TABLE IF NOT EXISTS Tbl_SmartCam_Stat_Dtls
+(
+Clm_Stat_Id int AUTO_INCREMENT  PRIMARY KEY, -- Status Id
+Clm_Stat_Typ varchar(50),
+Clm_Stat bool default false -- Status, 0-Ideal , 1-InProgress
+);
+// DELIMITER ;
+
+commit;

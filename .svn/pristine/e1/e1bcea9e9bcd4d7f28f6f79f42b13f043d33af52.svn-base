@@ -1,0 +1,748 @@
+-- Tbl - Table
+-- Clm - Column
+-- Dtls - Details
+-- (SELECT DATE_FORMAT(NOW(), "%d-%m-%Y %T"));
+
+ insert into Tbl_Camera_Variables(Ldr_Ctrl) value('AUTO');
+ 
+ insert into Tbl_BIT_Typ_Mstr(Clm_BIT_Typ) values("Networking");
+insert into Tbl_BIT_Typ_Mstr(Clm_BIT_Typ) values("Memory");
+insert into Tbl_BIT_Typ_Mstr(Clm_BIT_Typ) values("Power");
+insert into Tbl_BIT_Typ_Mstr(Clm_BIT_Typ) values("Temperature");
+
+insert into Tbl_BIT_Typ_Dtls(Clm_BIT_Typ,Clm_BIT_Typ_Id) values("Connection",(select Clm_BIT_Typ_Id from Tbl_BIT_Typ_Mstr t2 where t2.Clm_BIT_Typ='Networking'));
+insert into Tbl_BIT_Typ_Dtls(Clm_BIT_Typ,Clm_BIT_Typ_Id) values("Quality",(select Clm_BIT_Typ_Id from Tbl_BIT_Typ_Mstr t2 where t2.Clm_BIT_Typ='Networking'));
+insert into Tbl_BIT_Typ_Dtls(Clm_BIT_Typ,Clm_BIT_Typ_Id) values("Speed",(select Clm_BIT_Typ_Id from Tbl_BIT_Typ_Mstr t2 where t2.Clm_BIT_Typ='Networking'));
+insert into Tbl_BIT_Typ_Dtls(Clm_BIT_Typ,Clm_BIT_Typ_Id) values("System",(select Clm_BIT_Typ_Id from Tbl_BIT_Typ_Mstr t2 where t2.Clm_BIT_Typ='Temperature'));
+insert into Tbl_BIT_Typ_Dtls(Clm_BIT_Typ,Clm_BIT_Typ_Id) values("Camera1",(select Clm_BIT_Typ_Id from Tbl_BIT_Typ_Mstr t2 where t2.Clm_BIT_Typ='Temperature'));
+insert into Tbl_BIT_Typ_Dtls(Clm_BIT_Typ,Clm_BIT_Typ_Id) values("Camera2",(select Clm_BIT_Typ_Id from Tbl_BIT_Typ_Mstr t2 where t2.Clm_BIT_Typ='Temperature'));
+insert into Tbl_BIT_Typ_Dtls(Clm_BIT_Typ,Clm_BIT_Typ_Id) values("SD_Read",(select Clm_BIT_Typ_Id from Tbl_BIT_Typ_Mstr t2 where t2.Clm_BIT_Typ='Memory'));
+insert into Tbl_BIT_Typ_Dtls(Clm_BIT_Typ,Clm_BIT_Typ_Id) values("SD_Write",(select Clm_BIT_Typ_Id from Tbl_BIT_Typ_Mstr t2 where t2.Clm_BIT_Typ='Memory'));
+insert into Tbl_BIT_Typ_Dtls(Clm_BIT_Typ,Clm_BIT_Typ_Id) values("SD_Capisity",(select Clm_BIT_Typ_Id from Tbl_BIT_Typ_Mstr t2 where t2.Clm_BIT_Typ='Memory'));
+-- insert into Tbl_BIT_Typ_Dtls(Clm_BIT_Typ,Clm_BIT_Typ_Id) values("",(select Clm_BIT_Typ_Id from Tbl_BIT_Typ_Mstr t2 where t2.Clm_BIT_Typ=''));
+
+
+-- Delimiter //
+insert into Tbl_Dev_Mstr(Clm_Dev_NM) values('Device0');
+insert into Tbl_Dev_Mstr(Clm_Dev_NM) values('Device1');
+
+insert into Tbl_UD_Typ_Mstr(Clm_UD_Typ_NM,Clm_Up_D)values('SmartCamWeb',(SELECT DATE_FORMAT(NOW(), "%d-%m-%Y %T")));
+insert into Tbl_UD_Typ_Mstr(Clm_UD_Typ_NM,Clm_Up_D)values('SmartCamCamera1Firmware',(SELECT DATE_FORMAT(NOW(), "%d-%m-%Y %T")));
+insert into Tbl_UD_Typ_Mstr(Clm_UD_Typ_NM,Clm_Up_D)values('SmartCamCamera2Firmware',(SELECT DATE_FORMAT(NOW(), "%d-%m-%Y %T")));
+insert into Tbl_UD_Typ_Mstr(Clm_UD_Typ_NM,Clm_Up_D)values('SmartCamFirmware',(SELECT DATE_FORMAT(NOW(), "%d-%m-%Y %T")));
+insert into Tbl_UD_Typ_Mstr(Clm_UD_Typ_NM,Clm_Up_D)values('SmartCamScripts',(SELECT DATE_FORMAT(NOW(), "%d-%m-%Y %T")));
+insert into Tbl_UD_Typ_Mstr(Clm_UD_Typ_NM,Clm_Up_D)values('SmartCamExternalFiles',(SELECT DATE_FORMAT(NOW(), "%d-%m-%Y %T")));
+
+insert into Tbl_SmartCam_Stat_Dtls(Clm_Stat_Typ) values("Firmware_Update");
+insert into Tbl_SmartCam_Stat_Dtls(Clm_Stat_Typ) values("Video_Play");
+insert into Tbl_SmartCam_Stat_Dtls(Clm_Stat_Typ) values("Video_Stream"); -- 0-Play Through UDP, 1-Play Through Saved Images
+
+insert into Tbl_Config_Tab_Dtls(Clm_Config_Tab_NM) values('System');
+insert into Tbl_Config_Tab_Dtls(Clm_Config_Tab_NM) values('DateTime');
+insert into Tbl_Config_Tab_Dtls(Clm_Config_Tab_NM) values('Networks');
+insert into Tbl_Config_Tab_Dtls(Clm_Config_Tab_NM) values('UserAccounts');
+insert into Tbl_Config_Tab_Dtls(Clm_Config_Tab_NM) values('Profiles');
+insert into Tbl_Config_Tab_Dtls(Clm_Config_Tab_NM) values('Analytics');
+insert into Tbl_Config_Tab_Dtls(Clm_Config_Tab_NM) values('Recording_Config');
+
+
+insert into Tbl_Sys_Dtls(Clm_Sys_NM,Clm_Sys_Loc,Clm_Sys_Mfr,Clm_Sys_Mdl,Clm_Sys_HW,Clm_Sys_FMW,Clm_Sys_Dev_Id) values('Python','India','Analinear','Python','PY125678','1.1.C.1','PY123456');
+
+insert into Tbl_Dev_Dtls(Clm_Dev_CS,Clm_Dev_NM,Clm_Dev_Id) values(true,'Python',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Dev_Dtls(Clm_Dev_NM,Clm_Dev_Id) values('Eagle',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Lgn_Dtls(Clm_Lgn_Nm,Clm_Lgn_Pwd,Clm_Lgn_Lvl,Clm_Lgn_Cre_D) 
+			values('admin','Analinear',0,(SELECT DATE_FORMAT(NOW(), "%d-%m-%Y %T")));
+
+insert into Tbl_IP_Add_Mstr(Clm_Ip_Add) values('192.168.8.140');
+
+-- Insert default details into Network Table
+insert into Tbl_Net_Dtls(Clm_Net_SNM,Clm_Net_GW,Clm_Net_DNS1,Clm_Net_DNS2,Clm_Net_Typ,clm_Net_Hst_NM,clm_Net_MAC,Clm_IP_Add_Id)
+		values('255.255.255.0','192.168.8.1','','',0,'Analinear','E4-02-9B-1B-DA-60',(select Clm_IP_Add_Id from Tbl_IP_Add_Mstr where Clm_Ip_Add='192.168.8.140'));
+
+
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1920,1080);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1920,1280);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1280,1024);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1280,960);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1280,720);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1024,768);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(800,600);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(800,448);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(720,576);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(720,480);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(640,480);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(640,360);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(320,240);
+
+insert into Tbl_Res_Dtls(Clm_Res_Id,Clm_Dev_Id)values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD='640' and Clm_Res_HT='480'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Res_Dtls(Clm_Res_Id,Clm_Dev_Id)values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD='320' and Clm_Res_HT='240'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Res_Dtls(Clm_Res_Id,Clm_Dev_Id)values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD='1920' and Clm_Res_HT='1280'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(1);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(2);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(3);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(4);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(5);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(6);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(7);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(8);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(9);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(10);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(11);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(12);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(13);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(14);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(15);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(16);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(17);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(18);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(19);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(20);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(21);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(22);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(23);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(24);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(25);
+
+insert into Tbl_Enc_Mstr(Clm_Enc_NM)values("H.264");
+-- insert into Tbl_Enc_Mstr(Clm_Enc_NM)values("MJPEG");
+
+insert into Tbl_Port_Mstr(Clm_Port_No) values(8554);
+insert into Tbl_Port_Mstr(Clm_Port_No) values(1026);
+
+insert into Tbl_Prof_Dtls(Clm_Prof_NM,Clm_FPS_Id,Clm_BR,Clm_Enc_Id,Clm_Res_Id,Clm_Dev_Id,Clm_Prof_Typ)
+		values('H264',
+        (select Clm_FPS_Id from Tbl_FPS_Dtls where Clm_FPS_NM=25),
+        2048,
+        (select Clm_Enc_Id from Tbl_Enc_Mstr where Clm_Enc_NM='H.264'),
+        (select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=640 and Clm_Res_HT=480),
+		(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),0
+        ); 
+insert into Tbl_Prof_Dtls(Clm_Prof_NM,Clm_FPS_Id,Clm_BR,Clm_Enc_Id,Clm_Res_Id,Clm_Dev_Id,Clm_Prof_Typ)
+		values('H264',
+        (select Clm_FPS_Id from Tbl_FPS_Dtls where Clm_FPS_NM=25),
+        2048,
+        (select Clm_Enc_Id from Tbl_Enc_Mstr where Clm_Enc_NM='H.264'),
+        (select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=1920 and Clm_Res_HT=1280),
+		(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),0
+        );        
+        
+-- insert into Tbl_Prof_Dtls(Clm_Prof_NM,Clm_FPS_Id,Clm_BR,Clm_Enc_Id,Clm_Res_Id,Clm_Dev_Id,Clm_Prof_Typ)
+-- 		values('MJPEG',
+--         (select Clm_FPS_Id from Tbl_FPS_Dtls where Clm_FPS_NM=25),
+--         2048,
+--         (select Clm_Enc_Id from Tbl_Enc_Mstr where Clm_Enc_NM='MJPEG'),
+--         (select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=640 and Clm_Res_HT=480),
+-- 		(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),0
+--         ); 
+        
+insert into Tbl_Def_Prof_Dtls(Clm_Prof_Id,Clm_Dev_Id) values((select Clm_Prof_Id from Tbl_Prof_Dtls where Clm_Prof_NM='H264' and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Def_Prof_Dtls(Clm_Prof_Id,Clm_Dev_Id) values((select Clm_Prof_Id from Tbl_Prof_Dtls where Clm_Prof_NM='H264' and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_RTSP_Dtls(Clm_Port_Id,Clm_Dev_Id) values((select Clm_Port_Id from Tbl_Port_Mstr where Clm_Port_No=8554),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Curr_Dtls(Clm_Res_Id,Clm_FPS_Id,Clm_Enc_Id,Clm_Dev_Id,Clm_Curr_BR) values(
+								(select Clm_Res_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')),
+                                (select Clm_FPS_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')),
+                                (select Clm_Enc_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')),
+                                (select Clm_Dev_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')),
+                                (select Clm_BR from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'))
+                                );
+insert into Tbl_Curr_Dtls(Clm_Res_Id,Clm_FPS_Id,Clm_Enc_Id,Clm_Dev_Id,Clm_Curr_BR) values(
+								(select Clm_Res_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')),
+                                (select Clm_FPS_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')),
+                                (select Clm_Enc_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')),
+                                (select Clm_Dev_Id from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')),
+                                (select Clm_BR from Tbl_Prof_Dtls t2 where Clm_Prof_Id=(select Clm_Prof_Id from Tbl_Def_Prof_Dtls where Clm_Dev_Id=t2.Clm_Dev_Id) and Clm_Dev_Id=(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'))
+                                );                                
+                                
+insert into Tbl_Rec_Res_Dtls(Clm_Res_Id,Clm_Dev_Id) values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=1920 and Clm_Res_HT=1080),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Rec_Res_Dtls(Clm_Res_Id,Clm_Dev_Id) values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=1920 and Clm_Res_HT=1280),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Rec_Res_Dtls(Clm_Res_Id,Clm_Dev_Id) values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=1280 and Clm_Res_HT=720),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Rec_Res_Dtls(Clm_Res_Id,Clm_Dev_Id) values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=640 and Clm_Res_HT=480),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Rec_Res_Dtls(Clm_Res_Id,Clm_Dev_Id) values((select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=640 and Clm_Res_HT=480),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+
+insert into Tbl_Rec_Dtls(Clm_Enc_Id,Clm_Res_Id,Clm_Dev_Id) values(
+								(select Clm_Enc_Id from Tbl_Enc_Mstr where Clm_Enc_NM='H.264'),
+								(select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=640 and Clm_Res_HT=480),
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								);
+insert into Tbl_Rec_Dtls(Clm_Enc_Id,Clm_Res_Id,Clm_Dev_Id) values(
+								(select Clm_Enc_Id from Tbl_Enc_Mstr where Clm_Enc_NM='H.264'),
+								(select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=1920 and Clm_Res_HT=1280),
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')
+								);                                
+                                
+insert into Tbl_Err_Sev_Mstr(Clm_Err_Sev_NM,Clm_Err_Sev_Abv) values('Error','ERR');
+insert into Tbl_Err_Sev_Mstr(Clm_Err_Sev_NM,Clm_Err_Sev_Abv) values('Warning','WRN');
+insert into Tbl_Err_Sev_Mstr(Clm_Err_Sev_NM,Clm_Err_Sev_Abv) values('Information','INF');
+
+insert into Tbl_Msg_Dtls(Clm_Msg_Id_NM,Clm_Msg,Clm_Err_Sev_Id) values('SYS001','Network connection Established',
+													(select Clm_Err_Sev_Id from Tbl_Err_Sev_Mstr where Clm_Err_Sev_Abv='INF'));
+insert into Tbl_Msg_Dtls(Clm_Msg_Id_NM,Clm_Msg,Clm_Err_Sev_Id) values('SYS002','Network disconnected',
+													(select Clm_Err_Sev_Id from Tbl_Err_Sev_Mstr where Clm_Err_Sev_Abv='ERR'));
+insert into Tbl_Msg_Dtls(Clm_Msg_Id_NM,Clm_Msg,Clm_Err_Sev_Id) values('SYS003','New Client Device Connected with IP Address',
+													(select Clm_Err_Sev_Id from Tbl_Err_Sev_Mstr where Clm_Err_Sev_Abv='INF'));
+insert into Tbl_Msg_Dtls(Clm_Msg_Id_NM,Clm_Msg,Clm_Err_Sev_Id) values('CAM001','Camera Detected',
+													(select Clm_Err_Sev_Id from Tbl_Err_Sev_Mstr where Clm_Err_Sev_Abv='INF'));
+insert into Tbl_Msg_Dtls(Clm_Msg_Id_NM,Clm_Msg,Clm_Err_Sev_Id) values('CAM002','camera Disconnected',
+													(select Clm_Err_Sev_Id from Tbl_Err_Sev_Mstr where Clm_Err_Sev_Abv='ERR'));
+insert into Tbl_Msg_Dtls(Clm_Msg_Id_NM,Clm_Msg,Clm_Err_Sev_Id) values('CAM003','Camera Reset Request Received',
+													(select Clm_Err_Sev_Id from Tbl_Err_Sev_Mstr where Clm_Err_Sev_Abv='INF'));
+                                                    
+insert into Tbl_Ext_Msg_Dtls(Clm_Ext_Msg) values('');
+
+insert into  Tbl_VA_Mstr(Clm_VA_Typ) values('Motion_Detection');
+insert into  Tbl_VA_Mstr(Clm_VA_Typ) values('Face_Detection');
+insert into  Tbl_VA_Mstr(Clm_VA_Typ) values('Tampering_Detection');
+insert into  Tbl_VA_Mstr(Clm_VA_Typ) values('IVA_Detection');
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,1,'0 160,213 160,213 0,0 0',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,1,'0 160,213 160,213 0,0 0',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,2,'213 160,426 160,426 0,213 0',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,2,'213 160,426 160,426 0,213 0',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,3,'639 160,426 160,426 0,639 0',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,3,'639 160,426 160,426 0,639 0',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,4,'0 320,213 320,213 160,0 160',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,4,'0 320,213 320,213 160,0 160',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,5,'426 320,213 320,213 160,426 160',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,5,'426 320,213 320,213 160,426 160',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,6,'639 320,426 320,426 160,639 160',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,6,'639 320,426 320,426 160,639 160',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,7,'0 320,213 320,213 480,0 480',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,7,'0 320,213 320,213 480,0 480',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,8,'426 320,213 320,213 480,426 480',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,8,'426 320,213 320,213 480,426 480',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,9,'639 320,426 320,426 480,639 480',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(0,9,'639 320,426 320,426 480,639 480',0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,1,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,1,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,2,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,2,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,3,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,3,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,4,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id) values(1,4,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));   
+
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,1,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,1,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,2,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,2,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,3,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,3,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,4,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(0,4,'237 220,237 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,1,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,1,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,2,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,2,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,3,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,3,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,4,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,4,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'));   
+
+
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,1,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Tampering_Detection'));   
+insert into Tbl_Zn_Mstr(Clm_Zn_Typ,Clm_Zn,Clm_Zn_Pnt,Clm_Zn_CS,Clm_Dev_Id,Clm_VA_Id) values(1,1,'320 220,160 220,160 120,320 120',1,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Tampering_Detection'));   
+
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(1,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Motion_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(1,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Motion_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                        
+                        
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(0,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(0,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                        
+                        
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(1,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')); 
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(1,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                        
+ 
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(1,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Tampering_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_VA_Dtls(Clm_VA_Zn_Typ,Clm_VA_Id,Clm_Dev_Id) values(1,
+						(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Tampering_Detection'),
+                        (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                        
+ 
+insert into Tbl_Rec_Stat_Dtls(Clm_Dev_Id) values((select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Rec_Stat_Dtls(Clm_Dev_Id) values((select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Brightness');
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Contrast');
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Sharpness');
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Saturation');
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('BLC_Mode'); -- Backlight compensation Mode
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('BLC_Level'); -- Backlight compensation Level
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('WDR_Mode'); -- Wide dynamic range mode
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('WDR_Level'); -- Wide dynamic range level
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Exposure_Mode');
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Exposure_Time');
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('WB_Mode'); -- White balance Mode
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('WB_Cb'); -- White balance Cb
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('WB_Cr'); -- White balance Cr
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('IrCFilter_Mode'); -- Infrared cutoff filter
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('1NUC'); -- Perform 1NUC
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('NUC_Mode'); -- 1NUC Modes
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('NUC_Mode_Type'); -- 1NUC Mode Type
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Color_Palette'); -- Color Palette
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Orientation'); -- Orientation Mode
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Integration_Time'); -- Integration Time/Exposure Time
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('FPS'); -- FPS
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Sharpen'); -- Sharpen
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Smoothen'); -- Smoothen
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('AGC_Mode'); -- AGC Modes
+insert into Tbl_Img_Set_Mstr(Clm_Img_Set_NM)values('Save_Config'); -- Save current Configuration
+
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Sharpness'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Saturation'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Level'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Level'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Time'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Cb'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Cr'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='IrCFilter_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='1NUC'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Color_Palette'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Orientation'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='FPS'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Sharpen'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Smoothen'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='AGC_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Save_Config'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Sharpness'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Saturation'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Level'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Level'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Time'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Cb'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Cr'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='IrCFilter_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='1NUC'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Color_Palette'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Orientation'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='FPS'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Sharpen'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Smoothen'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='AGC_Mode'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+insert into Tbl_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Save_Config'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+
+
+insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('On');
+insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('Off');
+insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('Auto');
+insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('Manual');
+insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('External');
+-- insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('Frame');
+insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('Time');
+insert into Tbl_Img_Mode_Mstr(Clm_Img_Mode_NM)values('Temperature');
+
+insert into Tbl_Img_Clr_Pal_Dtls(Clm_Img_Mode_NM,Clm_Dev_Id)values('White_Hot',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Clr_Pal_Dtls(Clm_Img_Mode_NM,Clm_Dev_Id)values('Black_Hot',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Img_FPS_Dtls(Clm_Img_FPS_NM,Clm_Dev_Id)values('25',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_FPS_Dtls(Clm_Img_FPS_NM,Clm_Dev_Id)values('25',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Img_FPS_Dtls(Clm_Img_FPS_NM,Clm_Dev_Id)values('50',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Normal',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Normal',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Invert',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Invert',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Revert',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Revert',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Invert_Revert',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Orien_Dtls(Clm_Img_Orien_NM,Clm_Dev_Id)values('Invert_Revert',(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+                                                    
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='1NUC'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));                                                    
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Color_Palette'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Orientation'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Orientation'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                                    
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='FPS'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')); 
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='FPS'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+                                                    
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Sharpen'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Smoothen'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+insert into Tbl_Sup_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Dev_Id) values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='AGC_Mode'),
+													(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));                                                    
+                                                   
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Auto'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Auto'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+ 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Manual'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Manual'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='On'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')); 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='On'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+ 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Off'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='BLC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Off'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='On'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')); 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='On'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+ 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Off'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));  
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WDR_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Off'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+                                    
+                                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Auto'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Auto'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+ 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Manual'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Exposure_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Manual'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='IrCFilter_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='On'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')); 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='IrCFilter_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='On'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+ 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='IrCFilter_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Off'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));  
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='IrCFilter_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Off'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));                                    
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='WB_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Auto'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'));
+                                      
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Auto'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+ 
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Manual'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')); 
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='External'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));   
+                                    
+-- insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+-- 							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),
+-- 									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Frame'),
+--                                     (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Time'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Temperature'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='AGC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Auto'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+                                    
+insert into Tbl_Img_Set_Mode_Dtls(Clm_Img_Set_Id,Clm_Img_Mode_Id,Clm_Dev_Id)
+							values((select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='AGC_Mode'),
+									(select Clm_Img_Mode_Id from Tbl_Img_Mode_Mstr where Clm_Img_Mode_NM='Manual'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));                                    
+                                                                    
+                                    
+insert into Tbl_Img_Set_MinMax_Dtls(Clm_Img_Set_Id,Clm_Dev_Id,Clm_Min_Val,Clm_Max_Val) values(
+									(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),
+                                    1,16000                                 
+									);
+                                    
+insert into Tbl_Img_Set_MinMax_Dtls(Clm_Img_Set_Id,Clm_Dev_Id,Clm_Min_Val,Clm_Max_Val) values(
+									(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),
+                                    1,255                                 
+									);                                    
+                                    
+insert into Tbl_Img_Set_MinMax_Dtls(Clm_Img_Set_Id,Clm_Dev_Id,Clm_Min_Val,Clm_Max_Val) values(
+									(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),
+                                    1,255                                 
+									);
+
+insert into Tbl_Img_Set_MinMax_Dtls(Clm_Img_Set_Id,Clm_Dev_Id,Clm_Min_Val,Clm_Max_Val) values(
+									(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),
+                                    1,255                                 
+									);                                    
+                                    
+insert into Tbl_Img_Set_MinMax_Dtls(Clm_Img_Set_Id,Clm_Dev_Id,Clm_Min_Val,Clm_Max_Val) values(
+									(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),
+                                    1000,18000                                 
+									);   
+                                    
+insert into Tbl_Img_Set_MinMax_Dtls(Clm_Img_Set_Id,Clm_Dev_Id,Clm_Min_Val,Clm_Max_Val) values(
+									(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'),
+                                    0,89                                 
+									);  
+insert into Tbl_Img_Set_MinMax_Dtls(Clm_Img_Set_Id,Clm_Dev_Id,Clm_Min_Val,Clm_Max_Val) values(
+									(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),
+                                    (select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1'),
+                                    0,19                                 
+									);                                     
+
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Color_Palette'),
+								'White_Hot',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								);
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode'),
+								'Manual',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+                                                              
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),
+								'80',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Brightness'),
+								'80',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')
+								);                                
+
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),
+								'30',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Contrast'),
+								'30',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')
+								);
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Orientation'),
+								'Normal',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Orientation'),
+								'Normal',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')
+								);                                
+                               
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='NUC_Mode_Type'),
+								'1000',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),
+								'10.2',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Integration_Time'),
+								'10.2',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')
+								);                                
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='FPS'),
+								'25',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='FPS'),
+								'25',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device1')
+								);                                
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Sharpen'),
+								'false',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								);  
+                                
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='Smoothen'),
+								'false',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								);                                  
+                                    
+insert into Tbl_Curr_Img_Set_Dtls(Clm_Img_Set_Id,Clm_Curr_Val,Clm_Dev_Id)values(
+								(select Clm_Img_Set_Id from Tbl_Img_Set_Mstr where Clm_Img_Set_NM='AGC_Mode'),
+								'Auto',
+								(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0')
+								); 
+                                
+insert into Tbl_Sys_DT_Dtls(Clm_T_Zn_Id)values((select Clm_T_Zn_Id from Tbl_T_Zn_Mstr where Clm_T_Zn_NM='Asia/Kolkata'));							
+-- // DELIMITER ;
+
+insert into Tbl_PT_Dtls(Clm_P_Val,Clm_T_Val,Clm_Z_Val,Clm_Dev_Id)values(0,0,0,(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+commit;
+
+
+
+
+
+
+
+

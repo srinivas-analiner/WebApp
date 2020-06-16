@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebApplication1</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+              crossorigin="anonymous"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
+    </environment>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script>
+        var j = jQuery.noConflict();
+        function PostsyncData(url, Parameters, $Control, onSuccessCall) {
+            j.ajax({
+                url: url,
+                type: 'POST',
+                data: Parameters,
+                contentType: 'application/json; charset=utf-8',
+                beforeSend: function () {
+                    $Control.prop("disabled", true);
+                    $Control.hide();
+                },
+                complete: function () {
+                    $Control.show();
+                    $Control.prop("disabled", false);
+                },
+                success: function (data) {
+                    onSuccessCall(data);
+                },
+                error: function () {
+                    var data = "Error";
+                    onSuccessCall(data);
+                }
+            });
+        }
+        function PostasyncData(url, Parameters, $Control, onSuccessCall) {
+            j.ajax({
+                url: url,
+                type: 'POST',
+                data: JSON.stringify(Parameters),
+                timeout: 30000,
+                contentType: 'application/json; charset=utf-8',
+                beforeSend: function () {
+                    //$Control.prop("disabled", true);
+                    $Control.hide();
+                    //$Control.css("display", "none");
+                },
+                complete: function () {
+                    $Control.show();
+                    //$Control.prop("disabled", false);
+                    //$Control.css("display", "block");
+                },
+                success: function (data) {
+                    onSuccessCall(data);
+                },
+                async: false,
+                error: function () {
+                    var data = "Error";
+                    onSuccessCall(data);
+                }
+            });
+        }
+        /**/</script>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index2">Analinear</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+    <div class="col-md-12 col-lg-12">
+        <div>
+            <video id="my-video" width="640" height="360" autoplay="autoplay" controls="controls"></video>
+        </div>
+        <div class="container">
+            @RenderBody()
+        </div>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container" align="center">
+            &copy; 2019 - WebApplication1
+        </div>
+    </footer>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
+        </script>
+    </environment>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/hls.js"></script>
+    <script type="text/javascript">
+        if (Hls.isSupported()) {
+            var video = document.getElementById("my-video");
+            //alert(video);
+            var hls = new Hls();
+            hls.loadSource('http://192.168.8.147/test.m3u8');
+            hls.attachMedia(video);
+        }
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

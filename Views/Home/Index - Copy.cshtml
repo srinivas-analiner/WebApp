@@ -1,0 +1,288 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    .ImageDisplay {
+        width: 50%;
+        height: 200px;
+    }
+
+    #divMain {
+        font-size: 14px;
+    }
+
+    .classsm {
+        margin-bottom: 1px;
+    }
+
+    .lableDisplay {
+        display: block;
+    }
+
+    @@media (max-width: 950px) {
+        .ImageDisplay {
+            height: 380px;
+        }
+
+        #divMain {
+            font-size: 13px;
+        }
+    }
+
+    @@media (max-width: 850px) {
+        .ImageDisplay {
+            height: 320px;
+        }
+
+        #divMain {
+            font-size: 12px;
+        }
+    }
+
+    @@media (max-width: 750px) {
+        .ImageDisplay {
+            width: 100%;
+            height: 260px;
+        }
+
+        #divMain {
+            font-size: 11px;
+        }
+    }
+
+    @@media (max-width: 750px) {
+        .classsm {
+            margin-bottom: 8px;
+        }
+
+        .lableDisplay {
+            display: none;
+        }
+    }
+
+    a:hover, a:visited, a:link, a:active {
+        text-decoration: none;
+    }
+
+    .toggle.ios, .toggle-on.ios, .toggle-off.ios {
+        border-radius: 20px;
+    }
+
+        .toggle.ios .toggle-handle {
+            border-radius: 20px;
+        }
+</style>
+
+<script>
+    var j = jQuery.noConflict();
+
+    var btnPlayStop = false; var timer = null, interval = 40, value = 0;
+    var DirectoryPath = "";
+
+    j(document).ready(function () {
+
+        j(document).on('click', '#btnSubmit', function () {
+            var DataIn = j("#txtTransmit").val();
+            var myData = JSON.stringify({ TData: DataIn });
+            PostsyncData('/Json/TransmitData', myData, j(this), SubmitData);
+            return false;
+        });
+
+        j(document).on('click', '#btnSubmitUDP', function () {
+            var DataIn = j("#txtTransmit").val();
+            var myData = JSON.stringify({ TData: DataIn });
+            PostsyncData('/Json/TransmitDataUDP', myData, j(this), SubmitData);
+            return false;
+        });
+
+        j(document).on('click', '#btnGetImage', function () {
+            for (var k = 0; k < 1; k++) {
+                PostasyncData('/Json/GetImage4', {}, j(this), SubmitData4);
+            }
+
+            return false;
+        });
+
+        j(document).on('click', '#btnGetPath', function () {
+            PostsyncData('/Json/GetPath', {}, j(this), SubmitData3);
+            return false;
+        });
+
+        j(document).on('click', '#btnPlay', function () {
+            if (!btnPlayStop) {
+                DirectoryPath = "";
+                if (timer !== null) {
+                    return;
+                }
+                var myData = JSON.stringify({ TData: "True" });
+                //DirectoryPath = "T";
+                PostasyncData('/Json/StartStopPlay', myData, j("#lblDummy"), GetDirectory);
+                if (DirectoryPath != "") {
+                    $("#btnPlay").prop('value', 'Pause');
+                    btnPlayStop = true;
+                    timer = setInterval(function () {
+                        var myData = JSON.stringify({ FPath: DirectoryPath });
+                        PostasyncData("/Json/GetFrameData", myData, j("#lblDummy"), GetFrame);
+                    }, interval);
+                }
+            }
+            else {
+                var myData = JSON.stringify({ TData: "False" });
+                PostasyncData('/Json/StartStopPlay', myData, j(this), GetDirectory);
+                btnPlayStop = false;
+                clearInterval(timer);
+                timer = null;
+                $("#btnPlay").prop('value', 'Play');
+            }
+        });
+
+
+
+        //Test();
+    });
+
+
+    function GetDirectory(response) {
+        if (response.Result == "Sucess") {
+            DirectoryPath = response.ReturnData;
+        }
+        else {
+            alert(response.Result);
+        }
+    }
+
+    function Test() {
+        alert(location.hostname);
+    }
+
+    function SubmitData(response) {
+        if (response.Result == "Sucess") {
+            j("#txtReceive").val(response.ReturnData);
+        }
+        else {
+            alert(response.Result);
+        }
+    }
+
+    function SubmitData2(response) {
+        if (response.Result != "Sucess") {
+            alert(response.Result);
+        }
+        else {
+            var url = response.Base64Image;
+            j("#imgDisplay2").show();
+            j("#imgDisplay2").attr('src', url);
+            //alert(url);
+            var dt = new Date();
+            var time = dt.getHours() + "_" + dt.getMinutes() + "_" + dt.getSeconds();
+            var Filename = "Img_" + time;
+            var link = document.createElement("a");
+            link.href = url;
+            if ($(this).text().indexOf(".") == -1) {
+                if (url.indexOf("application/pdf;") > -1) {
+                    Filename = Filename + ".pdf";
+                }
+                else
+                    if (url.toUpperCase().indexOf("JPG") > -1) {
+                        Filename = Filename + ".jpg";
+                    }
+
+            }
+            link.download = Filename;
+            link.target = "blank";
+            //this part will append the anchor tag and remove it after automatic click
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+
+    function SubmitData4(response) {
+        if (response.Result != "Sucess") {
+            alert(response.Result);
+        }
+        else {
+            var url = response.Base64Image;
+
+            var url2 = response.Base64Image2;
+
+            j("#imgDisplay2").show();
+            j("#imgDisplay2").attr('src', url);
+            //alert(url);
+            DownloadImage(url);
+            DownloadImage(url2);
+        }
+    }
+
+    function GetFrame(response) {
+        if (response.Result != "Sucess") {
+            //alert(response.Result);
+            j("#lblError").html(response.Result);
+        }
+        else {
+            var url = response.Base64Image;
+            j("#imgDisplay2").show();
+            if (url != "")
+                j("#imgDisplay2").attr('src', url);
+            j("#lblError").html();
+        }
+    }
+
+    function DownloadImage(url) {
+        var dt = new Date();
+        var time = dt.getHours() + "_" + dt.getMinutes() + "_" + dt.getSeconds();
+        var Filename = "Img_" + time;
+        var link = document.createElement("a");
+        link.href = url;
+        if ($(this).text().indexOf(".") == -1) {
+            if (url.indexOf("application/pdf;") > -1) {
+                Filename = Filename + ".pdf";
+            }
+            else
+                if (url.toUpperCase().indexOf("JPG") > -1) {
+                    Filename = Filename + ".jpg";
+                }
+
+        }
+        link.download = Filename;
+        link.target = "blank";
+        //this part will append the anchor tag and remove it after automatic click
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function SubmitData3(response) {
+        if (response.Result != "Sucess") {
+            alert(response.Result);
+        }
+    }
+
+</script>
+
+<div>
+    <label id="lblDummy" hidden></label>
+    <label class="col-md-12 col-sm-12 col-xs-12 col-lg-12">Transmit/Receive</label>
+    <input type="text" id="txtTransmit" style="text-transform: uppercase;" />
+    <input type="text" id="txtReceive" readonly />
+    @*<textarea rows="4" cols="50" id="txtReceive" readonly></textarea>*@
+    <br />
+    <br />
+    <input type="submit" id="btnSubmit" value="Click" />
+    <input type="submit" id="btnSubmitUDP" value="UDP Click" />
+    <input type="submit" id="btnGetImage" value="GetImage" />
+    <input type="submit" id="btnGetPath" value="GetPath" />
+    <input type="submit" id="btnPlay" value="Play" />
+    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" align="left" style="overflow-x:auto;overflow-y:auto;">
+        <img id="imgDisplay2" class="col-md-12 col-sm-12 col-xs-12 col-lg-12" style="margin-top:10px;width:400px;height:300px;" />
+    </div>
+    <br />
+
+    <label id="lblError"></label>
+</div>
+
+
+
+
+

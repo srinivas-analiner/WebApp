@@ -1,0 +1,39 @@
+-- TRIGGER & Events
+-- EVENT to delete
+Delimiter //
+CREATE EVENT IF NOT EXISTS Evnt_Temp_Chk
+    ON SCHEDULE EVERY 4 hour
+    DO
+       DELETE FROM Tbl_Temp_Dtls WHERE DATE(Clm_Temp_DT) < DATE((NOW() - INTERVAL 1 DAY));
+// DELIMITER ;
+
+Delimiter //
+CREATE EVENT IF NOT EXISTS Evnt_Temp_Log
+    ON SCHEDULE EVERY 4 hour
+    DO
+       DELETE FROM Tbl_Evnt_Dtls WHERE DATE(Clm_Evnt_DT) < DATE((NOW() - INTERVAL 2 DAY));
+// DELIMITER ;
+
+Delimiter //
+CREATE TRIGGER Trx_Sav_Img_Dtls
+before insert on Tbl_Sav_Img_Dtls for each row begin
+DECLARE updatecount INT;
+  set updatecount = (select max(Clm_Img_Id) from Tbl_Sav_Img_Dtls);
+  if updatecount>4
+    then
+     delete from Tbl_Sav_Img_Dtls where Clm_Img_Id<10;
+     SET NEW.Clm_Img_Id = 1;
+     -- ALTER TABLE Tbl_Sav_Img_Dtls AUTO_INCREMENT = 1;
+     else
+     if updatecount=NULL
+     then
+     SET NEW.Clm_Img_Id =1;
+     else
+      SET NEW.Clm_Img_Id = (SELECT MAX(Clm_Img_Id) + 1 FROM Tbl_Sav_Img_Dtls);
+	end if;
+    end if;
+end;
+// DELIMITER ;
+
+
+

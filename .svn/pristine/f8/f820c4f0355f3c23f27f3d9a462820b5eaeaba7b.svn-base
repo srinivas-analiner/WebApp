@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "LiveViewer";
+}
+<div class="text-center">
+    <p>
+        Analinear is an imaging solution company, providing Imaging Sensor IP's, Peripheral Analog IP's, Imaging SoC design and Specialized camera System products. Focused on its core competency, Analinear has foundry and test house relationships for wafer fabrication, assembly and die screening tests.
+    </p>
+    <video id="video" autoplay="autoplay" controls="controls"></video>
+</div>
+
+@*<script src="~/js/hls.js"></script>
+<script>
+    if (Hls.isSupported()) {
+        var video = document.getElementById('video'); var hls = new Hls(); // bind them together
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MEDIA_ATTACHED,
+            function () {
+                console.log("video and hls.js are now bound together !");
+                hls.loadSource("http://192.168.8.147/test.m3u8"); //hls.loadSource("http://<ip-address-of-web-server>/live/mystream.m3u8");
+                hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) { console.log("manifest loaded, found " + data.levels.length + " quality level"); });
+            });
+    }
+</script>*@

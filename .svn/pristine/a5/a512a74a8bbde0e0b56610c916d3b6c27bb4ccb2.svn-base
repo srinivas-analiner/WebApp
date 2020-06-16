@@ -1,0 +1,11 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    ViewData["Title"] = "Sign in";
+}
+<div class="divLogin">
+</div>
+<script type="text/javascript">
+    j(document).ready(function () {
+        PostasyncData("/Json/GethtmData", JSON.stringify({ htmName: "Login_Form" }), j(".divLogin"), UpdateLoginDiv);
+    });
+</script>

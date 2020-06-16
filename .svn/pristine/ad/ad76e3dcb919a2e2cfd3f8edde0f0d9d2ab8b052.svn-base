@@ -1,0 +1,729 @@
+
+.edit:hover {
+    cursor: pointer;
+    color: #0008ff;
+}
+
+
+.font-smaller {
+    font-size: smaller;
+}
+
+.font-small {
+    font-size: small;
+}
+
+.Control-Height35 {
+    height: 35px;
+}
+
+.lable {
+    font-weight: bold;
+}
+
+.lableNormal {
+    font-weight: normal !important;
+}
+
+.custom-file-upload {
+    height: 35px;
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.progress {
+    background: #f0f0f0;
+    margin-top: 30px;
+    height: 25px;
+    display: none;
+    position: relative;
+}
+
+    .progress .bar {
+        background: green;
+        width: 33%;
+        height: 50px;
+    }
+
+    .progress .label {
+        line-height: 25px;
+        text-align: center;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 50px;
+        font-weight: bold;
+    }
+
+/* Modal Content */
+.modal-content {
+    position: absolute;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 250px;
+    height: 100%;
+}
+
+.edit:hover {
+    cursor: pointer;
+    color: #0008ff;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close:hover, .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+.block {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.classsm-mb1 {
+    margin-bottom: 1px;
+}
+
+.classsm-mb5 {
+    margin-bottom: 5px;
+}
+
+.classsm-mb10 {
+    margin-bottom: 10px;
+}
+
+.classsm-mb15 {
+    margin-bottom: 15px;
+}
+
+.classsm-mt1 {
+    margin-top: 1px;
+}
+
+.classsm-mt5 {
+    margin-top: 5px;
+}
+
+.classsm-mt10 {
+    margin-top: 10px;
+}
+
+.classsm-mt15 {
+    margin-top: 15px;
+}
+
+.classsm-mt20 {
+    margin-top: 20px;
+}
+
+.classsm-mt25 {
+    margin-top: 25px;
+}
+
+.classsm-mtmb55 {
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.classsm-mtmb1015 {
+    margin-bottom: 10px;
+    margin-top: 15px;
+}
+
+.controlMaxWidth215 {
+    max-width: 215px;
+}
+
+.controlMaxWidth50 {
+    max-width: 50px;
+}
+
+.controlMaxWidth60 {
+    max-width: 60px;
+}
+
+.controlMaxWidth70 {
+    max-width: 70px;
+}
+
+.controlMaxWidth75 {
+    max-width: 75px;
+}
+
+.controlMaxWidth80 {
+    max-width: 80px;
+}
+
+.controlMaxWidth90 {
+    max-width: 90px;
+}
+
+.controlMaxWidth100 {
+    max-width: 100px;
+}
+
+.controlMaxWidth115 {
+    max-width: 115px;
+}
+
+.controlMaxWidth125 {
+    max-width: 125px;
+}
+
+.controlMaxWidth150 {
+    max-width: 150px;
+}
+
+.controlMaxWidth160 {
+    max-width: 160px;
+}
+
+.controlMaxWidth180 {
+    max-width: 180px;
+}
+
+.controlMaxWidth200 {
+    max-width: 200px;
+}
+
+.demo-table {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", "Segoe Ui";
+    border-collapse: collapse;
+    min-width: 100%;
+}
+
+    .demo-table td {
+        border: 0px solid #e1edff;
+        padding: 8px 10px;
+    }
+
+    .demo-table th {
+        border: 1px solid #e1edff;
+        padding: 10px 10px;
+        text-align: center;
+        min-width: 90px;
+    }
+
+    .demo-table .title {
+        caption-side: bottom;
+        margin-top: 5px;
+    }
+
+    .demo-table thead th {
+        background-color: #508abb;
+        color: #FFFFFF;
+        border-color: #6ea1cc !important;
+        text-transform: uppercase;
+    }
+
+    .demo-table tbody td {
+        color: #353535;
+    }
+
+    .demo-table tbody tr:nth-child(odd) td {
+        /*background-color: #f4fbff;*/
+        text-align: center;
+    }
+
+    .demo-table tbody tr:nth-child(even) td {
+        text-align: center;
+    }
+
+    .demo-table tbody tr:hover td {
+        background-color: #ffffa2;
+        border-color: #ffff0f;
+        transition: all .1s;
+    }
+
+    .demo-table tfoot th {
+        background-color: #e5f5ff;
+    }
+
+        .demo-table tfoot th:first-child {
+            text-align: left;
+        }
+
+.table-pager > td {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+    .table-pager > td > a {
+        background-color: #f5f5f5;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        padding: 3px 7px;
+    }
+
+        .table-pager > td > a:hover {
+            background-color: #f0f0f0;
+        }
+
+
+.accordion-hd {
+    max-height: 40px;
+    vertical-align: top;
+}
+
+.accordion-hd-lbl {
+    font-size: medium;
+    font-weight: bold;
+}
+
+.borderempty {
+    padding: 0;
+    border: none;
+}
+
+.card-header {
+    height: 50px;
+}
+
+.ImageDisplay {
+    width: 50%;
+    height: 200px;
+}
+
+#divMain {
+    font-size: 14px;
+}
+
+
+.lableDisplay {
+    display: block;
+}
+
+.myselect-container {
+    position: static;
+    /*z-index: 0;*/
+}
+
+    .myselect-container select {
+        position: absolute;
+        z-index: 9;
+    }
+
+.image {
+    position: relative;
+    Left: auto;
+    Top: auto;
+    Right: auto;
+    Bottom: auto;
+    display: inline-block;
+}
+
+.ElementOver {
+    position: absolute;
+    Left: 90%;
+    Top: 90%;
+    Right: 0px;
+    Bottom: 0px;
+}
+
+.PanLeft {
+    position: absolute;
+    left: 5%;
+    Top: 50%;
+    Right: auto;
+    Bottom: auto;
+    z-index: 10;
+    display: inline-block;
+}
+
+.PanRight {
+    position: absolute;
+    left: auto;
+    Top: 50%;
+    right: 5%;
+    Bottom: auto;
+    z-index: 10;
+    display: inline-block;
+}
+
+.PanTop {
+    position: absolute;
+    left: 50%;
+    Top: 10%;
+    Right: auto;
+    Bottom: auto;
+    z-index: 10;
+    display: inline-block;
+}
+
+.PanBotom {
+    position: absolute;
+    left: 50%;
+    Top: auto;
+    Right: auto;
+    Bottom: 10%;
+    z-index: 10;
+    display: inline-block;
+}
+
+.Fullscreen {
+    position: absolute;
+    left: auto;
+    Top: auto;
+    right: 2%;
+    Bottom: 2%;
+    z-index: 10;
+    display: inline-block;
+}
+
+
+.overlay {
+    display: none;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 0px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+
+.togglelabel {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.togglelabel-text-left {
+    margin-left: 8px;
+}
+
+.togglelabel-text-right {
+    margin-right: 8px;
+}
+
+.toggle {
+    isolation: isolate;
+    position: relative;
+    height: 24px;
+    width: 48px;
+    border-radius: 15px;
+    background: #d6d6d6;
+    overflow: hidden;
+}
+
+.toggle-inner {
+    z-index: 2;
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    height: 22px;
+    width: 46px;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.active-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 200%;
+    background: #003dda;
+    transform: translate3d(-100%, 0, 0);
+    transition: transform 0.05s linear 0.17s;
+}
+
+.toggle-state {
+    display: none;
+}
+
+.indicator {
+    height: 100%;
+    width: 200%;
+    background: white;
+    border-radius: 13px;
+    transform: translate3d(-75%, 0, 0);
+    transition: transform 0.35s cubic-bezier(0.85, 0.05, 0.18, 1.35);
+}
+
+.toggle-state:checked ~ .active-bg {
+    transform: translate3d(-50%, 0, 0);
+}
+
+.toggle-state:checked ~ .toggle-inner .indicator {
+    transform: translate3d(25%, 0, 0);
+}
+
+#toggles {
+    width: 40px;
+}
+
+.ios-toggle, .ios-toggle:active {
+    position: absolute;
+    top: -50px;
+    height: 0;
+    width: 0;
+    opacity: 0;
+    border: none;
+    outline: none;
+}
+
+.checkbox-label {
+    display: block;
+    position: relative;
+    padding: 10px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    line-height: 5px;
+    width: 100%;
+    height: 10px;
+    /*border-radius*/
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+    background: #f8f8f8;
+    cursor: pointer;
+}
+
+.btnNumeric, .btnIVANumeric, #btnNumeric {
+    display: inline-block;
+    padding: 2px 8px;
+    margin-right: 4px;
+    border-radius: 3px;
+    border: solid 1px #c0c0c0;
+    background: #e9e9e9;
+    box-shadow: inset 0px 1px 0px rgba(255,255,255, .8), 0px 1px 3px rgba(0,0,0, .1);
+    font-size: .875em;
+    font-weight: bold;
+    text-decoration: none;
+    color: #717171;
+    text-shadow: 0px 1px 0px rgba(255,255,255, 1);
+}
+
+    .btnNumeric:hover, .btnIVANumeric:hover, #btnNumeric:hover {
+        background: #fefefe;
+        background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FEFEFE), to(#f0f0f0));
+        background: -moz-linear-gradient(0% 0% 270deg,#FEFEFE, #f0f0f0);
+    }
+
+@media (max-width: 950px) {
+    .ImageDisplay {
+        height: 380px;
+    }
+
+    #divMain {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 850px) {
+    .ImageDisplay {
+        height: 320px;
+    }
+
+    #divMain {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 750px) {
+    .ImageDisplay {
+        width: 100%;
+        height: 260px;
+    }
+
+    #divMain {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 750px) {
+    .classsm-mb1 {
+        margin-bottom: 8px;
+    }
+
+    .lableDisplay {
+        display: none;
+    }
+}
+
+a:hover, a:visited, a:link, a:active {
+    text-decoration: none;
+}
+
+.toggle.ios, .toggle-on.ios, .toggle-off.ios {
+    border-radius: 20px;
+}
+
+    .toggle.ios .toggle-handle {
+        border-radius: 20px;
+    }
+
+@keyframes slide-in {
+    0% {
+        -webkit-transform: translateX(100%);
+    }
+
+    100% {
+        -webkit-transform: translateX(0%);
+    }
+}
+
+@-webkit-keyframes slide-in {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(0%);
+    }
+}
+
+@keyframes slide-out {
+    0% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@-webkit-keyframes slide-out {
+    0% {
+        -webkit-transform: translateX(0%);
+    }
+
+    100% {
+        -webkit-transform: translateX(100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .form-control2 {
+        transition: none;
+    }
+}
+
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 105px;
+    height: 34px;
+}
+
+    .switch input {
+        display: none;
+    }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ca2222;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+input:checked + .slider {
+    background-color: #2ab934;
+    /*width: 75px;*/
+    /*text-align: center;
+         content:"On";*/
+    /* For browsers that do not support gradients */
+    /*background-color: #F691FF;*/
+    /* Safari 5.1 to 6.0 */
+    /*background: -webkit-repeating-linear-gradient(#F691FF, #EC72A8);*/
+    /* Opera 11.1 to 12.0 */
+    /*background: -o-repeating-linear-gradient(#F691FF, #EC72A8);*/
+    /* Firefox 3.6 to 15 */
+    /*background: -moz-repeating-linear-gradient(#F691FF, #EC72A8);*/
+    /* Standard syntax */
+    /*background-image: repeating-linear-gradient(to top, #F691FF, #EC72A8);*/
+}
+
+input + .slider {
+    /*background-color: #2ab934;*/
+    background-color: gray;
+    /*width: 105px;*/
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(70px);
+    -ms-transform: translateX(70px);
+    transform: translateX(70px);
+}
+
+/*------ ADDED CSS ---------*/
+.on {
+    display: none;
+}
+
+.on, .off {
+    color: white;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 60%;
+    /*text-align:center;*/
+    font-size: 14px;
+    font-family: Verdana, sans-serif;
+}
+
+input:checked + .slider .on {
+    display: block;
+    left: 50%;
+}
+
+input:checked + .slider .off {
+    display: none;
+    left: 60%;
+}
+
+/*--------- END --------*/
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+    .slider.round:before {
+        border-radius: 50%;
+    }

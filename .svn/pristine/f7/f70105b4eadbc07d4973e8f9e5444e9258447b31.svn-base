@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    @*<link rel="icon" href="@Url.Content("~/Logo.ico")" type="image/x-icon" />
+        <link rel="shortcut icon" href="@Url.Content("~/Logo.ico")" type="image/x-icon" />*@
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - @ViewData["Manufacturer"]</title>
+    <link id="hrefHomeLogo" rel="icon" type="image/x-icon" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap-reboot.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <link rel="stylesheet" href="~/css/icons.min.css" />
+    <link href="~/css/fontawesome.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js" type="text/javascript"></script>
+    <script>
+        var j = jQuery.noConflict();
+    </script>
+    <link href="~/css/Common.css" rel="stylesheet" />
+    <script src="~/lib/Common.js" type="text/javascript"></script>
+
+</head>
+<body oncontextmenu="return false">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light no-gutters bg-white border-bottom box-shadow mb-3">
+            <div class="container col-md-12 col-sm-12 col-xs-12 col-lg-12 no-gutters" style="height:40px;">
+                <a class="navbar-brand no-gutters" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img id="imgHomeBanner" class="no-gutters" style="margin-left:25%;height:35px;width:150px;display:none;" />
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav mr-auto"></ul>
+                    <span class="fas fa-sign-out-alt"><a href="~/Home/Login" style="margin-right:35px;">Logout</a></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+        @RenderBody()
+    </div>
+    @*<footer class="border-top footer text-muted">
+            <div  class="col-md-12 col-sm-12 col-xs-12 col-lg-12" align="center">
+                &copy; 2019 - WebApplication1
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" align="center">
+                This site is best viewed in in 1024 x 768 resolution with latest version of Chrome, Firefox, Safari and Internet Explorer.
+            </div>
+        </footer>*@
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

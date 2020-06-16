@@ -1,0 +1,500 @@
+-- Tbl - Table
+-- Clm - Column
+-- Dtls - Details
+-- (SELECT DATE_FORMAT(NOW(), "%d-%m-%Y %T"));
+
+-- Drop VIEWS
+DROP VIEW IF EXISTS GetProfileDetails;
+DROP VIEW IF EXISTS GetNetworkDetails;
+DROP VIEW IF EXISTS GetLoginDetails;
+DROP VIEW IF EXISTS GetDefaultProfileDetails;
+
+-- Drop TRIGGERS
+DROP TRIGGER IF EXISTS Trx_Sav_Img_Dtls;
+
+-- Drop PROCEDURES
+DROP PROCEDURE IF EXISTS Pro_Up_Net_Dtls;
+DROP PROCEDURE IF EXISTS Pro_Get_Net_Dtls;
+DROP PROCEDURE IF EXISTS Pro_Get_Lgn_Dtls;
+DROP PROCEDURE IF EXISTS Pro_Del_Lgn_Dtls;
+DROP PROCEDURE IF EXISTS Pro_Ins_Lgn_Dtls;
+
+
+-- Drop TABLES
+DROP TABLE IF EXISTS Tbl_Def_Prof_Dtls;
+DROP TABLE IF EXISTS Tbl_Prof_Dtls;
+DROP TABLE IF EXISTS Tbl_Enc_Mstr;
+DROP TABLE IF EXISTS Tbl_FPS_Dtls;
+DROP TABLE IF EXISTS Tbl_Res_Mstr;
+DROP TABLE IF EXISTS Tbl_Dev_Mstr;
+DROP TABLE IF EXISTS Tbl_Sav_Img_Dtls;
+DROP TABLE IF EXISTS Tbl_Net_Dtls;
+DROP TABLE IF EXISTS Tbl_IP_Add_Mstr;
+DROP TABLE IF EXISTS Tbl_Lgn_Dtls;
+
+
+-- Login Table
+CREATE TABLE Tbl_Lgn_Dtls 
+(
+Clm_Lgn_Id INTEGER AUTO_INCREMENT  PRIMARY KEY,
+Clm_Lgn_Nm varchar(20) unique, -- User Name
+Clm_Lgn_Pwd varchar(20), -- Password
+Clm_Lgn_Lvl integer default 1, -- Level 0-admin, 1-user
+Clm_Lgn_Cre_D VARCHAR(20) -- Created Data
+);
+
+Delimiter //
+-- Insert admin row into Login Table
+insert into Tbl_Lgn_Dtls(Clm_Lgn_Nm,Clm_Lgn_Pwd,Clm_Lgn_Lvl,Clm_Lgn_Cre_D) values('admin','admin',0,(SELECT DATE_FORMAT(NOW(), "%d-%m-%Y %T")));
+//
+DELIMITER ;
+
+
+-- View to get all details from Login Table
+CREATE VIEW GetLoginDetails AS SELECT Clm_Lgn_Nm as UserName,Clm_Lgn_Pwd as Password,
+CASE Clm_Lgn_Lvl  WHEN 0 THEN 'admin' WHEN 1 THEN 'user' END as Level FROM Tbl_Lgn_Dtls;
+
+
+-- PROCEDURE to insert values into Login Table
+Delimiter //
+Create Procedure Pro_Ins_Lgn_Dtls (
+	p_UserName varchar(20),
+	p_Password varchar(20),
+	p_Level varchar(10),
+	OUT p_ErrorMessage longtext )
+BEGIN
+DECLARE `_rollback` BOOL DEFAULT 0;
+DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+if(p_UserName = '' OR p_Password= '')
+THEN 
+	Set p_ErrorMessage='Failed, UserName,Password and Level cannot be empty';
+ELSE 
+BEGIN
+Declare v_Level int;
+if(p_Level='admin')
+Then
+set v_Level=0;
+else
+set v_Level=1;
+end if;
+if((select count(*) from Tbl_Lgn_Dtls)<10)
+Then
+if((select count(*) from Tbl_Lgn_Dtls where Clm_Lgn_Nm=p_UserName)=0)
+Then
+insert into Tbl_Lgn_Dtls(Clm_Lgn_Nm,Clm_Lgn_Pwd,Clm_Lgn_Lvl,Clm_Lgn_Cre_D) values(p_UserName,p_Password,p_Level,(SELECT DATE_FORMAT(NOW(), "%d-%m-%Y %T")));
+Set p_ErrorMessage='Sucess';
+else
+Set p_ErrorMessage='UserName already Exist';
+end if;
+else
+Set p_ErrorMessage='Max limit exceeded';
+end if;
+END;
+END IF;
+IF `_rollback` THEN
+        ROLLBACK;
+        Set p_ErrorMessage='An error has occurred, Please check';
+    ELSE
+        COMMIT;
+End IF;
+END;
+//
+DELIMITER ;
+
+
+-- PROCEDURE to update values of Login Table
+DROP PROCEDURE IF EXISTS Pro_Up_Lgn_Dtls;
+Delimiter //
+Create Procedure Pro_Up_Lgn_Dtls (
+	p_UserName varchar(20),
+	p_Password varchar(20),
+	p_Level varchar(10),
+	OUT p_ErrorMessage longtext )
+BEGIN
+DECLARE `_rollback` BOOL DEFAULT 0;
+DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+if(p_UserName = '' OR p_Password= '')
+THEN 
+	Set p_ErrorMessage='Failed, UserName,Password and Level cannot be empty';
+ELSE 
+BEGIN
+Declare v_Level int;
+if(p_Level='admin')
+Then
+set v_Level=0;
+else
+set v_Level=1;
+end if;
+if((select count(*) from Tbl_Lgn_Dtls where Clm_Lgn_Nm=p_UserName)=1)
+Then
+update Tbl_Lgn_Dtls set Clm_Lgn_Pwd=p_Password,Clm_Lgn_Lvl=v_Level where Clm_Lgn_Nm=p_UserName;
+Set p_ErrorMessage='Sucess';
+else
+Set p_ErrorMessage='Invalid UserName';
+end if;
+END;
+END IF;
+IF `_rollback` THEN
+        ROLLBACK;
+        Set p_ErrorMessage='An error has occurred, Please check';
+    ELSE
+        COMMIT;
+End IF;
+END;
+//
+DELIMITER ;
+
+
+-- PROCEDURE to delete values of Login Table
+Delimiter //
+Create Procedure Pro_Del_Lgn_Dtls (
+	p_UserName varchar(20),
+	p_Password varchar(20),
+	OUT p_ErrorMessage longtext )
+BEGIN
+DECLARE `_rollback` BOOL DEFAULT 0;
+DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+if(p_UserName = '' OR p_Password= '')
+THEN 
+	Set p_ErrorMessage='Failed, UserName,Password and Level cannot be empty';
+ELSE 
+BEGIN
+if(p_UserName!='admin')
+Then
+if((select count(*) from Tbl_Lgn_Dtls where Clm_Lgn_Nm=p_UserName)=1)
+Then
+
+delete from Tbl_Lgn_Dtls where Clm_Lgn_Nm=p_UserName and Clm_Lgn_Pwd=p_Password;
+Set p_ErrorMessage='Sucess';
+else
+Set p_ErrorMessage='Invalid UserName';
+end if;
+else
+Set p_ErrorMessage='admin cannot be removed';
+end if;
+
+END;
+END IF;
+IF `_rollback` THEN
+        ROLLBACK;
+        Set p_ErrorMessage='An error has occurred, Please check';
+    ELSE
+        COMMIT;
+End IF;
+END;
+//
+DELIMITER ;
+
+
+-- PROCEDURE to Get all data from Login Table
+Delimiter //
+Create Procedure Pro_Get_Lgn_Dtls (
+ )
+BEGIN
+DECLARE `_rollback` BOOL DEFAULT 0;
+DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+BEGIN
+select * from GetLoginDetails; 
+END;
+IF `_rollback` THEN
+        ROLLBACK;
+        -- Set p_ErrorMessage='An error has occurred, Please check';
+    ELSE
+        COMMIT;
+End IF;
+END;
+//
+DELIMITER ;
+
+
+-- Ip Address Table
+CREATE TABLE Tbl_IP_Add_Mstr
+(
+Clm_IP_Add_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- IpAddress Id
+Clm_Ip_Add varchar(20) unique -- Ip Address
+);
+
+insert into Tbl_IP_Add_Mstr(Clm_Ip_Add)	values('192.168.8.140');
+
+
+-- Network Table
+CREATE TABLE Tbl_Net_Dtls
+(
+Clm_Net_Id INTEGER AUTO_INCREMENT  PRIMARY KEY,
+-- Clm_Net_Ip_Add varchar(20) unique, -- Ip Address
+Clm_Net_SNM varchar(20), -- Subnet Mask
+Clm_Net_GW varchar(20), -- Gateway
+Clm_Net_DNS1 varchar(20), -- DNS 1
+Clm_Net_DNS2 varchar(20), -- DNS 2
+Clm_Net_Typ integer default 1, -- Network Type 0-Manual, 1-DHCP
+clm_Net_MAC varchar(20), -- MacAddress
+clm_Net_Hst_NM varchar(20), -- HostName
+Clm_IP_Add_Id int,  -- IpAddress Id from Ip Address Table
+FOREIGN KEY (Clm_IP_Add_Id) REFERENCES Tbl_IP_Add_Mstr(Clm_IP_Add_Id) -- FOREIGN key constrain for Ip Address Table
+);
+
+Delimiter //
+-- Insert default details into Network Table
+insert into Tbl_Net_Dtls(Clm_Net_SNM,Clm_Net_GW,Clm_Net_DNS1,Clm_Net_DNS2,Clm_Net_Typ,clm_Net_Hst_NM,clm_Net_MAC,Clm_IP_Add_Id) values('255.255.255.0','192.168.8.1','','',0,'Analinear','E4-02-9B-1B-DA-60',(select Clm_IP_Add_Id from Tbl_IP_Add_Mstr where Clm_Ip_Add='192.168.8.140'));
+//
+DELIMITER ;
+
+
+-- View to get all details from Network Table
+CREATE VIEW GetNetworkDetails AS SELECT t2.Clm_Ip_Add as IPAddress,Clm_Net_SNM as SubnetMask,Clm_Net_GW as Gateway,Clm_Net_DNS1 as DNS1,Clm_Net_DNS2 as DNS2,
+			CASE Clm_Net_Typ  WHEN 0 THEN 'Manual' WHEN 1 THEN 'DHCP' END as NetworkType,clm_Net_MAC as MacAddress,clm_Net_Hst_NM as HostName
+			FROM Tbl_Net_Dtls t1
+            left join Tbl_IP_Add_Mstr t2 on t2.Clm_IP_Add_Id=t1.Clm_IP_Add_Id;
+
+
+-- PROCEDURE to Get all data from Network Table
+Delimiter //
+Create Procedure Pro_Get_Net_Dtls (
+ )
+BEGIN
+DECLARE `_rollback` BOOL DEFAULT 0;
+DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+BEGIN
+select * from GetNetworkDetails; 
+END;
+IF `_rollback` THEN
+        ROLLBACK;
+        -- Set p_ErrorMessage='An error has occurred, Please check';
+    ELSE
+        COMMIT;
+End IF;
+END;
+//
+DELIMITER ;
+
+
+-- PROCEDURE to update values of Network Table
+Delimiter //
+Create Procedure Pro_Up_Net_Dtls (
+	p_IpAddress varchar(20),
+	p_SubnetMask varchar(20),
+    p_Gateway varchar(20),
+    p_DNS1 varchar(20),
+    p_DNS2 varchar(20),
+	p_NetworkType varchar(20),
+    p_MacAddress varchar(20),
+    p_HostName varchar(20),    
+	OUT p_ErrorMessage longtext )
+BEGIN
+DECLARE `_rollback` BOOL DEFAULT 0;
+DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+if(p_IpAddress = '' OR p_SubnetMask= '' OR p_Gateway= '')
+THEN 
+	Set p_ErrorMessage='Failed, IpAddress,SubnetMask and Gateway cannot be empty';
+ELSE 
+BEGIN
+Declare v_NetType int;
+if((select count(*) from Tbl_Net_Dtls)=1)
+Then
+if(p_NetworkType='Manual')
+Then
+set v_NetType=0;
+else
+set v_NetType=1;
+end if;
+update Tbl_Net_Dtls set Clm_Net_Ip_Add=p_IpAddress,Clm_Net_SNM=p_SubnetMask,Clm_Net_GW=p_Gateway,Clm_Net_DNS1=p_DNS1,Clm_Net_DNS2=p_DNS2,Clm_Net_Typ=v_NetType,clm_Net_MAC=p_MacAddress,clm_Net_Hst_NM=p_HostName;
+Set p_ErrorMessage='Sucess';
+else
+insert into Tbl_Ip_Dtls(Clm_Net_Ip_Add,Clm_Net_SNM,Clm_Net_GW,Clm_Net_DNS1,Clm_Net_DNS2,Clm_Net_Typ) values(p_IpAddress,p_SubnetMask,p_Gateway,p_DNS1,p_DNS2,v_NetType);
+Set p_ErrorMessage='Sucess';
+end if;
+END;
+END IF;
+IF `_rollback` THEN
+        ROLLBACK;
+        Set p_ErrorMessage='An error has occurred, Please check';
+    ELSE
+        COMMIT;
+End IF;
+END;
+//
+DELIMITER ;
+
+
+-- ALTER TABLE Tbl_Sav_Img_Dtls AUTO_IN
+-- Save Images TableCREMENT = 1 to Reset AUTO_INCREMENT
+CREATE TABLE Tbl_Sav_Img_Dtls
+(
+Clm_Img_Id int AUTO_INCREMENT  PRIMARY KEY,
+Clm_Img_Data longblob -- longblob to store byteArray
+);
+
+-- select * from Tbl_Sav_Img_Dtls order by Clm_Img_Id desc limit 1;
+
+-- select * from Tbl_Sav_Img_Dtls order by Clm_Img_DateTime desc limit 3;
+
+-- select count(*) from Tbl_Sav_Img_Dtls where Clm_Img_Id=0;
+
+
+-- TRIGGER to update values of Save Images Table
+Delimiter //
+CREATE TRIGGER Trx_Sav_Img_Dtls
+before insert on Tbl_Sav_Img_Dtls for each row begin
+DECLARE updatecount INT;
+  set updatecount = (select max(Clm_Img_Id) from Tbl_Sav_Img_Dtls);
+  if updatecount>4
+    then
+     delete from Tbl_Sav_Img_Dtls where Clm_Img_Id<10;
+     SET NEW.Clm_Img_Id = 1;
+     -- ALTER TABLE Tbl_Sav_Img_Dtls AUTO_INCREMENT = 1;
+     else
+     if updatecount=NULL
+     then
+     SET NEW.Clm_Img_Id =1;
+     else
+      SET NEW.Clm_Img_Id = (SELECT MAX(Clm_Img_Id) + 1 FROM Tbl_Sav_Img_Dtls);
+	end if;
+    end if;
+end;
+//
+DELIMITER ;
+
+
+-- Device Table
+CREATE TABLE Tbl_Dev_Mstr
+(
+Clm_Dev_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Device Id
+Clm_Dev_NM varchar(20) unique -- Device Name
+);
+
+insert into Tbl_Dev_Mstr(Clm_Dev_NM) values('Device0');
+
+
+-- Resolution Table
+CREATE TABLE Tbl_Res_Mstr
+(
+Clm_Res_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Resolution Id
+Clm_Res_WD int, -- Width
+Clm_Res_HT int,  -- Height
+UNIQUE KEY Res_fun_id (Clm_Res_WD, Clm_Res_HT) -- Creating Unique key on two columns
+);
+
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1920,1080);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1280,1024);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1280,960);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1280,720);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(1024,768);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(800,600);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(800,448);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(720,576);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(720,480);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(640,480);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(640,360);
+insert into Tbl_Res_Mstr(Clm_Res_WD,Clm_Res_HT) values(320,240);
+
+
+-- FrameRate Table
+CREATE TABLE Tbl_FPS_Dtls
+(
+Clm_FPS_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- FrameRate Id
+Clm_FPS_NM int -- FrameRate
+);
+
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(1);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(2);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(3);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(4);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(5);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(6);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(7);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(8);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(9);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(10);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(11);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(12);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(13);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(14);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(15);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(16);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(17);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(18);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(19);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(20);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(21);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(22);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(23);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(24);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(25);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(26);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(27);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(28);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(29);
+insert into Tbl_FPS_Dtls(Clm_FPS_NM) values(30);
+
+
+-- Encoder Types Table
+CREATE TABLE Tbl_Enc_Mstr
+(
+Clm_Enc_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- FrameRate Id
+Clm_Enc_NM varchar(10) unique -- Encoder Name
+);
+
+insert into Tbl_Enc_Mstr(Clm_Enc_NM)values("MJPEG");
+insert into Tbl_Enc_Mstr(Clm_Enc_NM)values("H.264");
+
+
+-- Profile Table
+CREATE TABLE Tbl_Prof_Dtls
+(
+Clm_Prof_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Profile Id
+Clm_Prof_NM varchar(20) unique, -- Profile Name
+Clm_FPS_Id int, -- FrameRate Id from FrameRate Table
+Clm_Res_Id int, -- Resolution Id from Resolution Table
+Clm_Max_BR_Id int default 2048, -- Maximum Bitrate
+Clm_Dev_Id int,-- Device Id from Device Table
+Clm_Enc_Id int, -- EncoderType Id from Encoder Table
+FOREIGN KEY (Clm_FPS_Id) REFERENCES Tbl_FPS_Dtls(Clm_FPS_Id),
+FOREIGN KEY (Clm_Res_Id) REFERENCES Tbl_Res_Mstr(Clm_Res_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id),
+FOREIGN KEY (Clm_Enc_Id) REFERENCES Tbl_Enc_Mstr(Clm_Enc_Id)
+);
+
+insert into Tbl_Prof_Dtls(Clm_Prof_NM,Clm_FPS_Id,Clm_Max_BR_Id,Clm_Enc_Id,Clm_Res_Id,Clm_Dev_Id) values('H264',(select Clm_FPS_Id from Tbl_FPS_Dtls where Clm_FPS_NM=25),2048,(select Clm_Enc_Id from Tbl_Enc_Mstr where Clm_Enc_NM='H.264'),(select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=640 and Clm_Res_HT=480),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+        
+insert into Tbl_Prof_Dtls(Clm_Prof_NM,Clm_FPS_Id,Clm_Max_BR_Id,Clm_Enc_Id,Clm_Res_Id,Clm_Dev_Id) values('MJPEG',(select Clm_FPS_Id from Tbl_FPS_Dtls where Clm_FPS_NM=25),2048,(select Clm_Enc_Id from Tbl_Enc_Mstr where Clm_Enc_NM='MJPEG'),(select Clm_Res_Id from Tbl_Res_Mstr where Clm_Res_WD=640 and Clm_Res_HT=480),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));     
+
+
+-- Default Profile Table
+CREATE TABLE Tbl_Def_Prof_Dtls
+(
+Clm_Prof_Def_Id INTEGER AUTO_INCREMENT  PRIMARY KEY, -- Default Id
+Clm_Prof_Id int unique, -- Profile Id from Profile Table
+Clm_Dev_Id int unique,-- Device Id from Device Table
+FOREIGN KEY (Clm_Prof_Id) REFERENCES Tbl_Prof_Dtls(Clm_Prof_Id),
+FOREIGN KEY (Clm_Dev_Id) REFERENCES Tbl_Dev_Mstr(Clm_Dev_Id)
+);
+
+insert into Tbl_Def_Prof_Dtls(Clm_Prof_Id,Clm_Dev_Id) values((select Clm_Prof_Id from Tbl_Prof_Dtls where Clm_Prof_NM='H264'),(select Clm_Dev_Id from Tbl_Dev_Mstr where Clm_Dev_NM='Device0'));
+
+-- View to get all DefaultProfile information from Default Profile Table
+CREATE VIEW GetDefaultProfileDetails AS SELECT t1.Clm_Prof_Id as Id,t2.Clm_Prof_NM as ProfileName,t3.Clm_Dev_NM as DeviceName
+			FROM Tbl_Def_Prof_Dtls t1
+			left join  Tbl_Prof_Dtls t2 on t2.Clm_Prof_Id=t1.Clm_Prof_Id
+			left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id;
+
+
+-- View to get all Profile information from Profile Table
+CREATE VIEW GetProfileDetails AS SELECT Clm_Prof_Id as Id,Clm_Prof_NM as Name,t2.Clm_FPS_NM as FPS,Clm_Max_BR_Id as MaxBitRate,t3.Clm_Enc_NM as Encoder,
+			t4.Clm_Dev_NM as DeviceName,t5.Clm_Res_WD as Width,t5.Clm_Res_HT as Height,
+			CASE (select count(*) from Tbl_Def_Prof_Dtls tt where t1.Clm_Prof_Id=tt.Clm_Prof_Id) WHEN 1 THEN 'Default' WHEN 0 THEN 'NotDefault'END as Default_State
+			FROM Tbl_Prof_Dtls t1
+            left join Tbl_FPS_Dtls t2 on t2.Clm_FPS_Id=t1.Clm_FPS_Id
+            left join Tbl_Enc_Mstr t3 on t3.Clm_Enc_Id=t1.Clm_Enc_Id
+            left join Tbl_Dev_Mstr t4 on t4.Clm_Dev_Id=t1.Clm_Dev_Id
+            left join Tbl_Res_Mstr t5 on t5.Clm_Res_Id=t1.Clm_Res_Id;
+
+
+commit;
+
+
+
+
+
+
+
+

@@ -1,0 +1,605 @@
+Delimiter //
+-- VIEW to get all details from Login Table
+CREATE VIEW GetLoginDetails AS 
+SELECT Clm_Lgn_Nm as UserName, 
+Clm_Lgn_Pwd as Password, 
+CASE Clm_Lgn_Lvl WHEN 0 THEN 'Administrator' WHEN 1 THEN 'Operator' WHEN 2 THEN 'User' END as Level 
+FROM Tbl_Lgn_Dtls; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all details from Network Table
+CREATE VIEW GetNetworkDetails AS 
+SELECT t1.Clm_Net_Id as Id, 
+t2.Clm_Ip_Add as IPAddress, 
+Clm_Net_SNM as SubnetMask, 
+Clm_Net_GW as Gateway, 
+Clm_Net_DNS1 as DNS1, 
+Clm_Net_DNS2 as DNS2, 
+CASE Clm_Net_Typ  WHEN 0 THEN 'Static' WHEN 1 THEN 'DHCP' END as NetworkType, 
+clm_Net_MAC as MacAddress, 
+clm_Net_Hst_NM as HostName 
+FROM Tbl_Net_Dtls t1 
+left join Tbl_IP_Add_Mstr t2 on t2.Clm_IP_Add_Id=t1.Clm_IP_Add_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all information from Resolution Table
+CREATE VIEW GetResolutionDetails AS 
+SELECT Clm_Res_Id as Id, 
+Clm_Res_WD as Width, 
+Clm_Res_HT as Height 
+FROM Tbl_Res_Mstr; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all information from FPS Table
+CREATE VIEW GetFPSDetails AS 
+SELECT Clm_FPS_Id as Id, 
+Clm_FPS_NM as FPS 
+FROM Tbl_FPS_Dtls; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all information from Encoder Type Table
+CREATE VIEW GetEncoderDetails AS 
+SELECT Clm_Enc_Id as Id, 
+Clm_Enc_NM as EncoderType 
+FROM Tbl_Enc_Mstr; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all DefaultProfile information from Default Profile Table
+CREATE VIEW GetDefaultProfileDetails AS 
+SELECT t1.Clm_Prof_Id as Id, 
+t2.Clm_Prof_NM as ProfileName, 
+t3.Clm_Dev_NM as DeviceName 
+FROM Tbl_Def_Prof_Dtls t1 
+left join Tbl_Prof_Dtls t2 on t2.Clm_Prof_Id=t1.Clm_Prof_Id 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all Device information
+CREATE VIEW GetDeviceDetails AS 
+SELECT 
+CASE t1.Clm_Dev_CS WHEN 1 THEN 'Active' WHEN 0 THEN 'DeActive'END as Current_State, 
+t1.Clm_Dev_NM as Name, 
+t1.Clm_Dev_Node as Node, 
+t1.Clm_Dev_WD as Width, 
+t1.Clm_Dev_HT as Height, 
+t1.Clm_Dev_Frmt as Format, 
+t1.Clm_Dev_SPORT as Serial_Port, 
+t2.Clm_Dev_NM as DeviceName  
+FROM Tbl_Dev_Dtls t1 
+left join Tbl_Dev_Mstr t2 on t2.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+
+Delimiter //
+-- VIEW to get all Profile information from Profile Table
+CREATE VIEW GetProfileDetails AS 
+SELECT Clm_Prof_Id as Id, 
+Clm_Prof_NM as Name, 
+t2.Clm_FPS_NM as FPS, 
+t1.Clm_BR as BitRate, 
+t3.Clm_Enc_NM as Encoder, 
+t4.Clm_Dev_NM as DeviceName, 
+t5.Clm_Res_WD as Width, 
+t5.Clm_Res_HT as Height, 
+CASE (select count(*) from Tbl_Def_Prof_Dtls tt where t1.Clm_Prof_Id=tt.Clm_Prof_Id) WHEN 1 THEN 'Default' WHEN 0 THEN 'NotDefault'END as Default_State, 
+CASE t1.Clm_Prof_Typ WHEN 1 THEN 'User' WHEN 0 THEN 'Factory'END as PType, 
+CASE t1.Clm_Prof_Muc WHEN 1 THEN 'No' WHEN 0 THEN 'Yes'END as Multicast, 
+t1.Clm_Prof_Muc_TTL as TTL, 
+t6.Clm_Port_No as MPort, 
+t7.Clm_Ip_Add as MIPAddress 
+FROM Tbl_Prof_Dtls t1 
+left join Tbl_FPS_Dtls t2 on t2.Clm_FPS_Id=t1.Clm_FPS_Id 
+left join Tbl_Enc_Mstr t3 on t3.Clm_Enc_Id=t1.Clm_Enc_Id 
+left join Tbl_Dev_Mstr t4 on t4.Clm_Dev_Id=t1.Clm_Dev_Id 
+left join Tbl_Res_Mstr t5 on t5.Clm_Res_Id=t1.Clm_Res_Id 
+left join Tbl_Port_Mstr t6 on t6.Clm_Port_Id=t1.Clm_Muc_Port_Id 
+left join Tbl_IP_Add_Mstr t7 on t7.Clm_IP_Add_Id=t1.Clm_Prof_Muc_Ip_Add_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all RTSP information from RTSP Table
+CREATE VIEW GetRTSPDetails AS 
+SELECT t1.Clm_RTSP_Id as Id, 
+t2.Clm_Port_No as Port, 
+Clm_RTSP_Tout as TimeOut, 
+CASE t1.Clm_RTSP_auth WHEN 1 THEN 'Digest' WHEN 0 THEN 'None'END as Authentication, 
+t3.Clm_Dev_NM as DeviceName 
+FROM Tbl_RTSP_Dtls t1 
+left join Tbl_Port_Mstr t2 on t2.Clm_Port_Id=t1.Clm_Port_Id 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+
+Delimiter //
+-- VIEW to get all RTSP information from RTSP Table
+CREATE VIEW GetCurrentStreamDetails AS 
+SELECT t1.Clm_Curr_BR as BitRate, 
+t2.Clm_Res_WD as Width, 
+t2.Clm_Res_HT as Height, 
+t3.Clm_FPS_NM as FPS, 
+t4.Clm_Enc_NM as Encoder, 
+t6.Clm_Dev_NM as Device 
+FROM Tbl_Curr_Dtls t1 
+left join Tbl_Res_Mstr t2 on t2.Clm_Res_Id=t1.Clm_Res_Id 
+left join Tbl_FPS_Dtls t3 on t3.Clm_FPS_Id=t1.Clm_FPS_Id 
+left join Tbl_Enc_Mstr t4 on t4.Clm_Enc_Id=t1.Clm_Enc_Id 
+left join Tbl_Dev_Mstr t6 on t6.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all supported Resolutions from Recording
+CREATE VIEW GetRecordingResolutionDetails AS 
+SELECT t2.Clm_Res_WD as Width, 
+t2.Clm_Res_HT as Height, 
+t3.Clm_Dev_NM as Device 
+FROM Tbl_Rec_Res_Dtls t1 
+left join Tbl_Res_Mstr t2 on t2.Clm_Res_Id=t1.Clm_Res_Id 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all Recording Information
+CREATE VIEW GetRecordingDetails AS 
+SELECT t1.Clm_Res_TIME as Time, 
+t2.Clm_Res_WD as Width, 
+t2.Clm_Res_HT as Height, 
+t4.Clm_Enc_NM as Encoder, 
+t3.Clm_Dev_NM as Device 
+FROM Tbl_Rec_Dtls t1 
+left join Tbl_Res_Mstr t2 on t2.Clm_Res_Id=t1.Clm_Res_Id 
+left join Tbl_Enc_Mstr t4 on t4.Clm_Enc_Id=t1.Clm_Enc_Id 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetErrorSeverity AS 
+select Clm_Err_Sev_Id as Id, 
+Clm_Err_Sev_NM as Name, 
+Clm_Err_Sev_Abv as Abbreviation 
+from Tbl_Err_Sev_Mstr; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetErrorMessages AS 
+select Clm_Msg_Id as Id, 
+Clm_Msg_Id_NM as MsgId, 
+Clm_Msg as Message, 
+t2.Clm_Err_Sev_Abv as Severity 
+from Tbl_Msg_Dtls t1 
+left join Tbl_Err_Sev_Mstr t2 on t2.Clm_Err_Sev_Id=t1.Clm_Err_Sev_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetEventDetails AS 
+select t1.Clm_Evnt_Id as Id, 
+t3.Clm_Err_Sev_Abv as Severity_Abv, 
+t3.Clm_Err_Sev_NM as Severity,
+t2.Clm_Msg_Id_NM as MsgId, 
+t2.Clm_Msg as Message, 
+t1.Clm_Evnt_DT as EventDateTime, 
+t4.Clm_Ext_Msg as EMessage 
+FROM Tbl_Evnt_Dtls t1 
+left join Tbl_Msg_Dtls t2 on t2.Clm_Msg_Id=t1.Clm_Msg_Id 
+left join Tbl_Err_Sev_Mstr t3 on t3.Clm_Err_Sev_Id=t2.Clm_Err_Sev_Id 
+left join Tbl_Ext_Msg_Dtls t4 on t4.Clm_Ext_Msg_Id=t1.Clm_Ext_Msg_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetErrorTypes AS 
+select Clm_Err_Sev_NM as ErrorType, 
+Clm_Err_Sev_Abv as  Abbrevation 
+FROM Tbl_Err_Sev_Mstr; 
+// DELIMITER ;
+ 
+Delimiter //
+CREATE VIEW GetMotionZoneDetails AS 
+select CASE t1.Clm_Zn_Typ WHEN 1 THEN 'Custom' WHEN 0 THEN 'PreDefined'END as Zone_Type, 
+t1.Clm_Zn as ZoneId, 
+t1.Clm_Zn_WD as Width, 
+t1.Clm_Zn_HT as Height, 
+t1.Clm_Zn_Pnt as Points, 
+t1.Clm_Zn_Th as Threshold, 
+t1.Clm_Zn_Dur as Duration, 
+CASE t1.Clm_Zn_CS WHEN 0 THEN 'Active' WHEN 1 THEN 'DeActive'END as Current_State, 
+t3.Clm_Dev_NM as Device 
+from Tbl_Zn_Mstr t1 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id where Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Motion_Detection'); 
+// DELIMITER ;
+
+
+Delimiter //
+CREATE VIEW GetIVAZoneDetails AS 
+select CASE t1.Clm_Zn_Typ WHEN 1 THEN 'Area' WHEN 0 THEN 'Line'END as Zone_Type, 
+t1.Clm_Zn as ZoneId, 
+t1.Clm_Zn_WD as Width, 
+t1.Clm_Zn_HT as Height, 
+t1.Clm_Zn_Pnt as Points, 
+t1.Clm_Zn_Th as Threshold, 
+t1.Clm_Zn_Dur as Duration, 
+CASE t1.Clm_Zn_CS WHEN 0 THEN 'Active' WHEN 1 THEN 'DeActive'END as Current_State, 
+t3.Clm_Dev_NM as Device 
+from Tbl_Zn_Mstr t1 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id where Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='IVA_Detection'); 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetMotionDetectionDetails AS 
+select CASE t1.Clm_VA_Zn_Typ WHEN 1 THEN 'Custom' WHEN 0 THEN 'PreDefined'END as Zone_Type, 
+ CASE t1.Clm_VA_Alrm WHEN 0 THEN 'Disable' WHEN 1 THEN 'Enable'END as Alarm_State, 
+ CASE t1.Clm_VA_CS WHEN 0 THEN 'Disable' WHEN 1 THEN 'Enable'END as Current_State, 
+ t3.Clm_Dev_NM as Device 
+from Tbl_VA_Dtls t1 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id where Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Motion_Detection'); 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetIVADetectionDetails AS 
+select CASE t1.Clm_VA_Zn_Typ WHEN 1 THEN 'Area' WHEN 0 THEN 'Line'END as Zone_Type, 
+ CASE t1.Clm_VA_Alrm WHEN 0 THEN 'Disable' WHEN 1 THEN 'Enable'END as Alarm_State, 
+ CASE t1.Clm_VA_CS WHEN 0 THEN 'Disable' WHEN 1 THEN 'Enable'END as Current_State, 
+ t3.Clm_Dev_NM as Device 
+from Tbl_VA_Dtls t1 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id where Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Motion_Detection'); 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetTamperDetectionDetails AS 
+select 
+CASE t1.Clm_VA_Alrm WHEN 0 THEN 'Disable' WHEN 1 THEN 'Enable'END as Alarm_State, 
+CASE t1.Clm_VA_CS WHEN 0 THEN 'Disable' WHEN 1 THEN 'Enable'END as Current_State, 
+t2.Clm_Zn_Th as Threshold, 
+t2.Clm_Zn_Dur as Duration, 
+t3.Clm_Dev_NM as Device 
+from Tbl_VA_Dtls t1 
+left join Tbl_Zn_Mstr t2 on t2.Clm_Zn_Typ=t1.Clm_VA_Zn_Typ 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id where 
+t1.Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Tampering_Detection') and 
+t2.Clm_VA_Id=(select Clm_VA_Id from Tbl_VA_Mstr where Clm_VA_Typ='Tampering_Detection'); 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetRecordingStatusDetails AS 
+select CASE t1.Clm_Rec_Stat WHEN 0 THEN 'Ideal' WHEN 1 THEN 'Recording'END as Recording_State, 
+ t3.Clm_Dev_NM as Device 
+from Tbl_Rec_Stat_Dtls t1 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetTemperatureDetails AS 
+select t1.Clm_Temp_Id as Id, 
+CASE t1.Clm_Temp_Typ WHEN 0 THEN 'Processor' WHEN 1 THEN 'FPA' WHEN 2 THEN 'Sys'END as Type, 
+t1.Clm_Temp_DT as TempDateTime, 
+t1.Clm_Temp_Val as Temperature, 
+t3.Clm_Dev_NM as Device 
+from Tbl_Temp_Dtls t1 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetImgModeDetails AS 
+select  Clm_Img_Mode_Id as Id, 
+		Clm_Img_Mode_NM as Mode 
+        from Tbl_Img_Mode_Mstr order by Clm_Img_Mode_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetImgColorpaletteDetails AS 
+select Clm_Img_Mode_Id as Id, 
+		Clm_Img_Mode_NM as palette, 
+        t3.Clm_Dev_NM as DeviceName 
+        from Tbl_Img_Clr_Pal_Dtls t1 
+        left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id order by Clm_Img_Mode_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetImgPolarityTypeDetails AS 
+select Clm_Id as Id, 
+		Clm_Pol_NM as Polarity, 
+        t3.Clm_Dev_NM as DeviceName 
+        from Tbl_Img_Pol_Dtls t1 
+        left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id order by Clm_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetImgFPSDetails AS 
+select Clm_Img_FPS_Id as Id, 
+		Clm_Img_FPS_NM as FPS, 
+        t3.Clm_Dev_NM as DeviceName 
+        from Tbl_Img_FPS_Dtls t1 
+        left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id order by Clm_Img_FPS_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetImgOrientationDetails AS 
+select Clm_Img_Orien_Id as Id, 
+		Clm_Img_Orien_NM as Orientation, 
+        t3.Clm_Dev_NM as DeviceName 
+        from Tbl_Img_Orien_Dtls t1  
+        left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id order by Clm_Img_Orien_Id; 
+// DELIMITER ;
+
+Delimiter //                                              
+CREATE VIEW GetSupportedImagingDetails AS 
+select  t1.Clm_Sup_Img_Set_Id as Id, 
+		t2.Clm_Img_Set_NM as Name, 
+		t3.Clm_Dev_NM as DeviceName 
+        from Tbl_Sup_Img_Set_Dtls t1 
+        left join Tbl_Img_Set_Mstr t2 on t2.Clm_Img_Set_Id=t1.Clm_Img_Set_Id 
+        left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id;   
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetImagingModeDetails AS 
+select  t2.Clm_Img_Set_NM as Name, 
+		t4.Clm_Img_Mode_NM as Modes, 
+		t3.Clm_Dev_NM as DeviceName 
+        from Tbl_Img_Set_Mode_Dtls t1 
+        left join Tbl_Img_Set_Mstr t2 on t2.Clm_Img_Set_Id=t1.Clm_Img_Set_Id 
+        left join Tbl_Img_Mode_Mstr t4 on t4.Clm_Img_Mode_Id=t1.Clm_Img_Mode_Id 
+        left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //  
+CREATE VIEW GetImagingMinMaxDetails AS 
+select  t2.Clm_Img_Set_NM as Name, 
+		Clm_Min_Val as MinVal, 
+		Clm_Max_Val as MaxVal, 
+		t3.Clm_Dev_NM as DeviceName 
+        from Tbl_Img_Set_MinMax_Dtls t1 
+        left join Tbl_Img_Set_Mstr t2 on t2.Clm_Img_Set_Id=t1.Clm_Img_Set_Id 
+        left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetCurrentImagingDetails AS 
+select t2.Clm_Img_Set_NM as Name, 
+Clm_Curr_Val as Value, 
+ t3.Clm_Dev_NM as DeviceName 
+from Tbl_Curr_Img_Set_Dtls t1 
+left join Tbl_Img_Set_Mstr t2 on t2.Clm_Img_Set_Id=t1.Clm_Img_Set_Id 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetDefaultImagingDetails AS 
+select t2.Clm_Img_Set_NM as Name, 
+Clm_Curr_Val as Value, 
+ t3.Clm_Dev_NM as DeviceName 
+from Tbl_Curr_Img_Set_FTY_Dtls t1 
+left join Tbl_Img_Set_Mstr t2 on t2.Clm_Img_Set_Id=t1.Clm_Img_Set_Id 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all supported Resolution Device wise
+CREATE VIEW GetResolutionDetails2 AS 
+SELECT t1.Clm_Res_Dtls_Id as Id, 
+t2.Clm_Res_WD as Width, 
+t2.Clm_Res_HT as Height, 
+t3.Clm_Dev_NM as DeviceName  
+FROM Tbl_Res_Dtls t1 
+left join Tbl_Res_Mstr t2 on t2.Clm_Res_Id=t1.Clm_Res_Id 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all details from TimeZone Table
+CREATE VIEW GetTimeZoneDetails AS 
+SELECT Clm_T_Zn_Id as ZoneId, 
+Clm_T_Zn_NM as ZoneName 
+FROM Tbl_T_Zn_Mstr; 
+// DELIMITER ;
+
+
+Delimiter //
+-- VIEW to get all details from TimeZone Table
+CREATE VIEW GetSystemDateTimeDetails AS 
+SELECT t1.Clm_Sys_DT_Id as Id, 
+t2.Clm_T_Zn_NM as ZoneName, 
+CASE t1.Clm_Sys_DT_Typ WHEN 0 THEN 'NTP_Server' WHEN 1 THEN 'Manual' END as Type, 
+CASE WHEN t1.Clm_Sys_DT_D is null THEN DATE(NOW()) else t1.Clm_Sys_DT_D END as Date, 
+CASE WHEN t1.Clm_Sys_DT_T is null THEN TIME(NOW()) else t1.Clm_Sys_DT_T END as Time, 
+t1.Clm_Sys_DT_Add1 as NTP_Server1, 
+t1.Clm_Sys_DT_Add2 as NTP_Server2  
+FROM Tbl_Sys_DT_Dtls t1 
+left join Tbl_T_Zn_Mstr t2 on t2.Clm_T_Zn_Id=t1.Clm_T_Zn_Id; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetSystemDetails AS 
+select Clm_Sys_NM as Name, 
+Clm_Sys_Loc as Location, 
+Clm_Sys_Mfr as Manufacturer, 
+Clm_Sys_Mdl as Model, 
+Clm_Sys_HW as Hardware, 
+Clm_Sys_FMW as Firmware, 
+Clm_Sys_Dev_Id as DeviceId, 
+Clm_Logo as Logo, 
+Clm_Bnr as Banner  
+from Tbl_Sys_Dtls; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetPanTiltDetails AS 
+select Clm_P_Val as PanValue, 
+Clm_T_Val as TiltValue, 
+Clm_Z_Val as ZoomValue,
+t2.Clm_Dev_NM as DeviceName,   
+CASE Clm_T_Dir WHEN 0 THEN 'Top' WHEN 1 THEN 'Bottom'END as Direction, 
+CASE Clm_PT_CS WHEN 0 THEN 'Disable' WHEN 1 THEN 'Enable'END as Current_State 
+from Tbl_PT_Dtls t1  
+left join Tbl_Dev_Mstr t2 on t2.Clm_Dev_Id=t1.Clm_Dev_Id;
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get Network details of Tracking board
+CREATE VIEW GetTrackingNetworkDetails AS 
+SELECT t1.Clm_Trk_Id as Id, 
+t2.Clm_Ip_Add as IPAddress, 
+t3.Clm_Port_No as Port 
+FROM Tbl_Trk_Net_Dtls t1 
+left join Tbl_IP_Add_Mstr t2 on t2.Clm_IP_Add_Id=t1.Clm_IP_Add_Id 
+left join Tbl_Port_Mstr t3 on t3.Clm_Port_Id=t1.Clm_Port_Id;  
+// DELIMITER ;
+
+Delimiter //                                              
+CREATE VIEW GetImagingSettingDetails AS 
+select  t1.Clm_Id as Id, 
+		t2.Clm_Img_Set_NM as Name, 
+        CASE t1.Clm_Ena_St WHEN 0 THEN 'False' WHEN 1 THEN 'True' END as Enable, 
+        CASE t1.Clm_Vis_St WHEN 0 THEN 'False' WHEN 1 THEN 'True' END as Visible, 
+        t3.Clm_Dev_NM as DeviceName 
+        from Tbl_Img_Set_Dtls t1 
+        left join Tbl_Img_Set_Mstr t2 on t2.Clm_Img_Set_Id=t1.Clm_Img_Set_Id 
+        left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id;   
+// DELIMITER ;
+
+Delimiter //                                              
+CREATE VIEW GetConfigurationTabDetails AS 
+select  t1.Clm_Id as Id, 
+		t1.Clm_Config_Tab_NM as Name, 
+		CASE t1.Clm_Ena_St WHEN 0 THEN 'False' WHEN 1 THEN 'True' END as Enable, 
+        CASE t1.Clm_Vis_St WHEN 0 THEN 'False' WHEN 1 THEN 'True' END as Visible  
+        from Tbl_Config_Tab_Dtls t1;   
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all details from SmartCam Update Table
+CREATE VIEW GetSmartCamUpdateDetails AS 
+SELECT Clm_UD_Typ_Id as Id, 
+Clm_UD_Typ_NM as Type,  
+Clm_UD_Typ_Ver as Version,
+DATE_FORMAT(STR_TO_DATE(Clm_Up_D, "%d-%m-%Y %T"),'%d-%m-%Y') as Up_Date,
+DATE_FORMAT(STR_TO_DATE(Clm_Up_D, "%d-%m-%Y %T"),'%T') as Up_Time,
+Clm_Up_D as Up_DateTime   
+FROM Tbl_UD_Typ_Mstr; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all details from SmartCam Status Table
+CREATE VIEW GetSmartCamStatusDetails AS 
+SELECT Clm_Stat_Id as Id, 
+Clm_Stat_Typ as Type,  
+Clm_Stat as CState, 
+CASE Clm_Stat WHEN 0 THEN 'Ideal' WHEN 1 THEN 'InProgress'END as Status  
+FROM Tbl_SmartCam_Stat_Dtls; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all details of BuiltInTestResults 
+CREATE VIEW GetBuiltInTestTypes AS 
+SELECT Clm_BIT_Typ_Id as Id, 
+Clm_BIT_Typ as Type  
+FROM Tbl_BIT_Typ_Mstr; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all details of BuiltInTestResults 
+CREATE VIEW GetBuiltInTestSubTypes AS 
+SELECT t2.Clm_BIT_Typ_Id as Id, 
+t2.Clm_BIT_Typ as Type, 
+t1.Clm_BIT_Typ as SubType   
+FROM Tbl_BIT_Typ_Dtls t1 
+left join Tbl_BIT_Typ_Mstr t2 on t2.Clm_BIT_Typ_Id=t1.Clm_BIT_Typ_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get all details of BuiltInTestResults 
+CREATE VIEW GetBuiltInTestResult AS 
+SELECT t1.Clm_BIT_Rslt_Id as Id,
+t3.Clm_BIT_Typ as Type,  
+t2.Clm_BIT_Typ as SubType,  
+t1.Clm_Rmk as Remarks,
+CASE Clm_Stat WHEN 0 THEN 'NA' WHEN 1 THEN 'Pass' WHEN 2 THEN 'Fail' END as Status,
+DATE_FORMAT(STR_TO_DATE(t1.Clm_Up_D, "%d-%m-%Y %T"),'%d-%m-%Y') as Up_Date,
+DATE_FORMAT(STR_TO_DATE(t1.Clm_Up_D, "%d-%m-%Y %T"),'%T') as Up_Time,
+t1.Clm_Up_D as Up_DateTime   
+FROM Tbl_BIT_Rslt_Dtls t1 
+left join Tbl_BIT_Typ_Dtls t2 on t2.Clm_BIT_Typ_Dtls_Id=t1.Clm_BIT_Typ_Dtls_Id 
+left join Tbl_BIT_Typ_Mstr t3 on t3.Clm_BIT_Typ_Id=t1.Clm_BIT_Typ_Id ; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetCamFirmwareUpdateDetails AS 
+SELECT Clm_Id as Id,
+Clm_Tot_Pkt as TotalPackets,  
+Clm_Snd_Pkt as SendPackets  
+FROM Tbl_Cam_Fmw_Up_Dtls ; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetControllerDefaultValues AS 
+SELECT Clm_Id as Id,
+Clm_Nm as Type,  
+Clm_Val as Value,
+DATE_FORMAT(STR_TO_DATE(Clm_Up_D, "%d-%m-%Y %T"),'%d-%m-%Y') as Up_Date,
+DATE_FORMAT(STR_TO_DATE(Clm_Up_D, "%d-%m-%Y %T"),'%T') as Up_Time,
+Clm_Up_D as Up_DateTime   
+FROM Tbl_Ctrl_Val_Dtls ; 
+// DELIMITER ;
+
+Delimiter //
+CREATE VIEW GetTrackerTelemetryDetails AS 
+SELECT Clm_Id as Id,
+Clm_AZM_Err as Azimuth_Error,  
+Clm_AZM_Spd as Azimuth_Speed,  
+Clm_EL_Err as Elevation_Error,  
+Clm_EL_Spd as Elevation_Speed,  
+Clm_Row as Current_Row,  
+Clm_Col as Current_Column,
+Clm_Sc_Row as Scene_Row,  
+Clm_Sc_Col as Scene_Column,
+DATE_FORMAT(Clm_DT,'%d-%m-%Y') as Up_Date,
+DATE_FORMAT(Clm_DT,'%T') as Up_Time,
+Clm_DT as Up_DateTime   
+FROM Tbl_Trk_Tlm_Dtls ; 
+// DELIMITER ;
+
+
+Delimiter //
+CREATE VIEW GetTrackerPTZDetails AS 
+SELECT t1.Clm_Id as Id,
+t1.Clm_Z_Lvl as Zoom_Level,
+t1.Clm_FL as Focal_Length,
+t1.Clm_AZM_Max as Azimuth_Max,  
+t1.Clm_EL_Max as Elevation_Max,  
+t1.Clm_V_AZM_Max as V_Azimuth_Max,  
+t1.Clm_V_EL_Max as V_Elevation_Max, 
+t1.Clm_KP as KP, 
+t1.Clm_KI as KI, 
+t1.Clm_KP_Tilt as KPTilt, 
+t1.Clm_KI_Tilt as KITilt, 
+DATE_FORMAT(t1.Clm_DT,'%d-%m-%Y') as Up_Date,
+DATE_FORMAT(t1.Clm_DT,'%T') as Up_Time,
+t1.Clm_DT as Up_DateTime,
+t2.Clm_Dev_NM as DeviceName    
+FROM Tbl_Trk_PTZ_Dtls t1 
+left join Tbl_Dev_Mstr t2 on t2.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+Delimiter //
+-- VIEW to get PTZ Preset Details 
+CREATE VIEW GetPTZPresetDetails AS 
+SELECT Clm_Preset_Dtls_Id as Id, 
+Clm_Preset_NM as Name, 
+CASE Clm_Preset_CS WHEN 1 THEN 'Active' WHEN 0 THEN 'DeActive'END as Current_State   
+FROM Tbl_PTZ_Preset_Dtls; 
+// DELIMITER ;
+
+
+Delimiter //
+CREATE VIEW GetRecordingDateTimeDetails AS 
+select CASE t1.Clm_Rec_DT WHEN 0 THEN 'No' WHEN 1 THEN 'Yes'END as Include_DateTime, 
+ t3.Clm_Dev_NM as Device 
+from Tbl_Rec_DT_Dtls t1 
+left join Tbl_Dev_Mstr t3 on t3.Clm_Dev_Id=t1.Clm_Dev_Id; 
+// DELIMITER ;
+
+commit;

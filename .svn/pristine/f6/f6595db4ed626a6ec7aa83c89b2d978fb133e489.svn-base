@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row col-md-12 col-sm-12 col-xs-12 col-lg-12 no-gutters" id="divMain">
+    <div class="col-md-2 mb-3" id="divtab" style="border-right: 1px solid #ccc;">
+        <div id="divtabtemp">
+        </div>
+    </div>
+    <div class="col-md-10 col-sm-12 col-xs-12 col-lg-10" id="divtabContent" style="position: page;border-left:thin;height:100%;">
+    </div>
+    <label id="lblDummy" hidden></label>
+</div>
+
+<div id="myModal" class="modal" style="display:none;">
+    @* Modal content*@
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="divtabtemp2">
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var divtempcheck = false;
+    let IECheck = false;
+    j(document).ready(function () {
+        IECheck = detectIE();
+        j("#imgHomeBanner").hide();
+        PostasyncData("/Json/GetBannerImage", {}, j("#lblTabDummy"), UpdateBanner);
+        let myData = JSON.stringify({ htmName: "Tab" });
+        PostasyncData("/Json/GethtmData", myData, j("#lblDummy"), UpdatetabDiv);
+        myData = JSON.stringify({ htmName: "tabContent" });
+        PostasyncData("/Json/GethtmData", myData, j("#lblDummy"), UpdatetabContentDiv);
+    });
+
+    function UpdatetabDiv(response) {
+        if (response.Result == "Sucess") {
+            j("#divtabtemp2").empty();
+            j("#divtabtemp").empty();
+            if (divtempcheck) {
+                j("#divtabtemp2").append(response.OutData);
+            }
+            else
+                j("#divtabtemp").append(response.OutData);
+            //myData = JSON.stringify({ htmName: "tabContent" });
+            //PostasyncData("/Json/GethtmData", myData, j("#lblDummy"), UpdatetabContentDiv);
+            FillTabContent();
+            if (j("#Configuration-tab").length > 0) {
+                j("#Configuration-tab").hide();
+                j("#Control-tab").hide();
+                if (UserType == "Administrator") {
+                    j("#Configuration-tab").show();
+                    //myData = JSON.stringify({ htmName: "Configuration" });
+                    //PostasyncData("/Json/GethtmData", myData, j("#lblDummy"), UpdateConfigurationDiv);
+                }
+                if (SuperUser) {
+                    j("#Control-tab").show();
+                    //let myData3 = JSON.stringify({ htmName: "Control" });
+                    //PostasyncData("/Json/GethtmData", myData3, j("#lblDummy"), UpdateControlDiv);
+                }
+            }
+
+        }
+    }
+
+    function UpdateBanner(response) {
+        j("#imgHomeBanner,#hrefHomeLogo").hide();
+        if (response.Result == "Sucess") {
+            j("#imgHomeBanner").attr('src', response.Banner);
+            j("#hrefHomeLogo").attr('href', response.Logo);
+            j("#imgHomeBanner,#hrefHomeLogo").show();
+        }
+    }
+
+    function UpdatetabContentDiv(response) {
+        if (response.Result == "Sucess") {
+            j("#divtabContent").empty();
+            j("#divtabContent").append(response.OutData);
+            GetContentDivs();
+        }
+        Resize();
+    }
+</script>

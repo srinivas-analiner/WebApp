@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>C:\Users\SAAZ\Desktop\Web_App Test\SmartCamWeb</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="appsettings.Development.json">
+      <publishTime>07/05/2019 16:22:44</publishTime>
+    </File>
+    <File Include="appsettings.json">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="BouncyCastle.Crypto.dll">
+      <publishTime>05/28/2018 16:12:20</publishTime>
+    </File>
+    <File Include="Connected Services/Application Insights/ConnectedService.json">
+      <publishTime>07/22/2019 16:29:51</publishTime>
+    </File>
+    <File Include="Connected Services/Microsoft WCF Web Service Reference Provider/ConnectedService.json">
+      <publishTime>07/22/2019 17:39:03</publishTime>
+    </File>
+    <File Include="dotnet-aspnet-codegenerator-design.dll">
+      <publishTime>03/02/2019 19:52:30</publishTime>
+    </File>
+    <File Include="Google.Protobuf.dll">
+      <publishTime>08/10/2018 18:51:54</publishTime>
+    </File>
+    <File Include="Microsoft.AspNetCore.JsonPatch.dll">
+      <publishTime>06/07/2019 17:12:42</publishTime>
+    </File>
+    <File Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll">
+      <publishTime>06/07/2019 17:22:42</publishTime>
+    </File>
+    <File Include="Microsoft.AspNetCore.Mvc.Razor.Extensions.dll">
+      <publishTime>07/31/2019 11:07:17</publishTime>
+    </File>
+    <File Include="Microsoft.AspNetCore.Razor.Language.dll">
+      <publishTime>07/31/2019 11:04:25</publishTime>
+    </File>
+    <File Include="Microsoft.CodeAnalysis.CSharp.dll">
+      <publishTime>07/31/2019 11:06:21</publishTime>
+    </File>
+    <File Include="Microsoft.CodeAnalysis.CSharp.Workspaces.dll">
+      <publishTime>07/31/2019 10:53:27</publishTime>
+    </File>
+    <File Include="Microsoft.CodeAnalysis.dll">
+      <publishTime>07/31/2019 11:06:01</publishTime>
+    </File>
+    <File Include="Microsoft.CodeAnalysis.Razor.dll">
+      <publishTime>07/31/2019 11:06:24</publishTime>
+    </File>
+    <File Include="Microsoft.CodeAnalysis.Workspaces.dll">
+      <publishTime>07/31/2019 10:50:01</publishTime>
+    </File>
+    <File Include="Microsoft.DotNet.PlatformAbstractions.dll">
+      <publishTime>07/31/2019 11:06:22</publishTime>
+    </File>
+    <File Include="Microsoft.Extensions.DependencyModel.dll">
+      <publishTime>07/31/2019 11:04:30</publishTime>
+    </File>
+    <File Include="Microsoft.VisualStudio.Web.CodeGeneration.Contracts.dll">
+      <publishTime>03/02/2019 19:51:56</publishTime>
+    </File>
+    <File Include="Microsoft.VisualStudio.Web.CodeGeneration.Core.dll">
+      <publishTime>03/02/2019 19:52:00</publishTime>
+    </File>
+    <File Include="Microsoft.VisualStudio.Web.CodeGeneration.dll">
+      <publishTime>03/02/2019 19:52:04</publishTime>
+    </File>
+    <File Include="Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.dll">
+      <publishTime>03/02/2019 19:52:02</publishTime>
+    </File>
+    <File Include="Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll">
+      <publishTime>03/02/2019 19:51:58</publishTime>
+    </File>
+    <File Include="Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll">
+      <publishTime>03/02/2019 19:51:56</publishTime>
+    </File>
+    <File Include="Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll">
+      <publishTime>03/02/2019 19:52:04</publishTime>
+    </File>
+    <File Include="Microsoft.Web.Infrastructure.dll">
+      <publishTime>07/25/2012 11:48:56</publishTime>
+    </File>
+    <File Include="Microsoft.Win32.SystemEvents.dll">
+      <publishTime>05/15/2018 13:29:34</publishTime>
+    </File>
+    <File Include="MySql.Data.dll">
+      <publishTime>03/08/2019 08:01:42</publishTime>
+    </File>
+    <File Include="Newtonsoft.Json.Bson.dll">
+      <publishTime>11/27/2018 23:10:18</publishTime>
+    </File>
+    <File Include="Newtonsoft.Json.dll">
+      <publishTime>04/22/2019 01:06:16</publishTime>
+    </File>
+    <File Include="NuGet.Frameworks.dll">
+      <publishTime>07/31/2019 10:51:00</publishTime>
+    </File>
+    <File Include="runtimes/linux-arm64/lib/netcoreapp2.2/Microsoft.VisualBasic.dll">
+      <publishTime>06/18/2019 19:50:48</publishTime>
+    </File>
+    <File Include="runtimes/unix/lib/netcoreapp2.0/System.Drawing.Common.dll">
+      <publishTime>09/18/2018 19:38:14</publishTime>
+    </File>
+    <File Include="runtimes/unix/lib/netstandard2.0/System.Private.ServiceModel.dll">
+      <publishTime>07/19/2018 18:24:10</publishTime>
+    </File>
+    <File Include="runtimes/win/lib/netcoreapp2.0/Microsoft.Win32.SystemEvents.dll">
+      <publishTime>05/15/2018 13:29:34</publishTime>
+    </File>
+    <File Include="runtimes/win/lib/netcoreapp2.0/System.Drawing.Common.dll">
+      <publishTime>09/18/2018 19:38:14</publishTime>
+    </File>
+    <File Include="runtimes/win/lib/netcoreapp2.0/System.Text.Encoding.CodePages.dll">
+      <publishTime>07/19/2017 10:01:36</publishTime>
+    </File>
+    <File Include="runtimes/win/lib/netstandard2.0/System.Net.Http.WinHttpHandler.dll">
+      <publishTime>07/19/2017 10:01:30</publishTime>
+    </File>
+    <File Include="runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll">
+      <publishTime>07/19/2017 10:01:34</publishTime>
+    </File>
+    <File Include="runtimes/win7/lib/netstandard2.0/System.Private.ServiceModel.dll">
+      <publishTime>07/19/2018 18:24:12</publishTime>
+    </File>
+    <File Include="System.Composition.AttributedModel.dll">
+      <publishTime>07/31/2019 10:51:49</publishTime>
+    </File>
+    <File Include="System.Composition.Convention.dll">
+      <publishTime>07/31/2019 10:51:49</publishTime>
+    </File>
+    <File Include="System.Composition.Hosting.dll">
+      <publishTime>07/31/2019 10:51:50</publishTime>
+    </File>
+    <File Include="System.Composition.Runtime.dll">
+      <publishTime>07/31/2019 10:51:50</publishTime>
+    </File>
+    <File Include="System.Composition.TypedParts.dll">
+      <publishTime>07/31/2019 10:51:51</publishTime>
+    </File>
+    <File Include="System.Configuration.ConfigurationManager.dll">
+      <publishTime>11/20/2017 18:09:04</publishTime>
+    </File>
+    <File Include="System.Drawing.Common.dll">
+      <publishTime>09/18/2018 19:38:14</publishTime>
+    </File>
+    <File Include="System.Net.Http.Formatting.dll">
+      <publishTime>11/28/2018 13:00:36</publishTime>
+    </File>
+    <File Include="System.Net.Http.WinHttpHandler.dll">
+      <publishTime>07/19/2017 10:01:30</publishTime>
+    </File>
+    <File Include="System.Security.Cryptography.ProtectedData.dll">
+      <publishTime>07/19/2017 10:01:34</publishTime>
+    </File>
+    <File Include="System.ServiceModel.dll">
+      <publishTime>07/19/2018 18:24:20</publishTime>
+    </File>
+    <File Include="System.ServiceModel.Duplex.dll">
+      <publishTime>07/19/2018 18:24:16</publishTime>
+    </File>
+    <File Include="System.ServiceModel.Http.dll">
+      <publishTime>07/19/2018 18:24:18</publishTime>
+    </File>
+    <File Include="System.ServiceModel.NetTcp.dll">
+      <publishTime>07/19/2018 18:24:18</publishTime>
+    </File>
+    <File Include="System.ServiceModel.Primitives.dll">
+      <publishTime>07/19/2018 18:24:20</publishTime>
+    </File>
+    <File Include="System.ServiceModel.Security.dll">
+      <publishTime>07/19/2018 18:24:20</publishTime>
+    </File>
+    <File Include="System.Text.Encoding.CodePages.dll">
+      <publishTime>07/19/2017 10:01:36</publishTime>
+    </File>
+    <File Include="System.Web.Helpers.dll">
+      <publishTime>11/28/2018 13:04:24</publishTime>
+    </File>
+    <File Include="System.Web.Http.dll">
+      <publishTime>11/28/2018 13:01:00</publishTime>
+    </File>
+    <File Include="System.Web.Mvc.dll">
+      <publishTime>11/28/2018 12:59:46</publishTime>
+    </File>
+    <File Include="System.Web.Razor.dll">
+      <publishTime>11/28/2018 13:00:12</publishTime>
+    </File>
+    <File Include="System.Web.WebPages.Deployment.dll">
+      <publishTime>11/28/2018 13:04:24</publishTime>
+    </File>
+    <File Include="System.Web.WebPages.dll">
+      <publishTime>11/28/2018 13:04:24</publishTime>
+    </File>
+    <File Include="System.Web.WebPages.Razor.dll">
+      <publishTime>11/28/2018 13:04:24</publishTime>
+    </File>
+    <File Include="web.config">
+      <publishTime>10/24/2019 17:37:20</publishTime>
+    </File>
+    <File Include="Web.deps.json">
+      <publishTime>10/24/2019 17:37:20</publishTime>
+    </File>
+    <File Include="Web.dll">
+      <publishTime>10/24/2019 17:37:16</publishTime>
+    </File>
+    <File Include="Web.exe">
+      <publishTime>10/24/2019 17:37:16</publishTime>
+    </File>
+    <File Include="Web.pdb">
+      <publishTime>10/24/2019 17:37:16</publishTime>
+    </File>
+    <File Include="Web.runtimeconfig.json">
+      <publishTime>08/27/2019 17:05:18</publishTime>
+    </File>
+    <File Include="Web.Views.dll">
+      <publishTime>10/24/2019 17:37:19</publishTime>
+    </File>
+    <File Include="Web.Views.pdb">
+      <publishTime>10/24/2019 17:37:19</publishTime>
+    </File>
+    <File Include="wwwroot/Analinear_Logo.bmp">
+      <publishTime>08/09/2019 19:18:35</publishTime>
+    </File>
+    <File Include="wwwroot/css/Common.css">
+      <publishTime>10/18/2019 17:13:01</publishTime>
+    </File>
+    <File Include="wwwroot/css/fontawesome.css">
+      <publishTime>06/04/2019 20:16:50</publishTime>
+    </File>
+    <File Include="wwwroot/css/fontawesome.min.css">
+      <publishTime>06/04/2019 20:16:50</publishTime>
+    </File>
+    <File Include="wwwroot/css/icons.min.css">
+      <publishTime>07/27/2019 14:42:05</publishTime>
+    </File>
+    <File Include="wwwroot/css/site.css">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/Analytics.htm.aes">
+      <publishTime>10/24/2019 17:32:55</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/Configuration.htm.aes">
+      <publishTime>10/24/2019 17:32:55</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/Control.htm.aes">
+      <publishTime>10/24/2019 17:32:54</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/DBTest.txt.aes">
+      <publishTime>10/24/2019 17:32:55</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/ImagingSettings.htm.aes">
+      <publishTime>10/24/2019 17:32:54</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/IVA_Detection.htm.aes">
+      <publishTime>10/24/2019 17:32:52</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/LensControl.htm.aes">
+      <publishTime>10/24/2019 17:32:54</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/Load.htm.aes">
+      <publishTime>10/24/2019 17:32:54</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/Logs.htm.aes">
+      <publishTime>10/24/2019 17:32:54</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/Motion_Detection.htm.aes">
+      <publishTime>10/24/2019 17:32:52</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/Networks.htm.aes">
+      <publishTime>10/24/2019 17:32:54</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/Playback.htm.aes">
+      <publishTime>10/24/2019 17:32:53</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/Profiles.htm.aes">
+      <publishTime>10/24/2019 17:32:53</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/Recording_Config.htm.aes">
+      <publishTime>10/24/2019 17:32:53</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/System.htm.aes">
+      <publishTime>10/24/2019 17:32:53</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/Tab.htm.aes">
+      <publishTime>10/24/2019 17:32:53</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/tabContent.htm.aes">
+      <publishTime>10/24/2019 17:32:53</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/Tamper_Detection.htm.aes">
+      <publishTime>10/24/2019 17:32:52</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/UserAccounts.htm.aes">
+      <publishTime>10/24/2019 17:32:55</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/UserAccountsL2.htm.aes">
+      <publishTime>10/24/2019 17:32:55</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/Video.htm.aes">
+      <publishTime>10/24/2019 17:32:55</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Files/VideoStreaming.htm.aes">
+      <publishTime>10/24/2019 17:32:55</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/Analytics.htm">
+      <publishTime>10/09/2019 16:16:55</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/Configuration.htm">
+      <publishTime>10/18/2019 17:13:41</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/Control.htm">
+      <publishTime>10/24/2019 12:22:41</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/DBTest.txt">
+      <publishTime>10/21/2019 12:19:19</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/ImagingSettings.htm">
+      <publishTime>10/21/2019 12:39:18</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/IVA_Detection.htm">
+      <publishTime>10/18/2019 14:28:15</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/LensControl.htm">
+      <publishTime>10/24/2019 12:35:56</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/Load.htm">
+      <publishTime>08/14/2019 17:22:55</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/Logs.htm">
+      <publishTime>08/30/2019 12:18:39</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/Motion_Detection.htm">
+      <publishTime>10/18/2019 14:17:33</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/Networks.htm">
+      <publishTime>10/09/2019 12:49:43</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/Playback.htm">
+      <publishTime>09/17/2019 12:13:54</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/Profiles.htm">
+      <publishTime>10/18/2019 17:08:19</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/Recording_Config.htm">
+      <publishTime>10/18/2019 13:00:03</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/System.htm">
+      <publishTime>10/24/2019 17:32:20</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/Tab.htm">
+      <publishTime>10/24/2019 12:21:31</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/tabContent.htm">
+      <publishTime>10/24/2019 12:18:23</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/Tamper_Detection.htm">
+      <publishTime>10/18/2019 14:32:33</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/UserAccounts.htm">
+      <publishTime>08/31/2019 14:11:39</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/UserAccountsL2.htm">
+      <publishTime>08/31/2019 14:11:39</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/Video.htm">
+      <publishTime>10/23/2019 17:22:25</publishTime>
+    </File>
+    <File Include="wwwroot/HTML_Temp/VideoStreaming.htm">
+      <publishTime>10/15/2019 18:55:20</publishTime>
+    </File>
+    <File Include="wwwroot/js/bootstrap-filestyle.min.js">
+      <publishTime>09/17/2019 14:30:39</publishTime>
+    </File>
+    <File Include="wwwroot/js/hls.js">
+      <publishTime>07/10/2019 12:05:31</publishTime>
+    </File>
+    <File Include="wwwroot/js/site.js">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css.map">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css.map">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css.map">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css.map">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap.css">
+      <publishTime>08/20/2019 18:36:26</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap.css.map">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap.min.css">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap.min.css.map">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js.map">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js.map">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.js">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.js.map">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.min.js">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.min.js.map">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/LICENSE">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/Common.js">
+      <publishTime>09/18/2019 19:09:23</publishTime>
+    </File>
+    <File Include="wwwroot/lib/Common2.js">
+      <publishTime>07/27/2019 13:00:42</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation-unobtrusive/LICENSE.txt">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation/dist/additional-methods.js">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation/dist/additional-methods.min.js">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation/dist/jquery.validate.js">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation/dist/jquery.validate.min.js">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation/LICENSE.md">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery/dist/jquery.js">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery/dist/jquery.min.js">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery/dist/jquery.min.map">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery/LICENSE.txt">
+      <publishTime>07/05/2019 16:22:45</publishTime>
+    </File>
+    <File Include="wwwroot/Logo.ico">
+      <publishTime>06/12/2016 14:14:12</publishTime>
+    </File>
+    <File Include="wwwroot/Private/Firmware.dat">
+      <publishTime>10/24/2019 17:08:41</publishTime>
+    </File>
+    <File Include="wwwroot/Private/ReadMe.txt">
+      <publishTime>10/23/2019 18:18:20</publishTime>
+    </File>
+    <File Include="wwwroot/public/snapshot/Analinear_Logo.bmp">
+      <publishTime>08/09/2019 19:18:35</publishTime>
+    </File>
+    <File Include="wwwroot/public/video/TextFile.txt">
+      <publishTime>07/31/2019 10:35:01</publishTime>
+    </File>
+    <File Include="wwwroot/webfonts/fa-brands-400.eot">
+      <publishTime>06/04/2019 20:16:52</publishTime>
+    </File>
+    <File Include="wwwroot/webfonts/fa-brands-400.svg">
+      <publishTime>06/04/2019 20:16:52</publishTime>
+    </File>
+    <File Include="wwwroot/webfonts/fa-brands-400.ttf">
+      <publishTime>06/04/2019 20:16:52</publishTime>
+    </File>
+    <File Include="wwwroot/webfonts/fa-brands-400.woff">
+      <publishTime>06/04/2019 20:16:52</publishTime>
+    </File>
+    <File Include="wwwroot/webfonts/fa-brands-400.woff2">
+      <publishTime>06/04/2019 20:16:52</publishTime>
+    </File>
+    <File Include="wwwroot/webfonts/fa-regular-400.eot">
+      <publishTime>06/04/2019 20:16:52</publishTime>
+    </File>
+    <File Include="wwwroot/webfonts/fa-regular-400.svg">
+      <publishTime>06/04/2019 20:16:52</publishTime>
+    </File>
+    <File Include="wwwroot/webfonts/fa-regular-400.ttf">
+      <publishTime>06/04/2019 20:16:52</publishTime>
+    </File>
+    <File Include="wwwroot/webfonts/fa-regular-400.woff">
+      <publishTime>06/04/2019 20:16:52</publishTime>
+    </File>
+    <File Include="wwwroot/webfonts/fa-regular-400.woff2">
+      <publishTime>06/04/2019 20:16:52</publishTime>
+    </File>
+    <File Include="wwwroot/webfonts/fa-solid-900.eot">
+      <publishTime>06/04/2019 20:16:52</publishTime>
+    </File>
+    <File Include="wwwroot/webfonts/fa-solid-900.svg">
+      <publishTime>06/04/2019 20:16:52</publishTime>
+    </File>
+    <File Include="wwwroot/webfonts/fa-solid-900.ttf">
+      <publishTime>06/04/2019 20:16:52</publishTime>
+    </File>
+    <File Include="wwwroot/webfonts/fa-solid-900.woff">
+      <publishTime>06/04/2019 20:16:52</publishTime>
+    </File>
+    <File Include="wwwroot/webfonts/fa-solid-900.woff2">
+      <publishTime>06/04/2019 20:16:52</publishTime>
+    </File>
+  </ItemGroup>
+</Project>
