@@ -241,79 +241,97 @@ namespace Web.Controllers
         [HttpPost]
         public JsonResult GetDeviceDetails()
         {
-            DataTable dt = new DataTable();
-            string Err = "";
-            MiddleTyre_Mysql.GetDeviceDetails(ref dt, ref Err);
             List<string> s = null;
-            if (dt.Rows.Count > 0)
+            try
             {
-                s = new List<string>();
-                for (int i = 0; i < dt.Rows.Count; i++)
+                DataTable dt = new DataTable();
+                string Err = "";
+                MiddleTyre_Mysql.GetDeviceDetails(ref dt, ref Err);
+                if (dt.Rows.Count > 0)
                 {
-                    int In = i;
-                    string DName = dt.Rows[i]["DeviceName"].ToString();
-                    if (DName.Contains("Device"))
+                    s = new List<string>();
+                    for (int i = 0; i < dt.Rows.Count; i++)
                     {
-                        DName = DName.Replace("Device", "");
-                        int.TryParse(DName, out In);
+                        int In = i;
+                        string DName = dt.Rows[i]["DeviceName"].ToString();
+                        if (DName.Contains("Device"))
+                        {
+                            DName = DName.Replace("Device", "");
+                            int.TryParse(DName, out In);
+                        }
+                        s.Add("Video_Input_" + In.ToString());
                     }
-                    s.Add("Video_Input_" + In.ToString());
                 }
+                dt.Clear();
+                dt.Dispose();
+                dt = null;
+                //List<string> s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
             }
-            dt.Clear();
-            dt.Dispose();
-            dt = null;
-            //List<string> s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
+            catch (Exception)
+            {
+            }
             return Json(s);
         }
 
         [HttpPost]
         public JsonResult GetAllDeviceDetails()
         {
-            DataTable dt = new DataTable();
-            string Err = "";
-            MiddleTyre_Mysql.GetAllDeviceDetails(ref dt, ref Err);
             List<string> s = null;
-            if (dt.Rows.Count > 0)
+            try
             {
-                s = new List<string>();
-                for (int i = 0; i < dt.Rows.Count; i++)
+                DataTable dt = new DataTable();
+                string Err = "";
+                MiddleTyre_Mysql.GetAllDeviceDetails(ref dt, ref Err);
+                if (dt.Rows.Count > 0)
                 {
-                    int In = i;
-                    string DName = dt.Rows[i]["DeviceName"].ToString();
-                    if (DName.Contains("Device"))
+                    s = new List<string>();
+                    for (int i = 0; i < dt.Rows.Count; i++)
                     {
-                        DName = DName.Replace("Device", "");
-                        int.TryParse(DName, out In);
+                        int In = i;
+                        string DName = dt.Rows[i]["DeviceName"].ToString();
+                        if (DName.Contains("Device"))
+                        {
+                            DName = DName.Replace("Device", "");
+                            int.TryParse(DName, out In);
+                        }
+                        s.Add("Video_Input_" + In.ToString());
                     }
-                    s.Add("Video_Input_" + In.ToString());
                 }
+                dt.Clear();
+                dt.Dispose();
+                dt = null;
             }
-            dt.Clear();
-            dt.Dispose();
-            dt = null;
-            //List<string> s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
+            catch (Exception)
+            {
+            }
             return Json(s);
         }
 
         [HttpPost]
         public JsonResult GetErrorTypes()
         {
-            DataTable dt = new DataTable();
-            string Err = "";
-            MiddleTyre_Mysql.GetErrorTypes(ref dt, ref Err);
-            if (dt.Columns.Count > 1)
+            List<string> s = null;
+            try
             {
-                dt.Columns.Remove("Abbrevation");
-                DataRow dr2;
-                dr2 = dt.NewRow();
-                dr2[0] = "All";
-                dt.Rows.InsertAt(dr2, 0);
+                DataTable dt = new DataTable();
+                string Err = "";
+                MiddleTyre_Mysql.GetErrorTypes(ref dt, ref Err);
+                if (dt.Columns.Count > 1)
+                {
+                    dt.Columns.Remove("Abbrevation");
+                    DataRow dr2;
+                    dr2 = dt.NewRow();
+                    dr2[0] = "All";
+                    dt.Rows.InsertAt(dr2, 0);
+                }
+                s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
+                dt.Clear();
+                dt.Dispose();
+                dt = null;
             }
-            List<string> s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
-            dt.Clear();
-            dt.Dispose();
-            dt = null;
+            catch (Exception)
+            {
+            }
             return Json(s);
         }
 
@@ -904,7 +922,6 @@ namespace Web.Controllers
             return jsonResult;
         }
 
-
         [HttpPost]
         public JsonResult UpdateTrackerPTZDetails([FromBody] JObject Data)
         {
@@ -957,9 +974,15 @@ namespace Web.Controllers
         {
             MemoryStream input = new MemoryStream(data);
             MemoryStream output = new MemoryStream();
-            using (DeflateStream dstream = new DeflateStream(input, CompressionMode.Decompress))
+            try
             {
-                dstream.CopyTo(output);
+                using (DeflateStream dstream = new DeflateStream(input, CompressionMode.Decompress))
+                {
+                    dstream.CopyTo(output);
+                }
+            }
+            catch (Exception)
+            {
             }
             return output.ToArray();
         }
@@ -1040,7 +1063,6 @@ namespace Web.Controllers
             {
             }
         }
-
 
         [HttpPost]
         public JsonResult GetFrameData([FromBody] JObject Data)
@@ -1247,54 +1269,59 @@ namespace Web.Controllers
 
         private static void SendSnap_Signal(string VideoInput, ref string Result, ref string Err)
         {
-            string DataIn = "C4";
-            switch (VideoInput)
+            try
             {
-                case "Device0":
-                    DataIn += "01";
-                    break;
-                case "Device1":
-                    DataIn += "02";
-                    break;
-                default:
-                    DataIn += "01";
-                    break;
-            }
-            DataIn += "F8";
-            UdpClient client = new UdpClient();
-            if (UDP.Connect(IpAddress, port, ref client, ref Err))
-            {
-                Err = "";
-                if (UDP.ATC_TransmitData(client, DataIn, ref Err))
+                string DataIn = "C4";
+                switch (VideoInput)
                 {
-                    string OutData = null;
-                    if (UDP.ATC_ReceiveData(client, ref OutData, ref Err))
+                    case "Device0":
+                        DataIn += "01";
+                        break;
+                    case "Device1":
+                        DataIn += "02";
+                        break;
+                    default:
+                        DataIn += "01";
+                        break;
+                }
+                DataIn += "F8";
+                UdpClient client = new UdpClient();
+                if (UDP.Connect(IpAddress, port, ref client, ref Err))
+                {
+                    Err = "";
+                    if (UDP.ATC_TransmitData(client, DataIn, ref Err))
                     {
-                        if (OutData.Substring(0, 8) == DataIn + "01")
+                        string OutData = null;
+                        if (UDP.ATC_ReceiveData(client, ref OutData, ref Err))
                         {
-                            Result = "Sucess";
+                            if (OutData.Substring(0, 8) == DataIn + "01")
+                            {
+                                Result = "Sucess";
+                            }
+                            else
+                            {
+                                Result = OutData;
+                            }
                         }
                         else
                         {
-                            Result = OutData;
+                            Result = Err;
                         }
                     }
                     else
                     {
                         Result = Err;
                     }
+                    UDP.DisConnect(client, ref Err);
                 }
                 else
                 {
                     Result = Err;
                 }
-                UDP.DisConnect(client, ref Err);
             }
-            else
+            catch (Exception)
             {
-                Result = Err;
             }
-
         }
 
         [HttpPost]
@@ -1432,7 +1459,6 @@ namespace Web.Controllers
             return jsonResult;
         }
 
-
         private void PoolCheck(bool ReadOnce = true)
         {
             try
@@ -1456,16 +1482,20 @@ namespace Web.Controllers
 
         private static byte[] Decompress2(byte[] gzBuffer)
         {
-            MemoryStream ms = new MemoryStream();
-            int msgLength = BitConverter.ToInt32(gzBuffer, 0);
-            ms.Write(gzBuffer, 4, gzBuffer.Length - 4);
-
-            byte[] buffer = new byte[msgLength];
-
-            ms.Position = 0;
-            GZipStream zip = new GZipStream(ms, CompressionMode.Decompress);
-            zip.Read(buffer, 0, buffer.Length);
-
+            byte[] buffer = null;
+            try
+            {
+                MemoryStream ms = new MemoryStream();
+                int msgLength = BitConverter.ToInt32(gzBuffer, 0);
+                ms.Write(gzBuffer, 4, gzBuffer.Length - 4);
+                buffer = new byte[msgLength];
+                ms.Position = 0;
+                GZipStream zip = new GZipStream(ms, CompressionMode.Decompress);
+                zip.Read(buffer, 0, buffer.Length);
+            }
+            catch (Exception)
+            {
+            }
             return buffer;
         }
         //public FileResult downloadFile(string filePath)
@@ -2409,51 +2439,56 @@ namespace Web.Controllers
         //    return jsonResult;
         //}
 
-
         [HttpPost]
         public JsonResult GetLogDetails([FromBody] JObject Data)
         {
             string Result = "Failed";
             int TotalCount = 0;
-            int SkipCount = Convert.ToInt32(Common.GetJArrayValue(Data, "SkipCount"));
-            string Severty = Common.GetJArrayValue(Data, "Severty");
             IEnumerable<Dictionary<string, string>> FileDetails = null;
-            Result = "Sucess";
-            DataTable dtData = new DataTable();
-            if (MiddleTyre_Mysql.GetLogDetails(Severty, ref dtData, ref Result))
+            try
             {
-                try
+                int SkipCount = Convert.ToInt32(Common.GetJArrayValue(Data, "SkipCount"));
+                string Severty = Common.GetJArrayValue(Data, "Severty");
+                Result = "Sucess";
+                DataTable dtData = new DataTable();
+                if (MiddleTyre_Mysql.GetLogDetails(Severty, ref dtData, ref Result))
                 {
-                    HttpContext.Session.SetObjectAsJson("LogDetails", dtData);
-                    int Total = 6;
-                    double TotalTemp = 6.0;
-                    TotalCount = Convert.ToInt32(Math.Ceiling((dtData.Rows.Count) / TotalTemp));
-                    if (dtData.Rows.Count == Total)
+                    try
                     {
-                        TotalCount = 0;
+                        HttpContext.Session.SetObjectAsJson("LogDetails", dtData);
+                        int Total = 6;
+                        double TotalTemp = 6.0;
+                        TotalCount = Convert.ToInt32(Math.Ceiling((dtData.Rows.Count) / TotalTemp));
+                        if (dtData.Rows.Count == Total)
+                        {
+                            TotalCount = 0;
+                        }
+                        DataTable dttemp = new DataTable();
+                        foreach (DataColumn dc in dtData.Columns)
+                            dttemp.Columns.Add(dc.ColumnName);
+                        IEnumerable<DataRow> dtData2 = dtData.AsEnumerable().Skip(SkipCount * Total).Take(Total);
+                        foreach (DataRow dr in dtData2)
+                        {
+                            dttemp.Rows.Add(dr.ItemArray);
+                        }
+                        var FileDetails2 = dttemp.Rows.OfType<DataRow>().Select(row => dttemp.Columns.OfType<DataColumn>().ToDictionary(col => col.ColumnName, col => row[col].ToString()));
+                        FileDetails = FileDetails2.ToList();
+                        FileDetails2 = null;
+                        dttemp.Clear();
+                        dttemp.Dispose();
+                        dttemp = null;
                     }
-                    DataTable dttemp = new DataTable();
-                    foreach (DataColumn dc in dtData.Columns)
-                        dttemp.Columns.Add(dc.ColumnName);
-                    IEnumerable<DataRow> dtData2 = dtData.AsEnumerable().Skip(SkipCount * Total).Take(Total);
-                    foreach (DataRow dr in dtData2)
+                    catch (Exception ex)
                     {
-                        dttemp.Rows.Add(dr.ItemArray);
                     }
-                    var FileDetails2 = dttemp.Rows.OfType<DataRow>().Select(row => dttemp.Columns.OfType<DataColumn>().ToDictionary(col => col.ColumnName, col => row[col].ToString()));
-                    FileDetails = FileDetails2.ToList();
-                    FileDetails2 = null;
-                    dttemp.Clear();
-                    dttemp.Dispose();
-                    dttemp = null;
                 }
-                catch (Exception ex)
-                {
-                }
+                dtData.Clear();
+                dtData.Dispose();
+                dtData = null;
             }
-            dtData.Clear();
-            dtData.Dispose();
-            dtData = null;
+            catch (Exception)
+            {
+            }
             JsonSerializerSettings ss = new JsonSerializerSettings();
             var jsonResult = Json(new { Result = Result, TotalCount = TotalCount, FileDtls = FileDetails }, ss);
             //jsonResult.SerializerSettings.MaxDepth= int.MaxValue;
@@ -2465,11 +2500,11 @@ namespace Web.Controllers
         {
             string Result = "";
             int TotalCount = 0;
-            int SkipCount = Convert.ToInt32(Common.GetJArrayValue(Data, "SkipCount"));
             IEnumerable<Dictionary<string, string>> FileDetails = null;
             Result = "Sucess";
             try
             {
+                int SkipCount = Convert.ToInt32(Common.GetJArrayValue(Data, "SkipCount"));
                 DataTable dtData = HttpContext.Session.GetObjectFromJson<DataTable>("LogDetails");
                 int Total = 6;
                 double TotalTemp = 6.0;
@@ -2508,45 +2543,51 @@ namespace Web.Controllers
             string Result = "Failed";
             string Log_Name = "";
             string URL = "";
-            string Severty = Common.GetJArrayValue(Data, "Severty");
-            DataTable dtData = new DataTable();
-            if (MiddleTyre_Mysql.GetLogDetails(Severty, ref dtData, ref Result))
+            try
             {
-                if (dtData.Rows.Count > 0)
+                string Severty = Common.GetJArrayValue(Data, "Severty");
+                DataTable dtData = new DataTable();
+                if (MiddleTyre_Mysql.GetLogDetails(Severty, ref dtData, ref Result))
                 {
-                    dtData.Columns.Remove("Id");
-                    dtData.Columns.Remove("Severity_Abv");
-                    dtData.Columns.Remove("MsgId");
-                    bool Status = GeneratelogPDF(dtData, "Log", ref URL);
-                    Result = "Sucess";
-                    string LogP = Environment.CurrentDirectory + "//wwwroot//public//Logs//log1.txt";
-                    string LogP2 = Environment.CurrentDirectory + "//wwwroot//public//Logs//log12.txt";
-                    if (System.IO.File.Exists(LogP))
+                    if (dtData.Rows.Count > 0)
                     {
-                        System.IO.File.Delete(LogP);
+                        dtData.Columns.Remove("Id");
+                        dtData.Columns.Remove("Severity_Abv");
+                        dtData.Columns.Remove("MsgId");
+                        bool Status = GeneratelogPDF(dtData, "Log", ref URL);
+                        Result = "Sucess";
+                        string LogP = Environment.CurrentDirectory + "//wwwroot//public//Logs//log1.txt";
+                        string LogP2 = Environment.CurrentDirectory + "//wwwroot//public//Logs//log12.txt";
+                        if (System.IO.File.Exists(LogP))
+                        {
+                            System.IO.File.Delete(LogP);
+                        }
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
+                        DirectoryInfo info = new DirectoryInfo(Environment.CurrentDirectory + "//wwwroot//public//Logs");
+                        FileInfo[] files = info.GetFiles("*.txt").OrderByDescending(p => p.CreationTime).ToArray().Take(2).ToArray();
+                        if (files.Length > 0)
+                        {
+                            Log_Name = files[0].Name;
+                            Common.FileEncrypt2(files[0].FullName, LogP);
+                            //Common.FileDecrypt(LogP, LogP2);
+                            Log_Name = "log1.txt";
+                        }
+                        files = null;
+                        info = null;
                     }
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                    DirectoryInfo info = new DirectoryInfo(Environment.CurrentDirectory + "//wwwroot//public//Logs");
-                    FileInfo[] files = info.GetFiles("*.txt").OrderByDescending(p => p.CreationTime).ToArray().Take(2).ToArray();
-                    if (files.Length > 0)
+                    else
                     {
-                        Log_Name = files[0].Name;
-                        Common.FileEncrypt2(files[0].FullName, LogP);
-                        //Common.FileDecrypt(LogP, LogP2);
-                        Log_Name = "log1.txt";
+                        Result = "No Logs to download";
                     }
-                    files = null;
-                    info = null;
                 }
-                else
-                {
-                    Result = "No Logs to download";
-                }
+                dtData.Clear();
+                dtData.Dispose();
+                dtData = null;
             }
-            dtData.Clear();
-            dtData.Dispose();
-            dtData = null;
+            catch (Exception)
+            {
+            }
             JsonSerializerSettings ss = new JsonSerializerSettings();
             var jsonResult = Json(new { Result = Result, Log_Name = Log_Name, URL = URL }, ss);
             //jsonResult.SerializerSettings.MaxDepth= int.MaxValue;
@@ -3091,6 +3132,24 @@ namespace Web.Controllers
             return jsonResult;
         }
 
+        [HttpPost]
+        public JsonResult SetRelativePanTilt([FromBody] JObject Data)
+        {
+            string Result = "Failed";
+            try
+            {
+                float PanAngle = (float)Convert.ToDouble(Common.GetJArrayValue(Data, "PanAngle"));
+                float TiltAngle = (float)Convert.ToDouble(Common.GetJArrayValue(Data, "TiltAngle"));
+                Result = PanTilt_Relative(PanAngle, TiltAngle);
+            }
+            catch (Exception ex)
+            {
+                Result = ex.Message;
+            }
+            JsonSerializerSettings ss = new JsonSerializerSettings();
+            var jsonResult = Json(new { Result = Result }, ss);
+            return jsonResult;
+        }
 
         [HttpPost]
         public JsonResult SetPTAbsolute([FromBody] JObject Data)
@@ -3501,7 +3560,6 @@ namespace Web.Controllers
         public JsonResult SetZoom([FromBody] JObject Data)
         {
             string Result = "Failed";
-
             try
             {
                 if (Data != null)
@@ -3556,7 +3614,6 @@ namespace Web.Controllers
         public JsonResult SetFOV([FromBody] JObject Data)
         {
             string Result = "Failed";
-
             try
             {
                 if (Data != null)
@@ -3583,7 +3640,6 @@ namespace Web.Controllers
         public JsonResult SetPreset([FromBody] JObject Data)
         {
             string Result = "Failed";
-
             try
             {
                 if (Data != null)
@@ -3619,7 +3675,6 @@ namespace Web.Controllers
         public JsonResult GoToPreset([FromBody] JObject Data)
         {
             string Result = "Failed";
-
             try
             {
                 if (Data != null)
@@ -3656,7 +3711,6 @@ namespace Web.Controllers
         public JsonResult ClearPreset([FromBody] JObject Data)
         {
             string Result = "Failed";
-
             try
             {
                 if (Data != null)
@@ -3733,7 +3787,6 @@ namespace Web.Controllers
 
         #region LensControl
 
-        [HttpPost]
         private string LC_Zoom(string VideoInput, bool ZoomIn = true, int speed = 1)
         {
             string Result = "Failed";
@@ -4280,6 +4333,71 @@ namespace Web.Controllers
                     DataIn += "04";
                 }
                 DataIn += PanSpeed.ToString("x2").PadLeft(2, '0') + TiltSpeed.ToString("x2").PadLeft(2, '0');
+                string Err = "";
+                UdpClient client = new UdpClient();
+                if (UDP.Connect(IpAddress, port, ref client, ref Err))
+                {
+                    Err = "";
+                    if (UDP.ATC_TransmitData(client, DataIn, ref Err))
+                    {
+                        string OutData = null;
+                        if (UDP.ATC_ReceiveData(client, ref OutData, ref Err))
+                        {
+                            if (OutData == DataIn2 + "01")
+                                Result = "Sucess";
+                            else
+                            {
+                                Result = OutData;
+                            }
+                        }
+                        else
+                        {
+                            Result = Err;
+                        }
+                    }
+                    else
+                    {
+                        Result = Err;
+                    }
+                    UDP.DisConnect(client, ref Err);
+                }
+                else
+                {
+                    Result = Err;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Result = "PanTilt_Continuous() : " + ex.Message;
+            }
+            return Result;
+        }
+
+        private string PanTilt_Relative(float Pan, float Tilt)
+        {
+            string Result = "Failed";
+            try
+            {
+                string DataIn = "C50116";
+                string DataIn2 = "C50116";
+                float val = Math.Abs(Pan);
+                if (Pan < 0)
+                {
+                    int val2 = Convert.ToInt32(val);
+                    val2 = (val2 | 0x80);
+                    val = val2;
+                }
+                DataIn += Convert.ToInt32(val).ToString("x2").PadLeft(2, '0');
+
+                val = Math.Abs(Tilt);
+                if (Tilt < 0)
+                {
+                    int val2 = Convert.ToInt32(val);
+                    val2 = (val2 | 0x80);
+                    val = val2;
+                }
+                DataIn += Convert.ToInt32(val).ToString("x2").PadLeft(2, '0');
                 string Err = "";
                 UdpClient client = new UdpClient();
                 if (UDP.Connect(IpAddress, port, ref client, ref Err))
@@ -5008,7 +5126,7 @@ namespace Web.Controllers
                     FileDetails = FileDetails2.ToList();
                     FileDetails2 = null;
                 }
-                MiddleTyre_Mysql.GetRecordingDateTimeDetails(VideoInput, ref DTState,ref Err);
+                MiddleTyre_Mysql.GetRecordingDateTimeDetails(VideoInput, ref DTState, ref Err);
                 dt1.Clear();
                 dt1.Dispose();
                 dt1 = null;
@@ -5611,6 +5729,7 @@ namespace Web.Controllers
         [HttpPost]
         public JsonResult GetImagingModeDetails([FromBody] JObject Data)
         {
+            List<string> s = null;
             try
             {
                 DataTable dt = new DataTable();
@@ -5619,21 +5738,21 @@ namespace Web.Controllers
                 VideoInput = Common.GetDeviceName(Common.GetJArrayValue(Data, "VideoInput"));
                 string Name = Common.GetJArrayValue(Data, "Name");
                 MiddleTyre_Mysql.GetImagingModeDetails(Name, VideoInput, ref dt, ref Err);
-                List<string> s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
+                s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
                 dt.Clear();
                 dt.Dispose();
                 dt = null;
-                return Json(s);
             }
             catch (Exception ex)
             {
-                return null;
             }
+            return Json(s);
         }
 
         [HttpPost]
         public JsonResult GetImgColorpaletteDetails([FromBody] JObject Data)
         {
+            List<string> s = null;
             try
             {
                 DataTable dt = new DataTable();
@@ -5641,23 +5760,21 @@ namespace Web.Controllers
                 VideoInput = Common.GetDeviceName(Common.GetJArrayValue(Data, "VideoInput"));
                 string Err = "";
                 MiddleTyre_Mysql.GetImgColorpaletteDetails(VideoInput, ref dt, ref Err);
-                List<string> s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
+                s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
                 dt.Clear();
                 dt.Dispose();
                 dt = null;
-                return Json(s);
             }
             catch (Exception ex)
             {
-                return null;
             }
-
+            return Json(s);
         }
-
 
         [HttpPost]
         public JsonResult GetImgPolarityTypeDetails([FromBody] JObject Data)
         {
+            List<string> s = null;
             try
             {
                 DataTable dt = new DataTable();
@@ -5665,23 +5782,22 @@ namespace Web.Controllers
                 VideoInput = Common.GetDeviceName(Common.GetJArrayValue(Data, "VideoInput"));
                 string Err = "";
                 MiddleTyre_Mysql.GetImgPolarityTypeDetails(VideoInput, ref dt, ref Err);
-                List<string> s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
+                s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
                 dt.Clear();
                 dt.Dispose();
                 dt = null;
-                return Json(s);
             }
             catch (Exception ex)
             {
-                return null;
             }
-
+            return Json(s);
         }
 
 
         [HttpPost]
         public JsonResult GetImgOrientationDetails([FromBody] JObject Data)
         {
+            List<string> s = null;
             try
             {
                 DataTable dt = new DataTable();
@@ -5689,21 +5805,21 @@ namespace Web.Controllers
                 VideoInput = Common.GetDeviceName(Common.GetJArrayValue(Data, "VideoInput"));
                 string Err = "";
                 MiddleTyre_Mysql.GetImgOrientationDetails(VideoInput, ref dt, ref Err);
-                List<string> s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
+                s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
                 dt.Clear();
                 dt.Dispose();
                 dt = null;
-                return Json(s);
             }
             catch (Exception)
             {
-                return null;
             }
+            return Json(s);
         }
 
         [HttpPost]
         public JsonResult GetImgFPSDetails([FromBody] JObject Data)
         {
+            List<string> s = null;
             try
             {
                 DataTable dt = new DataTable();
@@ -5711,16 +5827,15 @@ namespace Web.Controllers
                 VideoInput = Common.GetDeviceName(Common.GetJArrayValue(Data, "VideoInput"));
                 string Err = "";
                 MiddleTyre_Mysql.GetImgFPSDetails(VideoInput, ref dt, ref Err);
-                List<string> s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
+                s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
                 dt.Clear();
                 dt.Dispose();
                 dt = null;
-                return Json(s);
             }
             catch (Exception ex)
             {
-                return null;
             }
+            return Json(s);
         }
 
         [HttpPost]
@@ -5929,7 +6044,6 @@ namespace Web.Controllers
             return jsonResult;
         }
 
-
         [HttpPost]
         public JsonResult UpdateDefogDetails([FromBody] JObject Data)
         {
@@ -6059,7 +6173,6 @@ namespace Web.Controllers
             //jsonResult.SerializerSettings.MaxDepth= int.MaxValue;
             return jsonResult;
         }
-
 
         //[HttpPost]
         //public JsonResult UpdateAutoExposureDetails([FromBody] JObject Data)
@@ -6200,7 +6313,6 @@ namespace Web.Controllers
             return jsonResult;
         }
 
-
         [HttpPost]
         public JsonResult SendImageSettingSignal([FromBody] JObject Data)
         {
@@ -6262,86 +6374,92 @@ namespace Web.Controllers
         public JsonResult UploadFilesAjax2()
         {
             long size = 0;
-            var files = Request.Form.Files;
             string Result = "Failed To Upload";
             int FirmwarePacketSize = 0;
-            foreach (var file in files)
+            try
             {
-                try
+                var files = Request.Form.Files;
+                foreach (var file in files)
                 {
-                    var filename = ContentDispositionHeaderValue
-                                    .Parse(file.ContentDisposition)
-                                    .FileName
-                                    .Trim('"');
-                    size += file.Length;
-                    string FPath = Environment.CurrentDirectory + "//wwwroot//Private//";
-                    Common.DeleteAllFiles(FPath);
-                    filename = FPath + $@"/{filename}";
-                    using (FileStream fs = System.IO.File.Create(filename))
+                    try
                     {
-                        file.CopyTo(fs);
-                        fs.Flush();
-                    }
-                    int kk = 0;
-                    string OutVal = "";
-                    int OutValCount = 0;
-                    string StoreFirmwareVersion = "";
-                    var FileLength = new FileInfo(filename).Length;
-                    int Filesize = Convert.ToInt32(FileLength);
-                    string[] HeaderData = new string[7];
-                    string PathToSave = FPath + "//Firmware.dat";
-                    StreamWriter GenerateFile = new StreamWriter(new FileStream(PathToSave, FileMode.Create));
-                    using (StreamReader sr = new StreamReader(filename))
-                    {
-                        string Line = sr.ReadLine();
-                        while (Line != null)
+                        var filename = ContentDispositionHeaderValue
+                                        .Parse(file.ContentDisposition)
+                                        .FileName
+                                        .Trim('"');
+                        size += file.Length;
+                        string FPath = Environment.CurrentDirectory + "//wwwroot//Private//";
+                        Common.DeleteAllFiles(FPath);
+                        filename = FPath + $@"/{filename}";
+                        using (FileStream fs = System.IO.File.Create(filename))
                         {
-                            string DecryptValue = CryptorEngine.Decrypt(Line, true);
-                            if (OutValCount >= 7)
-                            {
-                                OutVal += DecryptValue;
-                                if (OutVal.Length == 512)
-                                {
-                                    GenerateFile.WriteLine(OutVal.PadRight(512, '0').ToUpper());
-                                    kk++;
-                                    OutVal = "";
-                                }
-                            }
-                            else
-                            {
-                                HeaderData[OutValCount] = DecryptValue;
-                                HeaderData[OutValCount] = HeaderData[OutValCount].Substring(6, HeaderData[OutValCount].Length - 7);
-                                if (OutValCount == 4)
-                                {
-                                    StoreFirmwareVersion = HeaderData[OutValCount];
-                                    GenerateFile.WriteLine(StoreFirmwareVersion.ToUpper());
-                                }
-                            }
-                            OutValCount++;
-                            Line = sr.ReadLine();
+                            file.CopyTo(fs);
+                            fs.Flush();
                         }
+                        int kk = 0;
+                        string OutVal = "";
+                        int OutValCount = 0;
+                        string StoreFirmwareVersion = "";
+                        var FileLength = new FileInfo(filename).Length;
+                        int Filesize = Convert.ToInt32(FileLength);
+                        string[] HeaderData = new string[7];
+                        string PathToSave = FPath + "//Firmware.dat";
+                        StreamWriter GenerateFile = new StreamWriter(new FileStream(PathToSave, FileMode.Create));
+                        using (StreamReader sr = new StreamReader(filename))
+                        {
+                            string Line = sr.ReadLine();
+                            while (Line != null)
+                            {
+                                string DecryptValue = CryptorEngine.Decrypt(Line, true);
+                                if (OutValCount >= 7)
+                                {
+                                    OutVal += DecryptValue;
+                                    if (OutVal.Length == 512)
+                                    {
+                                        GenerateFile.WriteLine(OutVal.PadRight(512, '0').ToUpper());
+                                        kk++;
+                                        OutVal = "";
+                                    }
+                                }
+                                else
+                                {
+                                    HeaderData[OutValCount] = DecryptValue;
+                                    HeaderData[OutValCount] = HeaderData[OutValCount].Substring(6, HeaderData[OutValCount].Length - 7);
+                                    if (OutValCount == 4)
+                                    {
+                                        StoreFirmwareVersion = HeaderData[OutValCount];
+                                        GenerateFile.WriteLine(StoreFirmwareVersion.ToUpper());
+                                    }
+                                }
+                                OutValCount++;
+                                Line = sr.ReadLine();
+                            }
+                        }
+                        GenerateFile.Close();
+                        if (System.IO.File.Exists(filename))
+                        {
+                            System.IO.File.Delete(filename);
+                        }
+                        FirmwarePacketSize = kk;
+                        Filesize = (kk * 512);
+                        InsertText(PathToSave, (Filesize / 2).ToString());
+                        Result = "Sucess";
+                        //HttpContext.Session.SetString("FirmwarePacketSize", FirmwarePacketSize.ToString());
+                        string Err = "";
+                        MiddleTyre_Mysql.UpdateSmartCamStatusDetails(FirmwarePacketSize, 0, ref Err);
+                        Result = FirmwareUpdateSignal();
+                        //Result = $"{files.Count} file(s) / { size} bytes uploaded successfully!";
                     }
-                    GenerateFile.Close();
-                    if (System.IO.File.Exists(filename))
+                    catch (Exception ex)
                     {
-                        System.IO.File.Delete(filename);
+                        Result = "Not Valid File";
                     }
-                    FirmwarePacketSize = kk;
-                    Filesize = (kk * 512);
-                    InsertText(PathToSave, (Filesize / 2).ToString());
-                    Result = "Sucess";
-                    //HttpContext.Session.SetString("FirmwarePacketSize", FirmwarePacketSize.ToString());
-                    string Err = "";
-                    MiddleTyre_Mysql.UpdateSmartCamStatusDetails(FirmwarePacketSize, 0, ref Err);
-                    Result = FirmwareUpdateSignal();
-                    //Result = $"{files.Count} file(s) / { size} bytes uploaded successfully!";
-                }
-                catch (Exception ex)
-                {
-                    Result = "Not Valid File";
                 }
             }
-            //return Json(message);
+            catch (Exception ex)
+            {
+                Result = ex.Message;
+            }
             JsonSerializerSettings ss = new JsonSerializerSettings();
             var jsonResult = Json(new { Result = Result, PacketSize = FirmwarePacketSize }, ss);
             //jsonResult.SerializerSettings.MaxDepth= int.MaxValue;
@@ -6669,7 +6787,6 @@ namespace Web.Controllers
             return jsonResult;
         }
 
-
         [HttpPost]
         public JsonResult CheckFirmwareUpdateStatus()
         {
@@ -6964,7 +7081,6 @@ namespace Web.Controllers
             return Result;
         }
 
-
         [HttpPost]
         public string RestartServices()
         {
@@ -7012,18 +7128,23 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
-            if (file == null || file.Length == 0)
-                return Content("file not selected");
-
-            var path = Path.Combine(
-                        Directory.GetCurrentDirectory(), "wwwroot",
-                        file.FileName);
-
-            using (var stream = new FileStream(path, FileMode.Create))
+            try
             {
-                await file.CopyToAsync(stream);
-            }
+                if (file == null || file.Length == 0)
+                    return Content("file not selected");
 
+                var path = Path.Combine(
+                            Directory.GetCurrentDirectory(), "wwwroot",
+                            file.FileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+            }
+            catch (Exception)
+            {
+            }
             return RedirectToAction("Files");
         }
 
@@ -7044,8 +7165,6 @@ namespace Web.Controllers
             }
             catch (Exception)
             {
-
-                throw;
             }
         }
 
@@ -7281,7 +7400,6 @@ namespace Web.Controllers
             return jsonResult;
         }
 
-
         private string GetKnownIanaTimeZoneNames(string UTCTime)
         {
             string TimeZone = "";
@@ -7465,7 +7583,6 @@ namespace Web.Controllers
             var jsonResult = Json(new { Result = Result, Details = Details }, ss);
             return jsonResult;
         }
-
 
         #region Tracking
 
@@ -7726,7 +7843,6 @@ namespace Web.Controllers
             var jsonResult = Json(new { Result = Result }, ss);
             return jsonResult;
         }
-
 
         [HttpPost]
         public JsonResult SetReset([FromBody] JObject Data)
@@ -8442,139 +8558,6 @@ namespace Web.Controllers
             return jsonResult;
         }
 
-
-        ///////////////////////////////////////////////////////////////////////////////
-        private int SLFIPSetStabilizationParameters(ref Byte[] buffer, int mode, int rate, int limit, int angleLimit)
-        {
-            int byteCount = 0;
-            buffer = new Byte[512];
-            buffer[byteCount++] = Common.GetEnumToHexToByte(Common.SLFIP.HeaderByte1);
-            buffer[byteCount++] = Common.GetEnumToHexToByte(Common.SLFIP.HeaderByte2);
-            buffer[byteCount++] = 0x06;
-            buffer[byteCount++] = Common.GetEnumToHexToByte(Common.SLFIP.SetStabilizationParameters);
-            buffer[byteCount++] = Common.GetEnumToHexToByte(mode);
-            buffer[byteCount++] = Common.GetEnumToHexToByte(rate);
-            buffer[byteCount++] = Common.GetEnumToHexToByte(limit);
-            buffer[byteCount++] = Common.GetEnumToHexToByte(angleLimit);
-            var newArray = buffer.Skip(3).Take(byteCount - 3).ToArray();
-            buffer[byteCount++] = Common.TrackingCRCCalculateByte(newArray);
-            var newArray2 = buffer.Take(byteCount).ToArray();
-            buffer = new Byte[newArray2.Length];
-            buffer = newArray2;
-            return byteCount;
-        }
-
-        private int SLFIPSetStabilizationParameters(ref Byte[] buffer, Common.SLStabilizationParams Params)
-        {
-            int byteCount = 0;
-            buffer = new Byte[512];
-            buffer[byteCount++] = Common.GetEnumToHexToByte(Common.SLFIP.HeaderByte1);
-            buffer[byteCount++] = Common.GetEnumToHexToByte(Common.SLFIP.HeaderByte2);
-            buffer[byteCount++] = 0x06;
-            buffer[byteCount++] = Common.GetEnumToHexToByte(Common.SLFIP.SetStabilizationParameters);
-            buffer[byteCount++] = Common.GetEnumToHexToByte(Params.mode);
-            buffer[byteCount++] = Common.GetEnumToHexToByte(Params.rate);
-            buffer[byteCount++] = Common.GetEnumToHexToByte(Params.limit);
-            buffer[byteCount++] = Common.GetEnumToHexToByte(Params.angleLimit);
-            var newArray = buffer.Skip(3).Take(byteCount - 3).ToArray();
-            buffer[byteCount++] = Common.TrackingCRCCalculateByte(newArray);
-            var newArray2 = buffer.Take(byteCount).ToArray();
-            buffer = new Byte[newArray2.Length];
-            buffer = newArray2;
-            return byteCount;
-        }
-
-
-        private void SLFIPSetStabilizationParameters(ref string buffer, Common.SLStabilizationParams Params)
-        {
-            buffer += Common.GetEnumToHex(Common.SLFIP.HeaderByte1);
-            buffer += Common.GetEnumToHex(Common.SLFIP.HeaderByte2);
-            buffer += Common.GetEnumToHex(Params.ByteCount);
-            buffer += Common.GetEnumToHex(Common.SLFIP.SetStabilizationParameters);
-            buffer += Common.GetEnumToHex(Params.mode);
-            buffer += Common.GetEnumToHex(Params.rate);
-            buffer += Common.GetEnumToHex(Params.limit);
-            buffer += Common.GetEnumToHex(Params.angleLimit);
-            if (Params.ByteCount == 8)
-            {
-                buffer += Common.GetEnumToHex(Params.CameraId);
-                buffer += Common.GetEnumToHex(Params.stabLimit);
-            }
-            buffer = Common.TrackingCRCCalculate(buffer);
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////
-        private void SLFIPModifyTracking(ref string buffer, Common.SLModifyTrackingParams Params, int col, int row, int flags, int width, int height)
-        {
-            //51,AC,09,05,4E,01,CE,00,88,66,00,AD
-            buffer += Common.GetEnumToHex(Common.SLFIP.HeaderByte1);//51
-            buffer += Common.GetEnumToHex(Common.SLFIP.HeaderByte2);//AC
-            buffer += Common.GetEnumToHex(Params.ByteCount);//09
-            buffer += Common.GetEnumToHex(Common.SLFIP.ModifyTracking);//05
-            buffer += Common.GetEnumToHex((byte)((Params.col & 0x00FF)));//4E
-            buffer += Common.GetEnumToHex((byte)((Params.col & 0xFF00) >> 8));//01
-            buffer += Common.GetEnumToHex((byte)((Params.row & 0x00FF)));//CE
-            buffer += Common.GetEnumToHex((byte)((Params.row & 0xFF00) >> 8));//00
-            buffer += Common.GetEnumToHex(Params.flags);//88
-            buffer += Common.GetEnumToHex(Params.width);//66
-            buffer += Common.GetEnumToHex(Params.height);//00
-            buffer = Common.TrackingCRCCalculate(buffer);
-        }
-
-        private string Tracking_Stablization(bool Mode)
-        {
-            string Result = "Failed";
-            try
-            {
-                string DataIn = "Stablization_Off";
-                if (Mode)
-                    DataIn = "Stablization_On";
-                string IpAddress = "192.168.8.138";
-                int port = 14001;
-                DataIn = "51AC060209320000";
-                if (!Mode)
-                    DataIn = "51AC060208320000";
-                Result = SendCommand(IpAddress, port, DataIn);
-            }
-            catch (Exception ex)
-            {
-                Result = "Zoom() : " + ex.Message;
-            }
-            return Result;
-        }
-
-
-        private string Tracking_CameraSelection(string Camera)
-        {
-            string Result = "Failed";
-            try
-            {
-                string DataIn = "CameraSelect_Cam0";
-                switch (Camera)
-                {
-                    case "Cam0":
-                        DataIn = "CameraSelect_Cam0";
-                        break;
-                    case "Cam1":
-                        DataIn = "CameraSelect_Cam1";
-                        break;
-                    case "Cam2":
-                        DataIn = "CameraSelect_Cam2";
-                        break;
-                    default:
-                        break;
-                }
-                string IpAddress = "192.168.8.138";
-                int port = 14001;
-                Result = SendCommand(IpAddress, port, DataIn);
-            }
-            catch (Exception ex)
-            {
-                Result = "Zoom() : " + ex.Message;
-            }
-            return Result;
-        }
-
         private string Tracking_Reset(string ResetType)
         {
             string Result = "Failed";
@@ -8605,7 +8588,6 @@ namespace Web.Controllers
             }
             return Result;
         }
-
 
         private string SendCommand(string IpAddress, int port, string Data)
         {
@@ -8662,8 +8644,6 @@ namespace Web.Controllers
             return Result;
         }
 
-
-
         #endregion Tracking
 
         private IEnumerable<Dictionary<string, string>> GetImagingSettingDetails(string DeviceName, int SkipCount, ref int TotalCount, ref int ColumnCount, ref string Result)
@@ -8706,7 +8686,6 @@ namespace Web.Controllers
             }
             return Details;
         }
-
 
         [HttpPost]
         public JsonResult GetImagingSettingDetails([FromBody] JObject Data)
@@ -8812,7 +8791,6 @@ namespace Web.Controllers
             var jsonResult = Json(new { Result = Result, Details = Details, ColumnCount = ColumnCount, TotalCount = TotalCount }, ss);
             return jsonResult;
         }
-
 
         private IEnumerable<Dictionary<string, string>> GetConfigurationTabDetails(int SkipCount, ref int TotalCount, ref int ColumnCount, ref string Result)
         {
@@ -8955,7 +8933,6 @@ namespace Web.Controllers
             var jsonResult = Json(new { Result = Result, Details = Details, ColumnCount = ColumnCount, TotalCount = TotalCount }, ss);
             return jsonResult;
         }
-
 
         private IEnumerable<Dictionary<string, string>> GetControllerDefaultValues(int SkipCount, ref int TotalCount, ref int ColumnCount, ref string Result)
         {
@@ -9724,7 +9701,6 @@ namespace Web.Controllers
             return status;
         }
 
-
         private IEnumerable<Dictionary<string, string>> GetBuiltInTestResult(ref string Result)
         {
             IEnumerable<Dictionary<string, string>> Details = null;
@@ -10128,41 +10104,45 @@ namespace Web.Controllers
         public JsonResult NewChart()
         {
             List<object> iData = new List<object>();
-            //Creating sample data  
-            DataTable dt = new DataTable();
-            dt.Columns.Add("Employee", System.Type.GetType("System.String"));
-            dt.Columns.Add("Credit", System.Type.GetType("System.Int32"));
-
-            DataRow dr = dt.NewRow();
-            dr["Employee"] = "Sam";
-            dr["Credit"] = 123;
-            dt.Rows.Add(dr);
-
-            dr = dt.NewRow();
-            dr["Employee"] = "Alex";
-            dr["Credit"] = 456;
-            dt.Rows.Add(dr);
-
-            dr = dt.NewRow();
-            dr["Employee"] = "Michael";
-            dr["Credit"] = 587;
-            dt.Rows.Add(dr);
-            //Looping and extracting each DataColumn to List<Object>  
-            foreach (DataColumn dc in dt.Columns)
+            try
             {
-                List<object> x = new List<object>();
-                x = (from DataRow drr in dt.Rows select drr[dc.ColumnName]).ToList();
-                iData.Add(x);
-            }
-            //Source data returned as JSON  
-            //return Json(iData, JsonRequestBehavior.AllowGet);
+                //Creating sample data  
+                DataTable dt = new DataTable();
+                dt.Columns.Add("Employee", System.Type.GetType("System.String"));
+                dt.Columns.Add("Credit", System.Type.GetType("System.Int32"));
 
+                DataRow dr = dt.NewRow();
+                dr["Employee"] = "Sam";
+                dr["Credit"] = 123;
+                dt.Rows.Add(dr);
+
+                dr = dt.NewRow();
+                dr["Employee"] = "Alex";
+                dr["Credit"] = 456;
+                dt.Rows.Add(dr);
+
+                dr = dt.NewRow();
+                dr["Employee"] = "Michael";
+                dr["Credit"] = 587;
+                dt.Rows.Add(dr);
+                //Looping and extracting each DataColumn to List<Object>  
+                foreach (DataColumn dc in dt.Columns)
+                {
+                    List<object> x = new List<object>();
+                    x = (from DataRow drr in dt.Rows select drr[dc.ColumnName]).ToList();
+                    iData.Add(x);
+                }
+                //Source data returned as JSON  
+                //return Json(iData, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+            }
             JsonSerializerSettings ss = new JsonSerializerSettings();
             var jsonResult = Json(new { iData = iData }, ss);
             //jsonResult.SerializerSettings.MaxDepth= int.MaxValue;
             return jsonResult;
         }
-
 
         public JsonResult getLineChartData()
         {
@@ -11062,7 +11042,6 @@ namespace Web.Controllers
             return jsonResult;
         }
 
-
         [HttpPost]
         public JsonResult UpdateNoiseReductionModeDetails([FromBody] JObject Data)
         {
@@ -11233,7 +11212,6 @@ namespace Web.Controllers
             return jsonResult;
         }
 
-
         [HttpPost]
         public JsonResult UpdateAutoFocusSensitivityDetails([FromBody] JObject Data)
         {
@@ -11290,7 +11268,6 @@ namespace Web.Controllers
             //jsonResult.SerializerSettings.MaxDepth= int.MaxValue;
             return jsonResult;
         }
-
 
         [HttpPost]
         public JsonResult UpdateAutoFocusModeDetails([FromBody] JObject Data)
@@ -11432,6 +11409,30 @@ namespace Web.Controllers
                 Result = Result
             }, ss);
             return jsonResult;
+        }
+
+        [HttpPost]
+        public JsonResult GetFocal_LengthPTZDetails([FromBody] JObject Data)
+        {
+            List<string> s = null;
+            try
+            {
+                string VideoInput = "Device0";
+                VideoInput = Common.GetDeviceName(Common.GetJArrayValue(Data, "VideoInput"));
+                DataTable dt = new DataTable();
+                string Err = "";
+                if (MiddleTyre_Mysql.GetFocal_LengthPTZDetails(VideoInput, ref dt, ref Err))
+                {
+                    s = dt.AsEnumerable().Select(x => x[0].ToString()).ToList();
+                }
+                dt.Clear();
+                dt.Dispose();
+                dt = null;
+            }
+            catch (Exception)
+            {
+            }
+            return Json(s);
         }
 
     }
@@ -11669,7 +11670,7 @@ namespace Web.Controllers
         //    catch (Exception ex)
         //    {
 
-        //        throw;
+        //        
         //    }
         //    return source;
         //}
@@ -11678,8 +11679,6 @@ namespace Web.Controllers
         {
             try
             {
-
-
                 Bitmap bbImg = new Bitmap(Path);
                 return bbImg;
                 //Image<Rgba32> image = new Image<Rgba32>(ImgWidth, ImgHeight);
@@ -11846,7 +11845,6 @@ namespace Web.Controllers
 
     internal static class UDP
     {
-
         internal static bool ATC_Tracking(string Ip, int Port, string Data, ref string ReadData, ref string Error, bool Read = false)
         {
             bool Status = false;
@@ -11907,7 +11905,6 @@ namespace Web.Controllers
             return Status;
         }
 
-
         internal static bool ATC_TrackingCRead(string Ip, int Port, ref string ReadData, ref string Error)
         {
             bool Status = false;
@@ -11950,7 +11947,6 @@ namespace Web.Controllers
             }
             return Status;
         }
-
 
         internal static bool GetFrame1(string Ip, int Port, ref string ReadData, ref string Error)
         {
@@ -12096,14 +12092,6 @@ namespace Web.Controllers
                                  {
                                      try
                                      {
-                                         //Client_Read.Client.Listen()
-                                         //Client_Read.Client.ReceiveBufferSize = 1000000;
-                                         //int MaxUDPSize = 1000000;
-                                         //byte[] m_Buffer = new byte[MaxUDPSize];
-                                         //EndPoint tempRemoteEP = new IPEndPoint(IPAddress.Any, readPort);
-                                         ////int ko= Client_Read.Client.ReceiveFrom(m_Buffer, MaxUDPSize, 0, ref tempRemoteEP);
-                                         //int ko = Client_Read.Client.ReceiveFrom(m_Buffer, MaxUDPSize, SocketFlags.None, ref tempRemoteEP);
-                                         //byte[] bytes = m_Buffer.ToArray().Take(ko).ToArray();
                                          byte[] bytes = Client_Read.Receive(ref remoteEP);
                                          Err1 = "";
                                          if (bytes != null)
@@ -12291,7 +12279,6 @@ namespace Web.Controllers
             return Status;
         }
 
-
         internal static bool GetFrame22(string Ip, int Port, ref string ReadData, ref string Error)
         {
             bool Status = false;
@@ -12401,8 +12388,7 @@ namespace Web.Controllers
             }
             return Status;
         }
-
-
+        
         public static void CopyTo(Stream src, Stream dest)
         {
             byte[] bytes = new byte[4096];
@@ -12722,7 +12708,6 @@ namespace Web.Controllers
                                                             "51AC030102","51AC030104",
                                                             "51AC030106","51AC101F0000000300000000000000000000",
                                                             "51AC101F0000000301000000000000000000","51AC101F0000000302000000000000000000"};
-
 
         // Default Publish Path : bin\Release\netcoreapp3.0\publish\
 

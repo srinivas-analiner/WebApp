@@ -15,12 +15,13 @@ namespace Web.Models
         static string SQLConnectionError = "A network-related or instance-specific error occurred while establishing a connection to SQL Server.";
         static string SQLConnectionError2 = "Unable to connect to any of the specified MySQL hosts.";
         static string SQLErr = "";
+
         public static void connection(ref MySqlConnection con)
         {
             try
             {
                 string constr_Mysql = "Data Source=localhost;port=3306;Initial Catalog=saazdbms;User Id=saazadmin;password=Akshar!23;Allow User Variables=True;Convert Zero Datetime=True;default command timeout=0;Connection Timeout=120";
-                constr_Mysql = "Data Source=192.168.8.165;port=3306;Initial Catalog=saazdbms;User Id=saazadmin;password=Akshar!23;Allow User Variables=True;Convert Zero Datetime=True;default command timeout=0;Connection Timeout=120";
+                constr_Mysql = "Data Source=192.168.8.143;port=3306;Initial Catalog=saazdbms;User Id=saazadmin;password=Akshar!23;Allow User Variables=True;Convert Zero Datetime=True;default command timeout=0;Connection Timeout=120";
                 //constr_Mysql = "Data Source=192.168.8.10;port=3306;Initial Catalog=saazdbms;User Id=saazadmin;password=akshar123;Allow User Variables=True;Convert Zero Datetime=True;default command timeout=0;Connection Timeout=120";
                 con = new MySqlConnection(constr_Mysql);
             }
@@ -7225,82 +7226,6 @@ namespace Web.Models
             }
             return Status;
         }
-
-        public static bool GetFocal_LengthPTZDetails(string DeviceName, ref DataTable dt, ref string Error)
-        {
-            bool Status = false;
-            MySqlConnection con = null;
-            try
-            {
-                SQLErr = "";
-                Error = "";
-                connection(ref con);
-                if (SQLErr != "")
-                {
-                    Error = SQLErr;
-                    return false;
-                }
-                con.Open();
-                MySqlCommand cmd = new MySqlCommand("select Focal_Length from GetTrackerPTZDetails where DeviceName=@DeviceName", con);
-                cmd.CommandType = CommandType.Text;
-                cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@DeviceName", DeviceName);
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
-                dt = new DataTable();
-                da.Fill(dt);
-                if (dt.Rows.Count > 0)
-                {
-                    Error = "Sucess";
-                    Status = true;
-                }
-                else
-                {
-                    Error = "Failed to get TrackerPTZ Values";
-                }
-                da.Dispose();
-                da = null;
-                cmd.Dispose();
-                cmd = null;
-            }
-            catch (Exception ex)
-            {
-                Status = false;
-                Error = ex.Message;
-                if (Error.Length >= SQLConnectionError.Length)
-                {
-                    if (Error.Substring(0, SQLConnectionError.Length) == SQLConnectionError)
-                    {
-                        Error = "Failed to communicate with database";
-                    }
-                }
-                else
-               if (Error.Length >= SQLConnectionError2.Length)
-                {
-                    if (Error.Substring(0, SQLConnectionError2.Length) == SQLConnectionError2)
-                    {
-                        Error = "Failed to communicate with database";
-                    }
-                }
-                else
-                {
-                    Error = ex.Message;
-                }
-            }
-            finally
-            {
-                if (con != null)
-                {
-                    if (con.State == ConnectionState.Open)
-                    {
-                        con.Close();
-                    }
-                    con.Dispose();
-                    con = null;
-                }
-            }
-            return Status;
-        }
-
 
         #region Check
         public static bool UpdateTemperatureDetails(ref string Error)
